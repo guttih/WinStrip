@@ -119,10 +119,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Json.h" />
+    <ClInclude Include="JsonData.h" />
     <ClInclude Include="SerialReader.h" />
     <ClInclude Include="__vm\.Esp32Strip.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Json.cpp" />
+    <ClCompile Include="JsonData.cpp" />
     <ClCompile Include="SerialReader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

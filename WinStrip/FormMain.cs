@@ -6,7 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Management;
 using System.Text;
+using System.Web.Script.Serialization;
 using System.Windows.Forms;
+using WinStrip.Entity;
 
 namespace WinStrip
 {
@@ -29,10 +31,24 @@ namespace WinStrip
         private void btnSend_Click(object sender, EventArgs e)
         {
             var text = textBox1.Text;
-            serial.WriteLine(text);
 
-            var str = serial.ReadLine();
-            labelStatus.Text = str;
+            var cmd = new StripCommand { Name = "nafn", Litur=33 };
+            var json = new JavaScriptSerializer().Serialize(cmd);
+
+
+            serial.WriteLine(json);
+            try { 
+                var str = serial.ReadLine();
+                labelStatus.Text = str;
+            } catch (TimeoutException)
+            {
+                labelStatus.Text = "";
+            }
+            
+            catch(Exception ex)
+            {
+                labelStatus.Text = ex.Message;
+            }
         }
 
         private void btnConnect_Click(object sender, EventArgs e)

@@ -27,9 +27,21 @@
     <ClInclude Include="SerialReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Json.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SerialReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Json.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

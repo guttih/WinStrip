@@ -14,13 +14,13 @@ namespace WinStrip
         private SerialPort port = null;
         public int MaxBufferLength { get; private set; }
         private int MaxChunkSize { get; set; }
-        private char Separator { get; set; } //chars used when writeline needs to split up a line
+        private char Separator { get; set; } //chars used when writeline needs to split up a line 
 
         public bool isConnected { get { return port == null ? false : port.IsOpen; } }
 
         public Serial()
         {
-            MaxChunkSize = 255;
+            MaxChunkSize = 10;
             Separator = '@';
         }
 
@@ -42,6 +42,9 @@ namespace WinStrip
             textToSend = textToSend.Trim();
 
             int len = textToSend.Length;
+            if (len > MaxBufferLength)
+                return; //invalid
+
             if (len > MaxChunkSize)
             {
                 string chunk;
@@ -65,7 +68,7 @@ namespace WinStrip
 
         public void WriteJson(string json)
         {
-            WriteLine(RemoveChars(json, new[] { '\t' }));
+            WriteLine(json);
         }
         public string ReadLine()
         {

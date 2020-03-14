@@ -62,18 +62,17 @@
             this.panelText.AutoSize = true;
             this.panelText.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.panelText.Controls.Add(this.textBox1);
-            this.panelText.Location = new System.Drawing.Point(28, 28);
+            this.panelText.Location = new System.Drawing.Point(28, 39);
             this.panelText.Name = "panelText";
-            this.panelText.Size = new System.Drawing.Size(1033, 127);
+            this.panelText.Size = new System.Drawing.Size(1033, 24);
             this.panelText.TabIndex = 6;
             // 
             // textBox1
             // 
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox1.Location = new System.Drawing.Point(0, 0);
-            this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(1033, 127);
+            this.textBox1.Size = new System.Drawing.Size(1033, 20);
             this.textBox1.TabIndex = 0;
             // 
             // btnSend

@@ -1,5 +1,5 @@
 #include "SerialReader.h"
-
+#include "Json.h"
 /*
  Name:		Esp32Strip.ino
  Created:	3/14/2020 11:24:27 AM
@@ -63,19 +63,19 @@ int getCommand(const char *str) {
 
 
 
-void setup() {
-    // initialize serial:
-    Serial.begin(500000);
-    
-    // reserve 200 bytes for the inputString:
-    Serial.println("Max string length is " + reader.getMaxLength());
-    if (reader.getMaxLength() > 255) {
-        Serial.println("If you need send longer strings than 255 you will need to split the sending up and end split strings with the simbol \";\".  Do not add ; to the last part of the split string.");
-    }
-}
+
 
 void processJson(String str) {
-    Serial.println(str);
+    //Serial.println(str);
+    Json json(str.c_str());
+    if (json.isValid()) {
+        Serial.println(json.toString());
+    }
+    else {
+        Serial.println("Invalid json string");
+    }
+    
+    
 }
 
 void processNewString() {
@@ -100,6 +100,17 @@ void processNewString() {
     reader.resetBuffer();
 }
 
+void setup() {
+    // initialize serial:
+    Serial.begin(500000);
+    
+    // reserve 200 bytes for the inputString:
+    Serial.println("Max string length is " + reader.getMaxLength());
+    if (reader.getMaxLength() > 255) {
+        Serial.println("If you need send longer strings than 255 you will need to split the sending up and end split strings with the simbol \";\".  Do not add ; to the last part of the split string.");
+    }
+
+}
 
 void loop() {
     reader.serialEvent();

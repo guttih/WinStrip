@@ -1,3 +1,4 @@
+#include <FastLED.h>
 #include "SerialReader.h"
 #include "Json.h"
 /*
@@ -16,6 +17,29 @@
 
 SerialReader reader;
 
+//STRIP_TYPE, DATA_PIN, CLOCK_PIN, COLOR_SCHEME > (leds, NUM_LEDS
+#include "StripHelper.h"
+
+
+
+#define NUM_LEDS 6 
+
+#define CLOCK_PIN 13  /*green wire*/
+#define DATA_PIN  14  /*blue wire*/
+
+
+// Strip type and scheme
+
+/*WS2801*/
+#define STRIP_TYPE WS2801
+#define COLOR_SCHEME RBG
+
+#define BRIGHTNESS_DEVICE_PIN 15
+
+CRGB leds[NUM_LEDS];
+StripHelper stripper;
+
+
 struct COMMAND_TEXT
 {
     const char Name[20];
@@ -27,6 +51,8 @@ enum COMMAND
     COMMAND_STATUS,
     COMMAND_BUFFERSIZE,
     COMMAND_SEPARATOR,
+    COMMAND_PROGRAMCOUNT,
+    COMMAND_PROGRAMINFO,
     COMMAND_COUNT
 };
 
@@ -34,9 +60,39 @@ COMMAND_TEXT commands[COMMAND::COMMAND_COUNT] = {
     { "INVALID"},
     { "STATUS"},
     { "BUFFERSIZE"},
-    {"SEPARATOR"}
+    {"SEPARATOR"},
+    {"PROGRAMCOUNT"},
+    {"PROGRAMINFO"}
 };
 
+
+void SerialPrintLine(String str) {
+    
+    int len = str.length();
+    if (len < 255)
+    {
+        Serial.println(str);
+        return;
+    }
+
+    //we need to send chuncks
+    int MaxChunkSize = 255;
+    int chunkLen = MaxChunkSize;
+    String chunk;
+    
+    while (str.length() > 0) {
+        chunk = str.substring(0, chunkLen);
+        str.remove(0, chunkLen);
+
+        len = str.length();
+        if (len > 0)
+            chunk += reader.getSeparator();
+
+        Serial.println(chunk);
+
+        chunkLen = len < MaxChunkSize ? len : MaxChunkSize;
+    }
+}
 void runCommand(int cmd) {
     switch (cmd) {
         case COMMAND_STATUS :       Serial.println("OK");
@@ -46,6 +102,11 @@ void runCommand(int cmd) {
                                     break;
     
         case COMMAND_SEPARATOR:     Serial.println(reader.getSeparator());
+                                    break;
+        case COMMAND_PROGRAMCOUNT:   Serial.println(stripper.getProgramCount());
+                                    break;
+        case COMMAND_PROGRAMINFO:                            
+                                    SerialPrintLine(stripper.getAllProgramInfosAsJsonArray());
                                     break;
     }
 }
@@ -58,11 +119,6 @@ int getCommand(const char *str) {
     }
     return COMMAND::COMMAND_INVALID;
 }
-
-
-
-
-
 
 
 void processJson(String str) {
@@ -100,6 +156,15 @@ void processNewString() {
     reader.resetBuffer();
 }
 
+void stripInit() {
+    FastLED.addLeds<STRIP_TYPE, DATA_PIN, CLOCK_PIN, COLOR_SCHEME>(leds, NUM_LEDS);
+    stripper.initialize(&FastLED);
+    Serial.println("- - - - - - - -     Available strip commands     - - - - - - - -");
+    Serial.println(stripper.getAllProgramNames());
+    Serial.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+    stripper.initProgram(stripper.getProgram());
+}
+
 void setup() {
     // initialize serial:
     Serial.begin(500000);
@@ -110,6 +175,8 @@ void setup() {
         Serial.println("If you need send longer strings than 255 you will need to split the sending up and end split strings with the simbol \";\".  Do not add ; to the last part of the split string.");
     }
 
+    stripInit();
+
 }
 
 void loop() {
@@ -118,6 +185,8 @@ void loop() {
     if (reader.stringComplete) {
         processNewString();
     }
+
+    stripper.run();
 
 }
 

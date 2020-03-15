@@ -4,14 +4,16 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 
-namespace WinStrip
+namespace WinStrip.Utilities
 {
     public enum SerialCommand
     {
+        [Description("STATUS")     ] STATUS,
+        [Description("BUFFERSIZE") ] BUFFERSIZE,
+        [Description("SEPARATOR")  ] SEPARATOR,
+        [Description("POGRAMCOUNT")] POGRAMCOUNT,
+        [Description("PROGRAMINFO")] PROGRAMINFO
 
-        [Description("STATUS")    ] STATUS,
-        [Description("BUFFERSIZE")] BUFFERSIZE,
-        [Description("SEPARATOR") ] SEPARATOR
     }
 
     public static class SerialCommandExtensions
@@ -35,9 +37,11 @@ namespace WinStrip
 
             switch (serialCommand)
             {
-                case SerialCommand.STATUS    : return "OK".Equals(commandResponce);
-                case SerialCommand.SEPARATOR : return commandResponce.Length == 1;                    
-                case SerialCommand.BUFFERSIZE:  try {
+                case SerialCommand.STATUS     : return "OK".Equals(commandResponce);
+                case SerialCommand.SEPARATOR  : return commandResponce.Length == 1;
+
+                case SerialCommand.POGRAMCOUNT:
+                case SerialCommand.BUFFERSIZE : try {
 
                                                         int value = 0;
                                                         int.TryParse(commandResponce, out value);

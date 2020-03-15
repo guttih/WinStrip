@@ -9,37 +9,40 @@ using System.Text;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using WinStrip.Entity;
+using WinStrip.Utilities;
+using StripProgram = WinStrip.Entity.StripProgram;
 
 namespace WinStrip
 {
     public partial class FormMain : Form
     {
         Serial serial;
+        List<StripProgram> programs;
+        List<ProgramParameter> parameters;
         public FormMain()
         {
             InitializeComponent();
 
             serial = new Serial();
+            parameters = new List<ProgramParameter>();
         }
 
         private void FormMain_Load(object sender, EventArgs e)
         {
             labelStatus.Text = "";
             InitCombo();
+            
         }
 
         private void btnSend_Click(object sender, EventArgs e)
         {
             var text = textBox1.Text;
 
-            var cmd = new StripCommand { Name = "nafn", Litur=33 };
-            var json = new JavaScriptSerializer().Serialize(cmd);
+            //var json = new JavaScriptSerializer().Serialize(cmd);
 
-
-            serial.WriteLine(json);
+            serial.WriteLine(text);
             try { 
-                var str = serial.ReadLine();
-                labelStatus.Text = str;
+                textBox2.Text += "\r\n"+ serial.ReadLine();
             } catch (TimeoutException)
             {
                 labelStatus.Text = "";
@@ -57,7 +60,7 @@ namespace WinStrip
 
         public void SetButtonStatus()
         {
-            btnSend.Enabled = textBox1.Text.Length > 0 && serial.isConnected;
+            btnSend.Enabled = serial.isConnected;
         }
         public bool GetFullComputerDevices(string findPort)
         {
@@ -109,10 +112,7 @@ namespace WinStrip
                     {
                         list.Add(portName);
                     }
-                    
                 }
-
-
             }
 
             var sorted = list.OrderBy(m => m.Length).ThenBy(m => m).ToList();
@@ -131,12 +131,58 @@ namespace WinStrip
                     {
                         comboPorts.SelectedIndex = index;
                         labelStatus.Text = $"Connected to port {nextPortName}";
+                        GetAvailablePrograms();
+
                         return;
                     }
                     index++;
                 }
             }
             labelStatus.Text = "Unable to connect to any com port";
+        }
+
+        private void GetAvailablePrograms()
+        {
+            var cmd = SerialCommand.PROGRAMINFO.ToString();
+            serial.WriteLine(cmd);
+            var strBuffer = serial.ReadLine();
+            //textBox2.Text = strBuffer;
+            var serializer = new JavaScriptSerializer();
+            programs = serializer.Deserialize<List<StripProgram>>(strBuffer);
+            comboPrograms.Items.Clear();
+            programs.ForEach(m => comboPrograms.Items.Add(m.name));
+        }
+
+        private void btnClearText2_Click(object sender, EventArgs e)
+        {
+            textBox2.Text = "";
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnSend_Click(sender, null);
+            }
+        }
+
+        private void comboPrograms_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBox comboBox = (ComboBox)sender;
+            var name = comboBox.Text;
+            foreach(var program in programs)
+            {
+                if (name.Equals(program.name))
+                {
+                    parameters.Clear();
+                    foreach(var value in program.values)
+                    {
+                        parameters.Add(new ProgramParameter { Name = value, Value=0 }); 
+                    }
+                    //dataGridView1.DataSource = parameters;
+                    return; 
+                }
+            }
         }
     }
 }

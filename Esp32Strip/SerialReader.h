@@ -7,7 +7,7 @@ class SerialReader
 
 private:
     int maxBufferLength = 64;
-    char separator = ';';
+    char separator = '@';
 
 
 public:

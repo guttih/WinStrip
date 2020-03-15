@@ -33,6 +33,9 @@
     <ClInclude Include="JsonData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="StripHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SerialReader.cpp">
@@ -42,6 +45,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="JsonData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StripHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -5,7 +5,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Text;
 
-namespace WinStrip
+namespace WinStrip.Utilities
 {
 
     class Serial
@@ -20,7 +20,7 @@ namespace WinStrip
 
         public Serial()
         {
-            MaxChunkSize = 10;
+            MaxChunkSize = 255;
             Separator = '@';
         }
 
@@ -72,7 +72,40 @@ namespace WinStrip
         }
         public string ReadLine()
         {
-            return port.ReadLine().Trim();
+            var str = port.ReadLine().Trim();
+            int len = str.Length;
+            if (len < MaxChunkSize)
+            {
+                return str;
+            }
+
+            string line = str;
+            str = "";
+                       // MaxChunkSize + '@'
+            while (len == MaxChunkSize + 1  && line.EndsWith("@"))
+            {
+                str += line.Substring(0, len - 1);
+                line = port.ReadLine().Trim();
+                len = line.Length;
+            }
+            str += line;
+            return str;
+        }
+
+        public string ReadLine(int waitTimeInMilliseconds)
+        {
+            var oldTimeout = port.ReadTimeout;
+            port.WriteTimeout = waitTimeInMilliseconds;
+            try
+            {
+                return port.ReadLine().Trim();
+            } catch (Exception ex){
+                throw ex;
+            } finally
+            {
+                port.ReadTimeout = oldTimeout;
+            }
+            
         }
         public bool OpenSerialPort(string portName, int baudRate)
         {

@@ -5,9 +5,9 @@ using System.Text;
 
 namespace WinStrip.Entity
 {
-    public class StripCommand
+    public class ProgramParameter
     {
-        public long Litur;
         public string Name;
+        public int Value;
     }
 }

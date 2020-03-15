@@ -12,8 +12,10 @@ namespace WinStrip.Utilities
         [Description("BUFFERSIZE") ] BUFFERSIZE,
         [Description("SEPARATOR")  ] SEPARATOR,
         [Description("POGRAMCOUNT")] POGRAMCOUNT,
-        [Description("PROGRAMINFO")] PROGRAMINFO
-
+        [Description("PROGRAMINFO")] PROGRAMINFO,
+        [Description("ALLSTATUS")  ] ALLSTATUS,
+        [Description("COLORS")     ] COLORS,
+        [Description("VALUES")     ] VALUES
     }
 
     public static class SerialCommandExtensions

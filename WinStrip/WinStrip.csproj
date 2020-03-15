@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entity\AllStatus.cs" />
     <Compile Include="Entity\ProgramParameter.cs" />
     <Compile Include="Entity\StripProgram.cs" />
     <Compile Include="FormMain.cs">
@@ -55,9 +56,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\SColor.cs" />
     <Compile Include="Utilities\Serial.cs" />
     <Compile Include="Utilities\SerialCommand.cs" />
-    <Compile Include="Utilities\StripProgram.cs" />
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>

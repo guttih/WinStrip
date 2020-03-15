@@ -204,7 +204,7 @@ String StripHelper::getProgramDescription(STRIP_PROGRAMS stripProgram) {
     case DOWN: return "Color 0 is the color of a a pixel running down the strip. Color 1 is the background.";
     case UP_DOWN: return "Color 0 is the color of a a pixel running up and down the strip. Color 1 is the background.";
     case STARS: return "Color 0 is the color of a start pixel.  Color 1 is the background color.";
-    case RAINBOW: return "There is no change if both values 0.  Try changing them to figure out what you like.  The program is very versatile. Test and see :)";
+    case RAINBOW: return "There is no change if both values are 0.  Try changing them to figure out what you like.  The program is very versatile. Test and see :)";
     case CYLON: return "Multiple color will flow down the strip.";
     case SECTIONS: return "Dived the strip to 4 color sections.  Possbile colors are from 0-4. Color 0 is for section 1, color 1 is for section 2 and so on.";
     }
@@ -326,6 +326,28 @@ CRGB StripHelper::decodeColor(uint32_t uiColor) {
     return CRGB(r, g, b);
 }
 
+String StripHelper::getColorsAsJson() {
+    String ret = "[";
+    for (int i = 0; i < COLOR_COUNT; i++) {
+        if (i > 0)
+            ret += ",";
+        ret += ulToString(encodeColor(stripColors[i]));
+    }
+    ret += "]";
+    return ret;
+}
+
+String StripHelper::getValuesAsJson() {
+    int len = STRIP_PROGRAMS_COUNT;
+    String ret = "{";
+
+    ret +=       MakeJsonKeyVal("delay", String(stepDelay));
+    ret += "," + MakeJsonKeyVal("com", String(program));
+    ret += "," + MakeJsonKeyVal("values", "[" + String(value1) + "," + String(value2) + "," + String(value3) + "]");
+    ret += "}";
+    return ret;
+}
+
 String StripHelper::toJson() {
 
     int len = STRIP_PROGRAMS_COUNT;
@@ -335,13 +357,7 @@ String StripHelper::toJson() {
     ret += "," + MakeJsonKeyVal("delay", String(stepDelay));
     ret += "," + MakeJsonKeyVal("com", String(program));
     ret += "," + MakeJsonKeyVal("values", "[" + String(value1) + "," + String(value2) + "," + String(value3) + "]");
-    ret += ",\"colors\":[";
-    for (int i = 0; i < COLOR_COUNT; i++) {
-        if (i > 0)
-            ret += ",";
-        ret += ulToString(encodeColor(stripColors[i]));
-    }
-    ret += "]";
+    ret += ",\"colors\":" + getColorsAsJson();
 
 
     ret += "}";

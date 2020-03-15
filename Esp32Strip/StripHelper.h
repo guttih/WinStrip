@@ -115,6 +115,8 @@ public:
     String getAllProgramNamesAsJsonArray();
     String getProgramInfoAsJsonArray(STRIP_PROGRAMS stripProgram);
     String getAllProgramInfosAsJsonArray();
+    String getColorsAsJson();
+    String getValuesAsJson();
     String toJson();
     CRGB decodeColor(uint32_t uiColor);
     uint32_t encodeColor(CRGB color);

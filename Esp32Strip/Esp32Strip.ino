@@ -53,6 +53,9 @@ enum COMMAND
     COMMAND_SEPARATOR,
     COMMAND_PROGRAMCOUNT,
     COMMAND_PROGRAMINFO,
+    COMMAND_ALLSTATUS,
+    COMMAND_COLORS,
+    COMMAND_VALUES,
     COMMAND_COUNT
 };
 
@@ -62,7 +65,10 @@ COMMAND_TEXT commands[COMMAND::COMMAND_COUNT] = {
     { "BUFFERSIZE"},
     {"SEPARATOR"},
     {"PROGRAMCOUNT"},
-    {"PROGRAMINFO"}
+    {"PROGRAMINFO"},
+    {"ALLSTATUS"},
+    {"COLORS"},
+    {"VALUES"},
 };
 
 
@@ -108,6 +114,12 @@ void runCommand(int cmd) {
         case COMMAND_PROGRAMINFO:                            
                                     SerialPrintLine(stripper.getAllProgramInfosAsJsonArray());
                                     break;
+        case COMMAND_ALLSTATUS:     SerialPrintLine(stripper.toJson());
+                                    break;
+        case COMMAND_COLORS:        Serial.println(stripper.getColorsAsJson());
+                                    break;
+        case COMMAND_VALUES:        Serial.println(stripper.getValuesAsJson());
+            break;
     }
 }
 

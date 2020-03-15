@@ -7,7 +7,8 @@ namespace WinStrip.Entity
 {
     public class ProgramParameter
     {
-        public string Name;
-        public int Value;
+        public string Name { get; set; }
+        public int Value { get; set; }
+        
     }
 }

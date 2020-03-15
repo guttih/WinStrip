@@ -27,11 +27,35 @@ namespace WinStrip
             parameters = new List<ProgramParameter>();
         }
 
+        private void PopulateDataGrid()
+        {
+            dataGridView1.Rows.Clear();
+            dataGridView1.Columns.Clear();
+            dataGridView1.Columns.Add("name", "Name");
+            dataGridView1.Columns.Add("value", "Value");
+            
+            var col = dataGridView1.Columns[0];
+            col.ReadOnly = true;
+            col.MinimumWidth = 160;
+            col.SortMode = DataGridViewColumnSortMode.NotSortable;
+
+            col = dataGridView1.Columns[1];
+            dataGridView1.Columns[1].ReadOnly = false;
+            col.SortMode = DataGridViewColumnSortMode.NotSortable;
+
+
+            foreach (var param in parameters)
+            {
+                dataGridView1.Rows.Add(new string[] { param.Name, param.Value.ToString() });
+            }
+            
+
+        }
+
         private void FormMain_Load(object sender, EventArgs e)
         {
             labelStatus.Text = "";
             InitCombo();
-            
         }
 
         private void btnSend_Click(object sender, EventArgs e)
@@ -131,7 +155,7 @@ namespace WinStrip
                     {
                         comboPorts.SelectedIndex = index;
                         labelStatus.Text = $"Connected to port {nextPortName}";
-                        GetAvailablePrograms();
+                        GetAllStatus();
 
                         return;
                     }
@@ -141,16 +165,35 @@ namespace WinStrip
             labelStatus.Text = "Unable to connect to any com port";
         }
 
-        private void GetAvailablePrograms()
+
+        private void GetAllStatus()
         {
-            var cmd = SerialCommand.PROGRAMINFO.ToString();
+            var cmd = SerialCommand.ALLSTATUS.ToString();
             serial.WriteLine(cmd);
             var strBuffer = serial.ReadLine();
-            //textBox2.Text = strBuffer;
             var serializer = new JavaScriptSerializer();
-            programs = serializer.Deserialize<List<StripProgram>>(strBuffer);
+            //programs = serializer.Deserialize<List<StripProgram>>(strBuffer);
+            AllStatus status = serializer.Deserialize<AllStatus>(strBuffer);
+            programs = status.programs;
+
+            textBoxDelay.Text = status.delay.ToString();
+            
+            btnColor1.BackColor = new SColor(status.colors[0]).Color;
+            btnColor2.BackColor = new SColor(status.colors[1]).Color;
+            btnColor3.BackColor = new SColor(status.colors[2]).Color;
+            btnColor4.BackColor = new SColor(status.colors[3]).Color;
+            btnColor5.BackColor = new SColor(status.colors[4]).Color;
+            btnColor6.BackColor = new SColor(status.colors[5]).Color;
+
+            
             comboPrograms.Items.Clear();
             programs.ForEach(m => comboPrograms.Items.Add(m.name));
+            comboPrograms.SelectedIndex = status.com;
+        }
+
+        private void btnGetAll_Click(object sender, EventArgs e)
+        {
+            GetAllStatus();
         }
 
         private void btnClearText2_Click(object sender, EventArgs e)
@@ -170,18 +213,37 @@ namespace WinStrip
         {
             ComboBox comboBox = (ComboBox)sender;
             var name = comboBox.Text;
-            foreach(var program in programs)
+            labelDescription.Text = "";
+            foreach (var program in programs)
             {
                 if (name.Equals(program.name))
                 {
+                    labelDescription.Text = program.description.Replace("\n", "\r\n");
                     parameters.Clear();
-                    foreach(var value in program.values)
+
+                    foreach (var value in program.values)
                     {
-                        parameters.Add(new ProgramParameter { Name = value, Value=0 }); 
+                        parameters.Add(new ProgramParameter { Name = value, Value=0 });
                     }
-                    //dataGridView1.DataSource = parameters;
+                    PopulateDataGrid();
                     return; 
                 }
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonColor_Click(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            colorDialog1.Color = button.BackColor;
+
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                button.BackColor = colorDialog1.Color;
             }
         }
     }

@@ -16,6 +16,7 @@ namespace WinStrip
 {
     public partial class FormMain : Form
     {
+        
         Serial serial;
         List<StripProgram> programs;
         List<ProgramParameter> parameters;
@@ -27,8 +28,26 @@ namespace WinStrip
             parameters = new List<ProgramParameter>();
         }
 
+        void textBoxCustomSenditem_Click(object sender, EventArgs e)
+        {
+            MenuItem clickedItem = sender as MenuItem;
+            textBoxCustomSend.Text = clickedItem.Text;
+        }
+
         private void PopulateDataGrid()
         {
+
+            textBoxCustomSend.ContextMenu = new ContextMenu();
+            for(SerialCommand i = 0; i<SerialCommand.COUNT; i++)
+            {
+
+                MenuItem item = textBoxCustomSend.ContextMenu.MenuItems.Add(i.ToString());
+                item.Click += new EventHandler(textBoxCustomSenditem_Click);
+            }
+            
+
+
+
             dataGridView1.Rows.Clear();
             dataGridView1.Columns.Clear();
             dataGridView1.Columns.Add("name", "Name");
@@ -60,7 +79,7 @@ namespace WinStrip
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-            var text = textBox1.Text;
+            var text = textBoxCustomSend.Text;
 
             //var json = new JavaScriptSerializer().Serialize(cmd);
 
@@ -301,5 +320,12 @@ namespace WinStrip
             }
         }
 
+        private void textBoxDelay_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnSendColors_Click(sender, null);
+            }
+        }
     }
 }

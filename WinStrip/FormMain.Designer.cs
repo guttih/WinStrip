@@ -33,7 +33,19 @@
             this.labelStatus = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPrograms = new System.Windows.Forms.TabPage();
+            this.btnSendColors = new System.Windows.Forms.Button();
+            this.btnGetAll = new System.Windows.Forms.Button();
+            this.textBoxDelay = new System.Windows.Forms.TextBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnColor6 = new System.Windows.Forms.Button();
+            this.btnColor5 = new System.Windows.Forms.Button();
+            this.btnColor4 = new System.Windows.Forms.Button();
+            this.btnColor3 = new System.Windows.Forms.Button();
+            this.btnColor2 = new System.Windows.Forms.Button();
+            this.btnColor1 = new System.Windows.Forms.Button();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label6 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.labelDescription = new System.Windows.Forms.Label();
@@ -43,28 +55,16 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnClearText2 = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.textBoxCustomSend = new System.Windows.Forms.TextBox();
             this.tabCPU = new System.Windows.Forms.TabPage();
             this.labelNotImplemented = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.btnColor1 = new System.Windows.Forms.Button();
-            this.btnColor2 = new System.Windows.Forms.Button();
-            this.btnColor3 = new System.Windows.Forms.Button();
-            this.btnColor4 = new System.Windows.Forms.Button();
-            this.btnColor5 = new System.Windows.Forms.Button();
-            this.btnColor6 = new System.Windows.Forms.Button();
-            this.btnSendColors = new System.Windows.Forms.Button();
-            this.textBoxDelay = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.btnGetAll = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPrograms.SuspendLayout();
-            this.tabManual.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.tabCPU.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.tabManual.SuspendLayout();
+            this.tabCPU.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnSend
@@ -134,6 +134,124 @@
             this.tabPrograms.TabIndex = 1;
             this.tabPrograms.Text = "Programs";
             // 
+            // btnSendColors
+            // 
+            this.btnSendColors.Location = new System.Drawing.Point(463, 29);
+            this.btnSendColors.Name = "btnSendColors";
+            this.btnSendColors.Size = new System.Drawing.Size(75, 23);
+            this.btnSendColors.TabIndex = 4;
+            this.btnSendColors.Text = "Send";
+            this.btnSendColors.UseVisualStyleBackColor = true;
+            this.btnSendColors.Click += new System.EventHandler(this.btnSendColors_Click);
+            // 
+            // btnGetAll
+            // 
+            this.btnGetAll.Location = new System.Drawing.Point(358, 29);
+            this.btnGetAll.Name = "btnGetAll";
+            this.btnGetAll.Size = new System.Drawing.Size(75, 23);
+            this.btnGetAll.TabIndex = 6;
+            this.btnGetAll.Text = "Read all";
+            this.btnGetAll.UseVisualStyleBackColor = true;
+            this.btnGetAll.Click += new System.EventHandler(this.btnGetAll_Click);
+            // 
+            // textBoxDelay
+            // 
+            this.textBoxDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxDelay.Location = new System.Drawing.Point(225, 29);
+            this.textBoxDelay.Name = "textBoxDelay";
+            this.textBoxDelay.Size = new System.Drawing.Size(89, 20);
+            this.textBoxDelay.TabIndex = 5;
+            this.textBoxDelay.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxDelay_KeyDown);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.btnColor6);
+            this.groupBox1.Controls.Add(this.btnColor5);
+            this.groupBox1.Controls.Add(this.btnColor4);
+            this.groupBox1.Controls.Add(this.btnColor3);
+            this.groupBox1.Controls.Add(this.btnColor2);
+            this.groupBox1.Controls.Add(this.btnColor1);
+            this.groupBox1.Location = new System.Drawing.Point(450, 78);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(94, 245);
+            this.groupBox1.TabIndex = 3;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Colors";
+            // 
+            // btnColor6
+            // 
+            this.btnColor6.Location = new System.Drawing.Point(13, 164);
+            this.btnColor6.Name = "btnColor6";
+            this.btnColor6.Size = new System.Drawing.Size(75, 23);
+            this.btnColor6.TabIndex = 0;
+            this.btnColor6.Text = "Color 6";
+            this.btnColor6.UseVisualStyleBackColor = true;
+            this.btnColor6.Click += new System.EventHandler(this.buttonColor_Click);
+            // 
+            // btnColor5
+            // 
+            this.btnColor5.Location = new System.Drawing.Point(13, 135);
+            this.btnColor5.Name = "btnColor5";
+            this.btnColor5.Size = new System.Drawing.Size(75, 23);
+            this.btnColor5.TabIndex = 0;
+            this.btnColor5.Text = "Color 5";
+            this.btnColor5.UseVisualStyleBackColor = true;
+            this.btnColor5.Click += new System.EventHandler(this.buttonColor_Click);
+            // 
+            // btnColor4
+            // 
+            this.btnColor4.Location = new System.Drawing.Point(13, 106);
+            this.btnColor4.Name = "btnColor4";
+            this.btnColor4.Size = new System.Drawing.Size(75, 23);
+            this.btnColor4.TabIndex = 0;
+            this.btnColor4.Text = "Color 4";
+            this.btnColor4.UseVisualStyleBackColor = true;
+            this.btnColor4.Click += new System.EventHandler(this.buttonColor_Click);
+            // 
+            // btnColor3
+            // 
+            this.btnColor3.Location = new System.Drawing.Point(13, 77);
+            this.btnColor3.Name = "btnColor3";
+            this.btnColor3.Size = new System.Drawing.Size(75, 23);
+            this.btnColor3.TabIndex = 0;
+            this.btnColor3.Text = "Color 3";
+            this.btnColor3.UseVisualStyleBackColor = true;
+            this.btnColor3.Click += new System.EventHandler(this.buttonColor_Click);
+            // 
+            // btnColor2
+            // 
+            this.btnColor2.Location = new System.Drawing.Point(13, 48);
+            this.btnColor2.Name = "btnColor2";
+            this.btnColor2.Size = new System.Drawing.Size(75, 23);
+            this.btnColor2.TabIndex = 0;
+            this.btnColor2.Text = "Color 2";
+            this.btnColor2.UseVisualStyleBackColor = true;
+            this.btnColor2.Click += new System.EventHandler(this.buttonColor_Click);
+            // 
+            // btnColor1
+            // 
+            this.btnColor1.Location = new System.Drawing.Point(13, 19);
+            this.btnColor1.Name = "btnColor1";
+            this.btnColor1.Size = new System.Drawing.Size(75, 23);
+            this.btnColor1.TabIndex = 0;
+            this.btnColor1.Text = "Color 1";
+            this.btnColor1.UseVisualStyleBackColor = true;
+            this.btnColor1.Click += new System.EventHandler(this.buttonColor_Click);
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(6, 170);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(427, 153);
+            this.dataGridView1.TabIndex = 2;
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -142,6 +260,16 @@
             this.label6.Size = new System.Drawing.Size(60, 13);
             this.label6.TabIndex = 1;
             this.label6.Text = "Parameters";
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(224, 13);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(34, 13);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Delay";
             // 
             // label4
             // 
@@ -192,7 +320,7 @@
             this.tabManual.Controls.Add(this.label1);
             this.tabManual.Controls.Add(this.btnClearText2);
             this.tabManual.Controls.Add(this.textBox2);
-            this.tabManual.Controls.Add(this.textBox1);
+            this.tabManual.Controls.Add(this.textBoxCustomSend);
             this.tabManual.Controls.Add(this.btnSend);
             this.tabManual.Location = new System.Drawing.Point(4, 22);
             this.tabManual.Name = "tabManual";
@@ -243,29 +371,16 @@
             this.textBox2.Size = new System.Drawing.Size(559, 217);
             this.textBox2.TabIndex = 1;
             // 
-            // textBox1
+            // textBoxCustomSend
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.textBoxCustomSend.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(6, 24);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(564, 20);
-            this.textBox1.TabIndex = 0;
-            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.AllowUserToDeleteRows = false;
-            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(6, 170);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(427, 153);
-            this.dataGridView1.TabIndex = 2;
+            this.textBoxCustomSend.Location = new System.Drawing.Point(6, 24);
+            this.textBoxCustomSend.Name = "textBoxCustomSend";
+            this.textBoxCustomSend.Size = new System.Drawing.Size(564, 20);
+            this.textBoxCustomSend.TabIndex = 0;
+            this.textBoxCustomSend.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // tabCPU
             // 
@@ -290,120 +405,6 @@
             this.labelNotImplemented.Text = "Not yet implemented!";
             this.labelNotImplemented.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.btnColor6);
-            this.groupBox1.Controls.Add(this.btnColor5);
-            this.groupBox1.Controls.Add(this.btnColor4);
-            this.groupBox1.Controls.Add(this.btnColor3);
-            this.groupBox1.Controls.Add(this.btnColor2);
-            this.groupBox1.Controls.Add(this.btnColor1);
-            this.groupBox1.Location = new System.Drawing.Point(450, 78);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(94, 245);
-            this.groupBox1.TabIndex = 3;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Colors";
-            // 
-            // btnColor1
-            // 
-            this.btnColor1.Location = new System.Drawing.Point(13, 19);
-            this.btnColor1.Name = "btnColor1";
-            this.btnColor1.Size = new System.Drawing.Size(75, 23);
-            this.btnColor1.TabIndex = 0;
-            this.btnColor1.Text = "Color 1";
-            this.btnColor1.UseVisualStyleBackColor = true;
-            this.btnColor1.Click += new System.EventHandler(this.buttonColor_Click);
-            // 
-            // btnColor2
-            // 
-            this.btnColor2.Location = new System.Drawing.Point(13, 48);
-            this.btnColor2.Name = "btnColor2";
-            this.btnColor2.Size = new System.Drawing.Size(75, 23);
-            this.btnColor2.TabIndex = 0;
-            this.btnColor2.Text = "Color 2";
-            this.btnColor2.UseVisualStyleBackColor = true;
-            this.btnColor2.Click += new System.EventHandler(this.buttonColor_Click);
-            // 
-            // btnColor3
-            // 
-            this.btnColor3.Location = new System.Drawing.Point(13, 77);
-            this.btnColor3.Name = "btnColor3";
-            this.btnColor3.Size = new System.Drawing.Size(75, 23);
-            this.btnColor3.TabIndex = 0;
-            this.btnColor3.Text = "Color 3";
-            this.btnColor3.UseVisualStyleBackColor = true;
-            this.btnColor3.Click += new System.EventHandler(this.buttonColor_Click);
-            // 
-            // btnColor4
-            // 
-            this.btnColor4.Location = new System.Drawing.Point(13, 106);
-            this.btnColor4.Name = "btnColor4";
-            this.btnColor4.Size = new System.Drawing.Size(75, 23);
-            this.btnColor4.TabIndex = 0;
-            this.btnColor4.Text = "Color 4";
-            this.btnColor4.UseVisualStyleBackColor = true;
-            this.btnColor4.Click += new System.EventHandler(this.buttonColor_Click);
-            // 
-            // btnColor5
-            // 
-            this.btnColor5.Location = new System.Drawing.Point(13, 135);
-            this.btnColor5.Name = "btnColor5";
-            this.btnColor5.Size = new System.Drawing.Size(75, 23);
-            this.btnColor5.TabIndex = 0;
-            this.btnColor5.Text = "Color 5";
-            this.btnColor5.UseVisualStyleBackColor = true;
-            this.btnColor5.Click += new System.EventHandler(this.buttonColor_Click);
-            // 
-            // btnColor6
-            // 
-            this.btnColor6.Location = new System.Drawing.Point(13, 164);
-            this.btnColor6.Name = "btnColor6";
-            this.btnColor6.Size = new System.Drawing.Size(75, 23);
-            this.btnColor6.TabIndex = 0;
-            this.btnColor6.Text = "Color 6";
-            this.btnColor6.UseVisualStyleBackColor = true;
-            this.btnColor6.Click += new System.EventHandler(this.buttonColor_Click);
-            // 
-            // btnSendColors
-            // 
-            this.btnSendColors.Location = new System.Drawing.Point(463, 29);
-            this.btnSendColors.Name = "btnSendColors";
-            this.btnSendColors.Size = new System.Drawing.Size(75, 23);
-            this.btnSendColors.TabIndex = 4;
-            this.btnSendColors.Text = "Send";
-            this.btnSendColors.UseVisualStyleBackColor = true;
-            this.btnSendColors.Click += new System.EventHandler(this.btnSendColors_Click);
-            // 
-            // textBoxDelay
-            // 
-            this.textBoxDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDelay.Location = new System.Drawing.Point(225, 29);
-            this.textBoxDelay.Name = "textBoxDelay";
-            this.textBoxDelay.Size = new System.Drawing.Size(89, 20);
-            this.textBoxDelay.TabIndex = 5;
-            // 
-            // label3
-            // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(224, 13);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(34, 13);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "Delay";
-            // 
-            // btnGetAll
-            // 
-            this.btnGetAll.Location = new System.Drawing.Point(358, 29);
-            this.btnGetAll.Name = "btnGetAll";
-            this.btnGetAll.Size = new System.Drawing.Size(75, 23);
-            this.btnGetAll.TabIndex = 6;
-            this.btnGetAll.Text = "Read all";
-            this.btnGetAll.UseVisualStyleBackColor = true;
-            this.btnGetAll.Click += new System.EventHandler(this.btnGetAll_Click);
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -419,11 +420,11 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPrograms.ResumeLayout(false);
             this.tabPrograms.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabManual.ResumeLayout(false);
             this.tabManual.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabCPU.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -437,7 +438,7 @@
         private System.Windows.Forms.TabPage tabPrograms;
         private System.Windows.Forms.Button btnClearText2;
         private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxCustomSend;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label4;

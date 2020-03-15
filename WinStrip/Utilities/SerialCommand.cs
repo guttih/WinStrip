@@ -8,16 +8,20 @@ namespace WinStrip.Utilities
 {
     public enum SerialCommand
     {
-        [Description("STATUS")     ] STATUS,
-        [Description("BUFFERSIZE") ] BUFFERSIZE,
-        [Description("SEPARATOR")  ] SEPARATOR,
-        [Description("POGRAMCOUNT")] POGRAMCOUNT,
-        [Description("PROGRAMINFO")] PROGRAMINFO,
-        [Description("ALLSTATUS")  ] ALLSTATUS,
-        [Description("COLORS")     ] COLORS,
-        [Description("VALUES")     ] VALUES,
-        [Description("PIXELCOUNT") ] PIXELCOUNT
-        
+        [Description("STATUS")      ] STATUS,
+        [Description("BUFFERSIZE")  ] BUFFERSIZE,
+        [Description("SEPARATOR")   ] SEPARATOR,
+        [Description("PROGRAMCOUNT")] PROGRAMCOUNT,
+        [Description("PROGRAMINFO") ] PROGRAMINFO,
+        [Description("ALLSTATUS")   ] ALLSTATUS,
+        [Description("COLORS")      ] COLORS,
+        [Description("VALUES")      ] VALUES,
+        [Description("PIXELCOUNT")  ] PIXELCOUNT,
+
+
+        //ADD NEW ITEMS BEFORE THIS LINE
+        [Description("COUNT OF SERIAL COMMANDS")] COUNT
+
     }
 
     public static class SerialCommandExtensions
@@ -44,7 +48,7 @@ namespace WinStrip.Utilities
                 case SerialCommand.STATUS     : return "OK".Equals(commandResponce);
                 case SerialCommand.SEPARATOR  : return commandResponce.Length == 1;
                 case SerialCommand.PIXELCOUNT:
-                case SerialCommand.POGRAMCOUNT:
+                case SerialCommand.PROGRAMCOUNT:
                 case SerialCommand.BUFFERSIZE : try {
 
                                                         int value = 0;

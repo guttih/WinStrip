@@ -22,7 +22,7 @@ SerialReader reader;
 
 
 
-#define NUM_LEDS 6 
+#define NUM_LEDS 20 
 
 #define CLOCK_PIN 13  /*green wire*/
 #define DATA_PIN  14  /*blue wire*/
@@ -56,6 +56,7 @@ enum COMMAND
     COMMAND_ALLSTATUS,
     COMMAND_COLORS,
     COMMAND_VALUES,
+    COMMAND_PIXELCOUNT,
     COMMAND_COUNT
 };
 
@@ -69,6 +70,7 @@ COMMAND_TEXT commands[COMMAND::COMMAND_COUNT] = {
     {"ALLSTATUS"},
     {"COLORS"},
     {"VALUES"},
+    {"PIXELCOUNT"}
 };
 
 
@@ -120,6 +122,8 @@ void runCommand(int cmd) {
                                     break;
         case COMMAND_VALUES:        Serial.println(stripper.getValuesAsJson());
             break;
+        case COMMAND_PIXELCOUNT:    Serial.println(stripper.getCount());
+            break;
     }
 }
 
@@ -135,14 +139,73 @@ int getCommand(const char *str) {
 
 void processJson(String str) {
     //Serial.println(str);
-    Json json(str.c_str());
-    if (json.isValid()) {
-        Serial.println(json.toString());
+    Json parser(str.c_str());
+    if (!parser.isValid()) {
+        //Serial.println("Invalid json string");
+        return;
     }
-    else {
-        Serial.println("Invalid json string");
-    }
+        
     
+    //Serial.println(parser.toString());
+    JsonData *root = parser.getRootObject();
+    if (root->getType() != JSONTYPE_OBJECT)
+        return;
+    
+
+
+    JsonData* current;
+    unsigned long ulCom, ulDelay, ulColor;
+    unsigned long stepDelay;
+    const int VARIABLE_COUNT = 3;
+    unsigned long values[VARIABLE_COUNT] = { 0,0,0 };
+    int i;
+
+    current = root->getChild("com");
+    if (current == NULL) { return; }
+    ulCom = current->getValueAsULong();
+
+    current = root->getChild("delay");
+    if (current == NULL) { return; }
+    ulDelay = current->getValueAsULong();
+
+
+    current = root->getChild("values");
+    if (current == NULL)
+        current = root->getChild("values");
+    if (current == NULL || current->getValueType() != JSONTYPE::JSONTYPE_ARRAY) { return; }
+    current = current->getChildAt(0);//we got the key, let's get the array
+    current = current->getChildAt(0);//now let's get the first item in the array
+
+    i = 0;
+    while (current && i < VARIABLE_COUNT) {
+        values[i] = current->getValueAsULong();
+        current = current->getNext();
+        i++;
+    }
+
+    current = root->getChild("colors");
+    if (current == NULL)
+        current = root->getChild("colors");
+    if (current == NULL || current->getValueType() != JSONTYPE::JSONTYPE_ARRAY) { return; }
+    //we got the key, let's get the array
+    current = current->getChildAt(0);
+    //now let's get the first item in the array
+    current = current->getChildAt(0);
+    i = 0;
+    while (current && i < COLOR_COUNT) {
+        ulColor = current->getValueAsULong();
+        stripper.setColorBank(i, stripper.decodeColor(ulColor));
+        current = current->getNext();
+        i++;
+    }
+
+    stripper.setNewValues((STRIP_PROGRAMS)ulCom, ulDelay, values[0], values[1], values[2]);
+
+    stripper.initProgram(stripper.getProgram());
+
+    /*if ((STRIP_PROGRAMS)ulCom == STRIP_PROGRAMS::RESET) {
+        devicePins.get(BRIGHTNESS_DEVICE_PIN)->setValue(stripper.getBrightness() * 4);
+    }*/
     
 }
 

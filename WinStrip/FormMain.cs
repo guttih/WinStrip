@@ -166,31 +166,6 @@ namespace WinStrip
         }
 
 
-        private void GetAllStatus()
-        {
-            var cmd = SerialCommand.ALLSTATUS.ToString();
-            serial.WriteLine(cmd);
-            var strBuffer = serial.ReadLine();
-            var serializer = new JavaScriptSerializer();
-            //programs = serializer.Deserialize<List<StripProgram>>(strBuffer);
-            AllStatus status = serializer.Deserialize<AllStatus>(strBuffer);
-            programs = status.programs;
-
-            textBoxDelay.Text = status.delay.ToString();
-            
-            btnColor1.BackColor = new SColor(status.colors[0]).Color;
-            btnColor2.BackColor = new SColor(status.colors[1]).Color;
-            btnColor3.BackColor = new SColor(status.colors[2]).Color;
-            btnColor4.BackColor = new SColor(status.colors[3]).Color;
-            btnColor5.BackColor = new SColor(status.colors[4]).Color;
-            btnColor6.BackColor = new SColor(status.colors[5]).Color;
-
-            
-            comboPrograms.Items.Clear();
-            programs.ForEach(m => comboPrograms.Items.Add(m.name));
-            comboPrograms.SelectedIndex = status.com;
-        }
-
         private void btnGetAll_Click(object sender, EventArgs e)
         {
             GetAllStatus();
@@ -231,11 +206,6 @@ namespace WinStrip
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void buttonColor_Click(object sender, EventArgs e)
         {
             Button button = (Button)sender;
@@ -246,5 +216,90 @@ namespace WinStrip
                 button.BackColor = colorDialog1.Color;
             }
         }
+
+
+        private void GetAllStatus()
+        {
+            var cmd = SerialCommand.ALLSTATUS.ToString();
+            serial.WriteLine(cmd);
+            var strBuffer = serial.ReadLine();
+            var serializer = new JavaScriptSerializer();
+            //programs = serializer.Deserialize<List<StripProgram>>(strBuffer);
+            AllStatus status = serializer.Deserialize<AllStatus>(strBuffer);
+            programs = status.programs;
+
+            textBoxDelay.Text = status.delay.ToString();
+
+            btnColor1.BackColor = new SColor(status.colors[0]).Color;
+            btnColor2.BackColor = new SColor(status.colors[1]).Color;
+            btnColor3.BackColor = new SColor(status.colors[2]).Color;
+            btnColor4.BackColor = new SColor(status.colors[3]).Color;
+            btnColor5.BackColor = new SColor(status.colors[4]).Color;
+            btnColor6.BackColor = new SColor(status.colors[5]).Color;
+
+            comboPrograms.Items.Clear();
+            programs.ForEach(m => comboPrograms.Items.Add(m.name));
+            comboPrograms.SelectedIndex = status.com;
+        }
+
+        private void btnSendColors_Click(object sender, EventArgs e)
+        {
+
+            var values = new StripValues
+            {
+                com = comboPrograms.SelectedIndex,
+                delay = SaveStringToInt(textBoxDelay.Text),
+                colors = GetButtonColors(),
+                values = GetValues()
+            };
+
+            var serializer = new JavaScriptSerializer();
+            var str = serializer.Serialize(values);
+            serial.WriteLine(str);
+
+        }
+
+        private List<int> GetValues()
+        {
+            List<int> list = new List<int>();
+            foreach(DataGridViewRow row in dataGridView1.Rows)
+            {   
+                list.Add(SaveStringToInt(row.Cells[1].Value.ToString()));
+            }
+            return list;
+
+        }
+
+        private List<ulong> GetButtonColors()
+        {
+            List<ulong> list = new List<ulong>();
+            list.Add((new SColor(btnColor1.BackColor)).ToUlong());
+            list.Add((new SColor(btnColor2.BackColor)).ToUlong());
+            list.Add((new SColor(btnColor3.BackColor)).ToUlong());
+            list.Add((new SColor(btnColor4.BackColor)).ToUlong());
+            list.Add((new SColor(btnColor5.BackColor)).ToUlong());
+            return list;
+        }
+
+        /// <summary>
+        /// Converts string to int.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns>Success: the converted number.  Fail: 0</returns>
+        private int SaveStringToInt(string text)
+        {
+            try
+            {
+
+                int value = 0;
+                int.TryParse(text, out value);
+                return value;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
     }
 }

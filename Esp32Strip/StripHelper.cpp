@@ -108,7 +108,7 @@ int StripHelper::stepDown() {
     fixStep();
     return step;
 }
-
+// Number of pixels in a strip
 int StripHelper::getCount() {
     return ledCount;
 }
@@ -206,7 +206,7 @@ String StripHelper::getProgramDescription(STRIP_PROGRAMS stripProgram) {
     case STARS: return "Color 0 is the color of a start pixel.  Color 1 is the background color.";
     case RAINBOW: return "There is no change if both values are 0.  Try changing them to figure out what you like.  The program is very versatile. Test and see :)";
     case CYLON: return "Multiple color will flow down the strip.";
-    case SECTIONS: return "Dived the strip to 4 color sections.  Possbile colors are from 0-4. Color 0 is for section 1, color 1 is for section 2 and so on.";
+    case SECTIONS: return "Divide the strip into four color sections.  Possbile colors are from 0-4. Color 0 is for section 1, color 1 is for section 2 and so on.";
     }
     return "This program is one of the available program.  The possible programs are only from 0 to " + String(((int)STRIP_PROGRAMS::STRIP_PROGRAMS_COUNT) - 1) + ".";
 }

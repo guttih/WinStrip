@@ -15,7 +15,9 @@ namespace WinStrip.Utilities
         [Description("PROGRAMINFO")] PROGRAMINFO,
         [Description("ALLSTATUS")  ] ALLSTATUS,
         [Description("COLORS")     ] COLORS,
-        [Description("VALUES")     ] VALUES
+        [Description("VALUES")     ] VALUES,
+        [Description("PIXELCOUNT") ] PIXELCOUNT
+        
     }
 
     public static class SerialCommandExtensions
@@ -41,7 +43,7 @@ namespace WinStrip.Utilities
             {
                 case SerialCommand.STATUS     : return "OK".Equals(commandResponce);
                 case SerialCommand.SEPARATOR  : return commandResponce.Length == 1;
-
+                case SerialCommand.PIXELCOUNT:
                 case SerialCommand.POGRAMCOUNT:
                 case SerialCommand.BUFFERSIZE : try {
 
@@ -53,6 +55,16 @@ namespace WinStrip.Utilities
                                                     {
                                                         return false;
                                                     }
+                
+
+                /* these are json responces, we could check by try serialize but it takes time */
+
+                case SerialCommand.COLORS:      return commandResponce[0] == '[' && commandResponce.EndsWith("]");
+
+                case SerialCommand.PROGRAMINFO:
+                case SerialCommand.ALLSTATUS:
+                case SerialCommand.VALUES:
+                                                return commandResponce[0] == '{' && commandResponce.EndsWith("}");
 
             }
             return false;

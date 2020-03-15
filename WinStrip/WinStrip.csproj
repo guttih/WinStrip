@@ -48,6 +48,7 @@
     <Compile Include="Entity\AllStatus.cs" />
     <Compile Include="Entity\ProgramParameter.cs" />
     <Compile Include="Entity\StripProgram.cs" />
+    <Compile Include="Entity\StripValues.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>

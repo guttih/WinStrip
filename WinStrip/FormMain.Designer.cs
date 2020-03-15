@@ -55,7 +55,6 @@
             this.btnColor4 = new System.Windows.Forms.Button();
             this.btnColor5 = new System.Windows.Forms.Button();
             this.btnColor6 = new System.Windows.Forms.Button();
-            this.btnSendAllValues = new System.Windows.Forms.Button();
             this.btnSendColors = new System.Windows.Forms.Button();
             this.textBoxDelay = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -71,7 +70,7 @@
             // btnSend
             // 
             this.btnSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSend.Location = new System.Drawing.Point(291, 284);
+            this.btnSend.Location = new System.Drawing.Point(495, 300);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(75, 23);
             this.btnSend.TabIndex = 0;
@@ -117,9 +116,9 @@
             // tabPrograms
             // 
             this.tabPrograms.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPrograms.Controls.Add(this.btnSendColors);
             this.tabPrograms.Controls.Add(this.btnGetAll);
             this.tabPrograms.Controls.Add(this.textBoxDelay);
-            this.tabPrograms.Controls.Add(this.btnSendAllValues);
             this.tabPrograms.Controls.Add(this.groupBox1);
             this.tabPrograms.Controls.Add(this.dataGridView1);
             this.tabPrograms.Controls.Add(this.label6);
@@ -198,7 +197,7 @@
             this.tabManual.Location = new System.Drawing.Point(4, 22);
             this.tabManual.Name = "tabManual";
             this.tabManual.Padding = new System.Windows.Forms.Padding(3);
-            this.tabManual.Size = new System.Drawing.Size(372, 313);
+            this.tabManual.Size = new System.Drawing.Size(576, 329);
             this.tabManual.TabIndex = 0;
             this.tabManual.Text = "Manual";
             // 
@@ -223,7 +222,7 @@
             // btnClearText2
             // 
             this.btnClearText2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnClearText2.Location = new System.Drawing.Point(11, 284);
+            this.btnClearText2.Location = new System.Drawing.Point(11, 300);
             this.btnClearText2.Name = "btnClearText2";
             this.btnClearText2.Size = new System.Drawing.Size(75, 23);
             this.btnClearText2.TabIndex = 2;
@@ -241,7 +240,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
             this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox2.Size = new System.Drawing.Size(355, 201);
+            this.textBox2.Size = new System.Drawing.Size(559, 217);
             this.textBox2.TabIndex = 1;
             // 
             // textBox1
@@ -251,7 +250,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBox1.Location = new System.Drawing.Point(6, 24);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(360, 20);
+            this.textBox1.Size = new System.Drawing.Size(564, 20);
             this.textBox1.TabIndex = 0;
             this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
@@ -276,7 +275,7 @@
             this.tabCPU.Location = new System.Drawing.Point(4, 22);
             this.tabCPU.Name = "tabCPU";
             this.tabCPU.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCPU.Size = new System.Drawing.Size(452, 329);
+            this.tabCPU.Size = new System.Drawing.Size(576, 329);
             this.tabCPU.TabIndex = 2;
             this.tabCPU.Text = "CPU monitoring";
             // 
@@ -286,7 +285,7 @@
             this.labelNotImplemented.Font = new System.Drawing.Font("Segoe Print", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelNotImplemented.Location = new System.Drawing.Point(3, 3);
             this.labelNotImplemented.Name = "labelNotImplemented";
-            this.labelNotImplemented.Size = new System.Drawing.Size(446, 323);
+            this.labelNotImplemented.Size = new System.Drawing.Size(570, 323);
             this.labelNotImplemented.TabIndex = 0;
             this.labelNotImplemented.Text = "Not yet implemented!";
             this.labelNotImplemented.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -294,7 +293,6 @@
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.btnSendColors);
             this.groupBox1.Controls.Add(this.btnColor6);
             this.groupBox1.Controls.Add(this.btnColor5);
             this.groupBox1.Controls.Add(this.btnColor4);
@@ -368,24 +366,15 @@
             this.btnColor6.UseVisualStyleBackColor = true;
             this.btnColor6.Click += new System.EventHandler(this.buttonColor_Click);
             // 
-            // btnSendAllValues
-            // 
-            this.btnSendAllValues.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSendAllValues.Location = new System.Drawing.Point(463, 29);
-            this.btnSendAllValues.Name = "btnSendAllValues";
-            this.btnSendAllValues.Size = new System.Drawing.Size(75, 23);
-            this.btnSendAllValues.TabIndex = 4;
-            this.btnSendAllValues.Text = "Send all";
-            this.btnSendAllValues.UseVisualStyleBackColor = true;
-            // 
             // btnSendColors
             // 
-            this.btnSendColors.Location = new System.Drawing.Point(13, 205);
+            this.btnSendColors.Location = new System.Drawing.Point(463, 29);
             this.btnSendColors.Name = "btnSendColors";
             this.btnSendColors.Size = new System.Drawing.Size(75, 23);
             this.btnSendColors.TabIndex = 4;
             this.btnSendColors.Text = "Send";
             this.btnSendColors.UseVisualStyleBackColor = true;
+            this.btnSendColors.Click += new System.EventHandler(this.btnSendColors_Click);
             // 
             // textBoxDelay
             // 
@@ -467,7 +456,6 @@
         private System.Windows.Forms.Button btnColor4;
         private System.Windows.Forms.Button btnColor3;
         private System.Windows.Forms.Button btnColor2;
-        private System.Windows.Forms.Button btnSendAllValues;
         private System.Windows.Forms.Button btnSendColors;
         private System.Windows.Forms.TextBox textBoxDelay;
         private System.Windows.Forms.Label label3;

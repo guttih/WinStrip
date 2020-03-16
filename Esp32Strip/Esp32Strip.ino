@@ -23,16 +23,16 @@ SerialReader reader;
 
 
 #define NUM_LEDS 20 
-
 #define CLOCK_PIN 13  /*green wire*/
 #define DATA_PIN  14  /*blue wire*/
-
-
-// Strip type and scheme
-
-/*WS2801*/
+/*
 #define STRIP_TYPE WS2801
 #define COLOR_SCHEME RBG
+*/
+
+#define STRIP_TYPE APA102
+#define COLOR_SCHEME BGR 
+
 
 #define BRIGHTNESS_DEVICE_PIN 15
 
@@ -154,7 +154,7 @@ void processJson(String str) {
 
 
     JsonData* current;
-    unsigned long ulCom, ulDelay, ulColor;
+    unsigned long ulCom, ulDelay, ulBrightness, ulColor;
     unsigned long stepDelay;
     const int VARIABLE_COUNT = 3;
     unsigned long values[VARIABLE_COUNT] = { 0,0,0 };
@@ -167,6 +167,10 @@ void processJson(String str) {
     current = root->getChild("delay");
     if (current == NULL) { return; }
     ulDelay = current->getValueAsULong();
+
+    current = root->getChild("brightness");
+    if (current == NULL) { return; }
+    ulBrightness = current->getValueAsULong();
 
 
     current = root->getChild("values");
@@ -200,7 +204,7 @@ void processJson(String str) {
     }
 
     stripper.setNewValues((STRIP_PROGRAMS)ulCom, ulDelay, values[0], values[1], values[2]);
-
+    stripper.setBrightness(ulBrightness);
     stripper.initProgram(stripper.getProgram());
 
     /*if ((STRIP_PROGRAMS)ulCom == STRIP_PROGRAMS::RESET) {
@@ -232,6 +236,8 @@ void processNewString() {
 }
 
 void stripInit() {
+    pinMode(DATA_PIN, OUTPUT);
+    pinMode(CLOCK_PIN, OUTPUT);
     FastLED.addLeds<STRIP_TYPE, DATA_PIN, CLOCK_PIN, COLOR_SCHEME>(leds, NUM_LEDS);
     stripper.initialize(&FastLED);
     Serial.println("- - - - - - - -     Available strip commands     - - - - - - - -");
@@ -243,7 +249,9 @@ void stripInit() {
 void setup() {
     // initialize serial:
     Serial.begin(500000);
-    
+    while (!Serial) {
+        ; // wait for serial port to connect. Needed for native USB port only
+    }
     // reserve 200 bytes for the inputString:
     Serial.println("Max string length is " + reader.getMaxLength());
     if (reader.getMaxLength() > 255) {

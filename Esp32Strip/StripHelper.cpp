@@ -343,6 +343,7 @@ String StripHelper::getValuesAsJson() {
 
     ret +=       MakeJsonKeyVal("delay", String(stepDelay));
     ret += "," + MakeJsonKeyVal("com", String(program));
+    ret += "," + MakeJsonKeyVal("brightness", String(getBrightness()));
     ret += "," + MakeJsonKeyVal("values", "[" + String(value1) + "," + String(value2) + "," + String(value3) + "]");
     ret += "}";
     return ret;
@@ -356,6 +357,7 @@ String StripHelper::toJson() {
     ret += MakeJsonKeyVal("programs", getAllProgramInfosAsJsonArray());
     ret += "," + MakeJsonKeyVal("delay", String(stepDelay));
     ret += "," + MakeJsonKeyVal("com", String(program));
+    ret += "," + MakeJsonKeyVal("brightness", String(getBrightness()));
     ret += "," + MakeJsonKeyVal("values", "[" + String(value1) + "," + String(value2) + "," + String(value3) + "]");
     ret += ",\"colors\":" + getColorsAsJson();
 

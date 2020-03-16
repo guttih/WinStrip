@@ -33,7 +33,10 @@
             this.labelStatus = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPrograms = new System.Windows.Forms.TabPage();
-            this.btnSendColors = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.TrackBarBrightness = new System.Windows.Forms.TrackBar();
+            this.NumericUpDownBrightness = new System.Windows.Forms.NumericUpDown();
+            this.btnSendAll = new System.Windows.Forms.Button();
             this.btnGetAll = new System.Windows.Forms.Button();
             this.textBoxDelay = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -61,6 +64,9 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.tabControl1.SuspendLayout();
             this.tabPrograms.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TrackBarBrightness)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownBrightness)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabManual.SuspendLayout();
@@ -70,7 +76,7 @@
             // btnSend
             // 
             this.btnSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSend.Location = new System.Drawing.Point(495, 300);
+            this.btnSend.Location = new System.Drawing.Point(578, 333);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(75, 23);
             this.btnSend.TabIndex = 0;
@@ -83,7 +89,7 @@
             this.comboPorts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.comboPorts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboPorts.FormattingEnabled = true;
-            this.comboPorts.Location = new System.Drawing.Point(23, 374);
+            this.comboPorts.Location = new System.Drawing.Point(23, 407);
             this.comboPorts.Name = "comboPorts";
             this.comboPorts.Size = new System.Drawing.Size(92, 21);
             this.comboPorts.TabIndex = 8;
@@ -91,9 +97,9 @@
             // labelStatus
             // 
             this.labelStatus.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.labelStatus.Location = new System.Drawing.Point(0, 406);
+            this.labelStatus.Location = new System.Drawing.Point(0, 439);
             this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(609, 20);
+            this.labelStatus.Size = new System.Drawing.Size(697, 20);
             this.labelStatus.TabIndex = 9;
             this.labelStatus.Text = "labelStatus labelStatus labelStatus labelStatus labelStatus labelStatus labelStat" +
     "us labelStatus labelStatus labelStatus labelStatus labelStatus labelStatus label" +
@@ -110,13 +116,14 @@
             this.tabControl1.Location = new System.Drawing.Point(13, 13);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(584, 355);
+            this.tabControl1.Size = new System.Drawing.Size(672, 388);
             this.tabControl1.TabIndex = 10;
             // 
             // tabPrograms
             // 
             this.tabPrograms.BackColor = System.Drawing.SystemColors.Control;
-            this.tabPrograms.Controls.Add(this.btnSendColors);
+            this.tabPrograms.Controls.Add(this.groupBox2);
+            this.tabPrograms.Controls.Add(this.btnSendAll);
             this.tabPrograms.Controls.Add(this.btnGetAll);
             this.tabPrograms.Controls.Add(this.textBoxDelay);
             this.tabPrograms.Controls.Add(this.groupBox1);
@@ -130,23 +137,61 @@
             this.tabPrograms.Location = new System.Drawing.Point(4, 22);
             this.tabPrograms.Name = "tabPrograms";
             this.tabPrograms.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPrograms.Size = new System.Drawing.Size(576, 329);
+            this.tabPrograms.Size = new System.Drawing.Size(664, 362);
             this.tabPrograms.TabIndex = 1;
             this.tabPrograms.Text = "Programs";
             // 
-            // btnSendColors
+            // groupBox2
             // 
-            this.btnSendColors.Location = new System.Drawing.Point(463, 29);
-            this.btnSendColors.Name = "btnSendColors";
-            this.btnSendColors.Size = new System.Drawing.Size(75, 23);
-            this.btnSendColors.TabIndex = 4;
-            this.btnSendColors.Text = "Send";
-            this.btnSendColors.UseVisualStyleBackColor = true;
-            this.btnSendColors.Click += new System.EventHandler(this.btnSendColors_Click);
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.TrackBarBrightness);
+            this.groupBox2.Controls.Add(this.NumericUpDownBrightness);
+            this.groupBox2.Location = new System.Drawing.Point(559, 78);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(94, 212);
+            this.groupBox2.TabIndex = 10;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Brightness";
+            // 
+            // TrackBarBrightness
+            // 
+            this.TrackBarBrightness.Location = new System.Drawing.Point(28, 19);
+            this.TrackBarBrightness.Maximum = 255;
+            this.TrackBarBrightness.Name = "TrackBarBrightness";
+            this.TrackBarBrightness.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.TrackBarBrightness.Size = new System.Drawing.Size(45, 147);
+            this.TrackBarBrightness.TabIndex = 7;
+            this.TrackBarBrightness.Value = 1;
+            this.TrackBarBrightness.ValueChanged += new System.EventHandler(this.trackBarBrightness_ValueChanged);
+            // 
+            // NumericUpDownBrightness
+            // 
+            this.NumericUpDownBrightness.Location = new System.Drawing.Point(28, 177);
+            this.NumericUpDownBrightness.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.NumericUpDownBrightness.Name = "NumericUpDownBrightness";
+            this.NumericUpDownBrightness.Size = new System.Drawing.Size(45, 20);
+            this.NumericUpDownBrightness.TabIndex = 8;
+            this.NumericUpDownBrightness.ValueChanged += new System.EventHandler(this.BrightnessSpinner_ValueChanged);
+            // 
+            // btnSendAll
+            // 
+            this.btnSendAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSendAll.Location = new System.Drawing.Point(578, 333);
+            this.btnSendAll.Name = "btnSendAll";
+            this.btnSendAll.Size = new System.Drawing.Size(75, 23);
+            this.btnSendAll.TabIndex = 4;
+            this.btnSendAll.Text = "Send";
+            this.btnSendAll.UseVisualStyleBackColor = true;
+            this.btnSendAll.Click += new System.EventHandler(this.btnSendAll_Click);
             // 
             // btnGetAll
             // 
-            this.btnGetAll.Location = new System.Drawing.Point(358, 29);
+            this.btnGetAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGetAll.Location = new System.Drawing.Point(578, 29);
             this.btnGetAll.Name = "btnGetAll";
             this.btnGetAll.Size = new System.Drawing.Size(75, 23);
             this.btnGetAll.TabIndex = 6;
@@ -157,7 +202,7 @@
             // textBoxDelay
             // 
             this.textBoxDelay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDelay.Location = new System.Drawing.Point(225, 29);
+            this.textBoxDelay.Location = new System.Drawing.Point(444, 29);
             this.textBoxDelay.Name = "textBoxDelay";
             this.textBoxDelay.Size = new System.Drawing.Size(89, 20);
             this.textBoxDelay.TabIndex = 5;
@@ -172,16 +217,16 @@
             this.groupBox1.Controls.Add(this.btnColor3);
             this.groupBox1.Controls.Add(this.btnColor2);
             this.groupBox1.Controls.Add(this.btnColor1);
-            this.groupBox1.Location = new System.Drawing.Point(450, 78);
+            this.groupBox1.Location = new System.Drawing.Point(446, 78);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(94, 245);
+            this.groupBox1.Size = new System.Drawing.Size(94, 212);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Colors";
             // 
             // btnColor6
             // 
-            this.btnColor6.Location = new System.Drawing.Point(13, 164);
+            this.btnColor6.Location = new System.Drawing.Point(10, 174);
             this.btnColor6.Name = "btnColor6";
             this.btnColor6.Size = new System.Drawing.Size(75, 23);
             this.btnColor6.TabIndex = 0;
@@ -191,7 +236,7 @@
             // 
             // btnColor5
             // 
-            this.btnColor5.Location = new System.Drawing.Point(13, 135);
+            this.btnColor5.Location = new System.Drawing.Point(10, 143);
             this.btnColor5.Name = "btnColor5";
             this.btnColor5.Size = new System.Drawing.Size(75, 23);
             this.btnColor5.TabIndex = 0;
@@ -201,7 +246,7 @@
             // 
             // btnColor4
             // 
-            this.btnColor4.Location = new System.Drawing.Point(13, 106);
+            this.btnColor4.Location = new System.Drawing.Point(10, 112);
             this.btnColor4.Name = "btnColor4";
             this.btnColor4.Size = new System.Drawing.Size(75, 23);
             this.btnColor4.TabIndex = 0;
@@ -211,7 +256,7 @@
             // 
             // btnColor3
             // 
-            this.btnColor3.Location = new System.Drawing.Point(13, 77);
+            this.btnColor3.Location = new System.Drawing.Point(10, 81);
             this.btnColor3.Name = "btnColor3";
             this.btnColor3.Size = new System.Drawing.Size(75, 23);
             this.btnColor3.TabIndex = 0;
@@ -221,7 +266,7 @@
             // 
             // btnColor2
             // 
-            this.btnColor2.Location = new System.Drawing.Point(13, 48);
+            this.btnColor2.Location = new System.Drawing.Point(10, 50);
             this.btnColor2.Name = "btnColor2";
             this.btnColor2.Size = new System.Drawing.Size(75, 23);
             this.btnColor2.TabIndex = 0;
@@ -231,7 +276,7 @@
             // 
             // btnColor1
             // 
-            this.btnColor1.Location = new System.Drawing.Point(13, 19);
+            this.btnColor1.Location = new System.Drawing.Point(10, 19);
             this.btnColor1.Name = "btnColor1";
             this.btnColor1.Size = new System.Drawing.Size(75, 23);
             this.btnColor1.TabIndex = 0;
@@ -249,7 +294,7 @@
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(6, 170);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(427, 153);
+            this.dataGridView1.Size = new System.Drawing.Size(421, 120);
             this.dataGridView1.TabIndex = 2;
             // 
             // label6
@@ -265,7 +310,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(224, 13);
+            this.label3.Location = new System.Drawing.Point(443, 13);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(34, 13);
             this.label3.TabIndex = 1;
@@ -296,7 +341,7 @@
             this.labelDescription.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.labelDescription.Location = new System.Drawing.Point(7, 78);
             this.labelDescription.Name = "labelDescription";
-            this.labelDescription.Size = new System.Drawing.Size(426, 58);
+            this.labelDescription.Size = new System.Drawing.Size(420, 58);
             this.labelDescription.TabIndex = 1;
             this.labelDescription.Text = "label3";
             // 
@@ -309,7 +354,7 @@
             this.comboPrograms.FormattingEnabled = true;
             this.comboPrograms.Location = new System.Drawing.Point(7, 29);
             this.comboPrograms.Name = "comboPrograms";
-            this.comboPrograms.Size = new System.Drawing.Size(201, 21);
+            this.comboPrograms.Size = new System.Drawing.Size(420, 21);
             this.comboPrograms.TabIndex = 0;
             this.comboPrograms.SelectedIndexChanged += new System.EventHandler(this.comboPrograms_SelectedIndexChanged);
             // 
@@ -325,7 +370,7 @@
             this.tabManual.Location = new System.Drawing.Point(4, 22);
             this.tabManual.Name = "tabManual";
             this.tabManual.Padding = new System.Windows.Forms.Padding(3);
-            this.tabManual.Size = new System.Drawing.Size(576, 329);
+            this.tabManual.Size = new System.Drawing.Size(664, 362);
             this.tabManual.TabIndex = 0;
             this.tabManual.Text = "Manual";
             // 
@@ -350,7 +395,7 @@
             // btnClearText2
             // 
             this.btnClearText2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnClearText2.Location = new System.Drawing.Point(11, 300);
+            this.btnClearText2.Location = new System.Drawing.Point(11, 333);
             this.btnClearText2.Name = "btnClearText2";
             this.btnClearText2.Size = new System.Drawing.Size(75, 23);
             this.btnClearText2.TabIndex = 2;
@@ -368,7 +413,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
             this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox2.Size = new System.Drawing.Size(559, 217);
+            this.textBox2.Size = new System.Drawing.Size(647, 250);
             this.textBox2.TabIndex = 1;
             // 
             // textBoxCustomSend
@@ -378,7 +423,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCustomSend.Location = new System.Drawing.Point(6, 24);
             this.textBoxCustomSend.Name = "textBoxCustomSend";
-            this.textBoxCustomSend.Size = new System.Drawing.Size(564, 20);
+            this.textBoxCustomSend.Size = new System.Drawing.Size(652, 20);
             this.textBoxCustomSend.TabIndex = 0;
             this.textBoxCustomSend.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
@@ -390,7 +435,7 @@
             this.tabCPU.Location = new System.Drawing.Point(4, 22);
             this.tabCPU.Name = "tabCPU";
             this.tabCPU.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCPU.Size = new System.Drawing.Size(576, 329);
+            this.tabCPU.Size = new System.Drawing.Size(664, 362);
             this.tabCPU.TabIndex = 2;
             this.tabCPU.Text = "CPU monitoring";
             // 
@@ -400,7 +445,7 @@
             this.labelNotImplemented.Font = new System.Drawing.Font("Segoe Print", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelNotImplemented.Location = new System.Drawing.Point(3, 3);
             this.labelNotImplemented.Name = "labelNotImplemented";
-            this.labelNotImplemented.Size = new System.Drawing.Size(570, 323);
+            this.labelNotImplemented.Size = new System.Drawing.Size(658, 356);
             this.labelNotImplemented.TabIndex = 0;
             this.labelNotImplemented.Text = "Not yet implemented!";
             this.labelNotImplemented.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -409,7 +454,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(609, 426);
+            this.ClientSize = new System.Drawing.Size(697, 459);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.comboPorts);
@@ -420,6 +465,10 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPrograms.ResumeLayout(false);
             this.tabPrograms.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TrackBarBrightness)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumericUpDownBrightness)).EndInit();
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabManual.ResumeLayout(false);
@@ -457,10 +506,13 @@
         private System.Windows.Forms.Button btnColor4;
         private System.Windows.Forms.Button btnColor3;
         private System.Windows.Forms.Button btnColor2;
-        private System.Windows.Forms.Button btnSendColors;
+        private System.Windows.Forms.Button btnSendAll;
         private System.Windows.Forms.TextBox textBoxDelay;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnGetAll;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.TrackBar TrackBarBrightness;
+        private System.Windows.Forms.NumericUpDown NumericUpDownBrightness;
     }
 }
 

@@ -81,8 +81,6 @@ namespace WinStrip
         {
             var text = textBoxCustomSend.Text;
 
-            //var json = new JavaScriptSerializer().Serialize(cmd);
-
             serial.WriteLine(text);
             try { 
                 textBox2.Text += "\r\n"+ serial.ReadLine();
@@ -233,6 +231,7 @@ namespace WinStrip
             if (colorDialog1.ShowDialog() == DialogResult.OK)
             {
                 button.BackColor = colorDialog1.Color;
+                btnSendAll_Click(sender, null);
             }
         }
 
@@ -243,7 +242,6 @@ namespace WinStrip
             serial.WriteLine(cmd);
             var strBuffer = serial.ReadLine();
             var serializer = new JavaScriptSerializer();
-            //programs = serializer.Deserialize<List<StripProgram>>(strBuffer);
             AllStatus status = serializer.Deserialize<AllStatus>(strBuffer);
             programs = status.programs;
 
@@ -259,9 +257,11 @@ namespace WinStrip
             comboPrograms.Items.Clear();
             programs.ForEach(m => comboPrograms.Items.Add(m.name));
             comboPrograms.SelectedIndex = status.com;
+            TrackBarBrightness.Value = status.brightness;
+            NumericUpDownBrightness.Value = status.brightness;
         }
 
-        private void btnSendColors_Click(object sender, EventArgs e)
+        private void btnSendAll_Click(object sender, EventArgs e)
         {
 
             var values = new StripValues
@@ -269,7 +269,8 @@ namespace WinStrip
                 com = comboPrograms.SelectedIndex,
                 delay = SaveStringToInt(textBoxDelay.Text),
                 colors = GetButtonColors(),
-                values = GetValues()
+                values = GetValues(),
+                brightness = TrackBarBrightness.Value
             };
 
             var serializer = new JavaScriptSerializer();
@@ -324,7 +325,31 @@ namespace WinStrip
         {
             if (e.KeyCode == Keys.Enter)
             {
-                btnSendColors_Click(sender, null);
+                btnSendAll_Click(sender, null);
+            }
+        }
+
+        private void trackBarBrightness_ValueChanged(object sender, EventArgs e)
+        {
+            if (sender.GetType().Name == "TrackBar")
+            {
+                NumericUpDownBrightness.Value = TrackBarBrightness.Value;
+                btnSendAll_Click(sender, null);
+            }
+            else if (sender.GetType().Name == "NumericUpDown")
+            {
+                TrackBarBrightness.Value = (int)NumericUpDownBrightness.Value;
+            }
+        }
+
+        private void BrightnessSpinner_ValueChanged(object sender, EventArgs e)
+        { 
+            if (sender.GetType().Name == "TrackBar")
+            {
+                NumericUpDownBrightness.Value = TrackBarBrightness.Value;
+            } else if (sender.GetType().Name == "NumericUpDown")
+            {
+                TrackBarBrightness.Value  = (int)NumericUpDownBrightness.Value;
             }
         }
     }

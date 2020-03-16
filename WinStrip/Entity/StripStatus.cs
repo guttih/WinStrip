@@ -5,7 +5,7 @@ using System.Text;
 
 namespace WinStrip.Entity
 {
-    public class AllStatus
+    public class StripStatus
     {
         public List <StripProgram> programs { get; set; }
         public int delay { get; set; }

@@ -20,12 +20,24 @@ namespace WinStrip
         Serial serial;
         List<StripProgram> programs;
         List<ProgramParameter> parameters;
+        public int PortSpeed { get; set; }
+        
         public FormMain()
         {
+
+            PortSpeed = 500000;
             InitializeComponent();
 
             serial = new Serial();
             parameters = new List<ProgramParameter>();
+
+            textBoxCustomSend.ContextMenu = new ContextMenu();
+            for (SerialCommand i = 0; i < SerialCommand.COUNT; i++)
+            {
+
+                MenuItem item = textBoxCustomSend.ContextMenu.MenuItems.Add(i.ToString());
+                item.Click += new EventHandler(textBoxCustomSenditem_Click);
+            }
         }
 
         void textBoxCustomSenditem_Click(object sender, EventArgs e)
@@ -34,40 +46,16 @@ namespace WinStrip
             textBoxCustomSend.Text = clickedItem.Text;
         }
 
-        private void PopulateDataGrid()
+
+        private void ShowAndSetParamNames()
         {
-
-            textBoxCustomSend.ContextMenu = new ContextMenu();
-            for(SerialCommand i = 0; i<SerialCommand.COUNT; i++)
-            {
-
-                MenuItem item = textBoxCustomSend.ContextMenu.MenuItems.Add(i.ToString());
-                item.Click += new EventHandler(textBoxCustomSenditem_Click);
-            }
+            groupBoxValue1.Visible = parameters.Count > 0;
+            groupBoxValue2.Visible = parameters.Count > 1;
+            groupBoxValue3.Visible = parameters.Count > 2;
             
-
-
-
-            dataGridView1.Rows.Clear();
-            dataGridView1.Columns.Clear();
-            dataGridView1.Columns.Add("name", "Name");
-            dataGridView1.Columns.Add("value", "Value");
-            
-            var col = dataGridView1.Columns[0];
-            col.ReadOnly = true;
-            col.MinimumWidth = 160;
-            col.SortMode = DataGridViewColumnSortMode.NotSortable;
-
-            col = dataGridView1.Columns[1];
-            dataGridView1.Columns[1].ReadOnly = false;
-            col.SortMode = DataGridViewColumnSortMode.NotSortable;
-
-
-            foreach (var param in parameters)
-            {
-                dataGridView1.Rows.Add(new string[] { param.Name, param.Value.ToString() });
-            }
-            
+            if (groupBoxValue1.Visible) groupBoxValue1.Text = parameters[0].Name;
+            if (groupBoxValue2.Visible) groupBoxValue2.Text = parameters[1].Name;
+            if (groupBoxValue3.Visible) groupBoxValue3.Text = parameters[2].Name;
 
         }
 
@@ -75,6 +63,16 @@ namespace WinStrip
         {
             labelStatus.Text = "";
             InitCombo();
+            GetHardwareFromDevice();
+        }
+
+        private void GetHardwareFromDevice()
+        {
+            serial.WriteLine(SerialCommand.HARDWARE.ToString());
+            var strBuffer = serial.ReadLine();
+            var serializer = new JavaScriptSerializer();
+            var ret = serializer.Deserialize<StripHardware>(strBuffer);
+
         }
 
         private void btnSend_Click(object sender, EventArgs e)
@@ -138,6 +136,23 @@ namespace WinStrip
             return ret;
         }
 
+
+        private bool ConnectToPort(int comboPortsItemIndex)
+        {
+            var nextPortName = comboPorts.Items[comboPortsItemIndex].ToString();
+            labelStatus.Text = $"{nextPortName}";
+            if (serial.OpenSerialPort(nextPortName, PortSpeed))
+            {
+                comboPorts.SelectedIndex = comboPortsItemIndex;
+                labelStatus.Text = $"Connected to port {nextPortName}";
+                SetPortConnectionStatus(true);
+                GetAllFromDevice();
+                return true;
+            }
+            return false;
+        }
+
+
         public void InitCombo()
         {
             string[] ports = serial.getPortNames();
@@ -166,26 +181,47 @@ namespace WinStrip
                 int index = 0;
                 while (index < comboPorts.Items.Count)
                 {
-                    var nextPortName = comboPorts.Items[index].ToString();
-                    labelStatus.Text = $"{nextPortName}";
-                    if (serial.OpenSerialPort(nextPortName, 500000))
-                    {
-                        comboPorts.SelectedIndex = index;
-                        labelStatus.Text = $"Connected to port {nextPortName}";
-                        GetAllStatus();
-
+                    if (ConnectToPort(index))
                         return;
-                    }
+                    
                     index++;
                 }
             }
             labelStatus.Text = "Unable to connect to any com port";
         }
 
-
-        private void btnGetAll_Click(object sender, EventArgs e)
+        private void SetPortConnectionStatus(bool connectionStatus)
         {
-            GetAllStatus();
+            if (connectionStatus)
+            {
+                btnConnection.Text = "Disconnect";
+            } else
+            {
+                btnConnection.Text = "Connect";
+            }
+
+            btnConnection.Enabled = comboPrograms.Items.Count > 0;
+
+            bool enabled = serial.isConnected;
+            groupBoxDelay.Enabled = enabled;
+            groupBoxBrightness.Enabled = enabled;
+            groupBoxParameters.Enabled = enabled;
+            comboPrograms.Enabled = enabled;
+            btnGetValues.Enabled = enabled;
+            btnSendAll.Enabled = enabled;
+            btnColor1.Enabled = enabled;
+            btnColor2.Enabled = enabled;
+            btnColor3.Enabled = enabled;
+            btnColor4.Enabled = enabled;
+            btnColor5.Enabled = enabled;
+            btnColor6.Enabled = enabled;
+
+            btnSend.Enabled = enabled;
+        }
+
+        private void btnGetValues_Click(object sender, EventArgs e)
+        {
+            GetValuesAndColorsFromDevice();
         }
 
         private void btnClearText2_Click(object sender, EventArgs e)
@@ -217,7 +253,13 @@ namespace WinStrip
                     {
                         parameters.Add(new ProgramParameter { Name = value, Value=0 });
                     }
-                    PopulateDataGrid();
+                    ShowAndSetParamNames();
+
+                    SendValuesToDevice();
+                    if (name == "Reset")
+                    {
+                        GetValues();
+                    }
                     return; 
                 }
             }
@@ -231,46 +273,106 @@ namespace WinStrip
             if (colorDialog1.ShowDialog() == DialogResult.OK)
             {
                 button.BackColor = colorDialog1.Color;
-                btnSendAll_Click(sender, null);
+                SendColorsToDevice();
             }
         }
 
-
-        private void GetAllStatus()
+        
+        private void GetValuesAndColorsFromDevice()
         {
-            var cmd = SerialCommand.ALLSTATUS.ToString();
-            serial.WriteLine(cmd);
+            serial.WriteLine(SerialCommand.VALUES.ToString());
             var strBuffer = serial.ReadLine();
             var serializer = new JavaScriptSerializer();
-            AllStatus status = serializer.Deserialize<AllStatus>(strBuffer);
-            programs = status.programs;
+            var ret = serializer.Deserialize<StripValues>(strBuffer);
 
-            textBoxDelay.Text = status.delay.ToString();
+            serial.WriteLine(SerialCommand.COLORS.ToString());
+            strBuffer = serial.ReadLine();
+            var colorObj = serializer.Deserialize<StripColors>(strBuffer);
 
-            btnColor1.BackColor = new SColor(status.colors[0]).Color;
-            btnColor2.BackColor = new SColor(status.colors[1]).Color;
-            btnColor3.BackColor = new SColor(status.colors[2]).Color;
-            btnColor4.BackColor = new SColor(status.colors[3]).Color;
-            btnColor5.BackColor = new SColor(status.colors[4]).Color;
-            btnColor6.BackColor = new SColor(status.colors[5]).Color;
+            comboPrograms.SelectedIndex = ret.com;
+            ValuesToControls(ret.brightness, ret.delay, ret.values, colorObj.colors);
 
-            comboPrograms.Items.Clear();
-            programs.ForEach(m => comboPrograms.Items.Add(m.name));
-            comboPrograms.SelectedIndex = status.com;
-            TrackBarBrightness.Value = status.brightness;
-            NumericUpDownBrightness.Value = status.brightness;
         }
 
-        private void btnSendAll_Click(object sender, EventArgs e)
+        private bool GetAllFromDevice()
+        {
+            try { 
+                serial.WriteLine(SerialCommand.ALLSTATUS.ToString());
+                var strBuffer = serial.ReadLine();
+                var serializer = new JavaScriptSerializer();
+                StripStatus ret = serializer.Deserialize<StripStatus>(strBuffer);
+                programs = ret.programs;
+
+                comboPrograms.Items.Clear();
+                programs.ForEach(m => comboPrograms.Items.Add(m.name));
+                comboPrograms.SelectedIndex = ret.com;
+            
+                ValuesToControls(ret.brightness, ret.delay, ret.values, ret.colors);
+                return true;
+            } catch(Exception ex)
+            {
+                return false;
+            }
+        }
+
+        private void ValuesToControls(int brightness, int delay, List<int> values, List<ulong> colors)
+        {
+            SetControlValue(ValueControls.DELAY, delay);
+            SetControlValue(ValueControls.BRIGHTNESS, brightness);
+
+            int i;
+
+            if (colors != null && colors.Count == 6 )
+            { 
+                btnColor1.BackColor = new SColor(colors[0]).Color;
+                btnColor2.BackColor = new SColor(colors[1]).Color;
+                btnColor3.BackColor = new SColor(colors[2]).Color;
+                btnColor4.BackColor = new SColor(colors[3]).Color;
+                btnColor5.BackColor = new SColor(colors[4]).Color;
+                btnColor6.BackColor = new SColor(colors[5]).Color;
+            }
+
+            if (values.Count > 0) SetControlValue(ValueControls.VALUE1, values[0]);
+            if (values.Count > 1) SetControlValue(ValueControls.VALUE2, values[1]);
+            if (values.Count > 2) SetControlValue(ValueControls.VALUE3, values[2]);
+        }
+        private void SetControlValue(ValueControls control, int newValue)
+        {
+            switch (control)
+            {
+                case ValueControls.BRIGHTNESS:  
+                                                if (trackBarBrightness.Value      != newValue)       trackBarBrightness.Value = newValue;
+                                                if (numericUpDownBrightness.Value != newValue)  numericUpDownBrightness.Value = newValue;
+                                                break;
+                case ValueControls.DELAY:
+                                                if (trackBarDelay.Value           != newValue)            trackBarDelay.Value = newValue;
+                                                if (numericUpDownDelay.Value      != newValue)       numericUpDownDelay.Value = newValue;
+                                                break;
+                case ValueControls.VALUE1:
+                                                if (trackBarValue1.Value           != newValue)      trackBarValue1.Value = newValue;
+                                                if (numericUpDownValue1.Value      != newValue) numericUpDownValue1.Value = newValue;
+                                                break;
+                case ValueControls.VALUE2:
+                                                if (trackBarValue2.Value           != newValue)      trackBarValue2.Value = newValue;
+                                                if (numericUpDownValue2.Value      != newValue) numericUpDownValue2.Value = newValue;
+                                                break;                             
+                case ValueControls.VALUE3:                                         
+                                                if (trackBarValue3.Value           != newValue)      trackBarValue3.Value = newValue;
+                                                if (numericUpDownValue3.Value      != newValue) numericUpDownValue3.Value = newValue;
+                                                break;
+            }
+        }
+
+        private void SendValuesToDevice()
         {
 
             var values = new StripValues
             {
                 com = comboPrograms.SelectedIndex,
-                delay = SaveStringToInt(textBoxDelay.Text),
-                colors = GetButtonColors(),
+                delay = trackBarDelay.Value,
+                //colors     = GetButtonColors(),
                 values = GetValues(),
-                brightness = TrackBarBrightness.Value
+                brightness = trackBarBrightness.Value
             };
 
             var serializer = new JavaScriptSerializer();
@@ -279,15 +381,35 @@ namespace WinStrip
 
         }
 
+        private void SendColorsToDevice()
+        {
+
+            var values = new StripColors
+            {
+                colors     = GetButtonColors(),
+            };
+
+            var serializer = new JavaScriptSerializer();
+            var str = serializer.Serialize(values);
+            serial.WriteLine(str);
+
+        }
+
+        private void btnSendAll_Click(object sender, EventArgs e)
+        {
+
+            SendValuesToDevice();
+
+        }
+
         private List<int> GetValues()
         {
-            List<int> list = new List<int>();
-            foreach(DataGridViewRow row in dataGridView1.Rows)
-            {   
-                list.Add(SaveStringToInt(row.Cells[1].Value.ToString()));
-            }
-            return list;
+            var list = new List<int>();
+            if (groupBoxValue1.Visible) list.Add(trackBarValue1.Value);
+            if (groupBoxValue2.Visible) list.Add(trackBarValue2.Value);
+            if (groupBoxValue3.Visible) list.Add(trackBarValue3.Value);
 
+            return list;
         }
 
         private List<ulong> GetButtonColors()
@@ -321,24 +443,42 @@ namespace WinStrip
             }
         }
 
-        private void textBoxDelay_KeyDown(object sender, KeyEventArgs e)
+        ValueControls GetControlValueFromName(string Name)
         {
-            if (e.KeyCode == Keys.Enter)
+            switch(Name)
             {
-                btnSendAll_Click(sender, null);
+                case "trackBarBrightness": 
+                case "numericUpDownBrightness": return ValueControls.BRIGHTNESS;
+
+                case "trackBarDelay":                       
+                case "numericUpDownDelay":      return ValueControls.DELAY;
+
+                case "trackBarValue1":
+                case "numericUpDownValue1":     return ValueControls.VALUE1;
+
+                case "trackBarValue2":
+                case "numericUpDownValue2":     return ValueControls.VALUE2;
+
+                case "trackBarValue3":
+                case "numericUpDownValue3":     return ValueControls.VALUE3;
+
             }
+            return ValueControls.INVALID;
         }
 
-        private void trackBarBrightness_ValueChanged(object sender, EventArgs e)
+        private void ValueControl_ValueChanged(object sender, EventArgs e)
         {
-            if (sender.GetType().Name == "TrackBar")
+            var typeName = sender.GetType().Name;
+            if (typeName == "TrackBar")
             {
-                NumericUpDownBrightness.Value = TrackBarBrightness.Value;
-                btnSendAll_Click(sender, null);
+                var control = (TrackBar)sender;
+                SetControlValue(GetControlValueFromName(control.Name), control.Value);
+                SendValuesToDevice();
             }
-            else if (sender.GetType().Name == "NumericUpDown")
+            else if (typeName == "NumericUpDown")
             {
-                TrackBarBrightness.Value = (int)NumericUpDownBrightness.Value;
+                var control = (NumericUpDown)sender;
+                SetControlValue(GetControlValueFromName(control.Name), (int)control.Value);
             }
         }
 
@@ -346,11 +486,30 @@ namespace WinStrip
         { 
             if (sender.GetType().Name == "TrackBar")
             {
-                NumericUpDownBrightness.Value = TrackBarBrightness.Value;
+                numericUpDownBrightness.Value = trackBarBrightness.Value;
             } else if (sender.GetType().Name == "NumericUpDown")
             {
-                TrackBarBrightness.Value  = (int)NumericUpDownBrightness.Value;
+                trackBarBrightness.Value  = (int)numericUpDownBrightness.Value;
             }
+        }
+
+        private void comboPorts_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int index = comboPorts.SelectedIndex;
+            if (index > -1)
+            {
+                ConnectToPort(index);
+            }
+        }
+
+        private void btnConnection_Click(object sender, EventArgs e)
+        {
+            if (serial.isConnected)
+                serial.Close(); 
+            else
+                ConnectToPort(comboPorts.SelectedIndex);
+
+            SetPortConnectionStatus(serial.isConnected);
         }
     }
 }

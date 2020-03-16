@@ -1,4 +1,4 @@
-#include <FastLED.h>
+
 #include "SerialReader.h"
 #include "Json.h"
 /*
@@ -22,7 +22,7 @@ SerialReader reader;
 
 
 
-#define NUM_LEDS 20 
+#define NUM_LEDS 30 
 #define CLOCK_PIN 13  /*green wire*/
 #define DATA_PIN  14  /*blue wire*/
 /*
@@ -31,10 +31,9 @@ SerialReader reader;
 */
 
 #define STRIP_TYPE APA102
+const char* stripType = "APA102";
 #define COLOR_SCHEME BGR 
 
-
-#define BRIGHTNESS_DEVICE_PIN 15
 
 CRGB leds[NUM_LEDS];
 StripHelper stripper;
@@ -57,20 +56,22 @@ enum COMMAND
     COMMAND_COLORS,
     COMMAND_VALUES,
     COMMAND_PIXELCOUNT,
+    COMMAND_HARDWARE,
     COMMAND_COUNT
 };
 
 COMMAND_TEXT commands[COMMAND::COMMAND_COUNT] = {
-    { "INVALID"},
-    { "STATUS"},
-    { "BUFFERSIZE"},
-    {"SEPARATOR"},
-    {"PROGRAMCOUNT"},
-    {"PROGRAMINFO"},
-    {"ALLSTATUS"},
-    {"COLORS"},
-    {"VALUES"},
-    {"PIXELCOUNT"}
+    "INVALID",
+    "STATUS",
+    "BUFFERSIZE",
+    "SEPARATOR",
+    "PROGRAMCOUNT",
+    "PROGRAMINFO",
+    "ALLSTATUS",
+    "COLORS",
+    "VALUES",
+    "PIXELCOUNT",
+    "HARDWARE"
 };
 
 
@@ -103,27 +104,26 @@ void SerialPrintLine(String str) {
 }
 void runCommand(int cmd) {
     switch (cmd) {
-        case COMMAND_STATUS :       Serial.println("OK");
+        case COMMAND_STATUS :       SerialPrintLine("OK");
                                     break;
-
         case COMMAND_BUFFERSIZE:    Serial.println(reader.getMaxLength());
                                     break;
-    
         case COMMAND_SEPARATOR:     Serial.println(reader.getSeparator());
                                     break;
-        case COMMAND_PROGRAMCOUNT:   Serial.println(stripper.getProgramCount());
+        case COMMAND_PROGRAMCOUNT:  Serial.println(stripper.getProgramCount());
                                     break;
-        case COMMAND_PROGRAMINFO:                            
-                                    SerialPrintLine(stripper.getAllProgramInfosAsJsonArray());
+        case COMMAND_PROGRAMINFO:   SerialPrintLine(stripper.getAllProgramInfosAsJsonArray());
                                     break;
         case COMMAND_ALLSTATUS:     SerialPrintLine(stripper.toJson());
                                     break;
-        case COMMAND_COLORS:        Serial.println(stripper.getColorsAsJson());
+        case COMMAND_COLORS:        SerialPrintLine("{" + stripper.MakeJsonKeyVal("colors", stripper.getColorsAsJson()) + "}");
                                     break;
-        case COMMAND_VALUES:        Serial.println(stripper.getValuesAsJson());
-            break;
+        case COMMAND_VALUES:        SerialPrintLine(stripper.getValuesAsJson());
+                                    break;
+        case COMMAND_HARDWARE:      SerialPrintLine(stripper.getHardwareAsJson());
+                                    break;
         case COMMAND_PIXELCOUNT:    Serial.println(stripper.getCount());
-            break;
+                                    break;
     }
 }
 
@@ -160,6 +160,26 @@ void processJson(String str) {
     unsigned long values[VARIABLE_COUNT] = { 0,0,0 };
     int i;
 
+
+    current = root->getChild("colors");
+    if (current == NULL)
+        current = root->getChild("colors");
+    if (current != NULL && current->getValueType() == JSONTYPE::JSONTYPE_ARRAY) {
+        //Colors are optional
+        //we got the key, let's get the array
+        current = current->getChildAt(0);
+        //now let's get the first item in the array
+        current = current->getChildAt(0);
+        i = 0;
+        while (current && i < COLOR_COUNT) {
+            ulColor = current->getValueAsULong();
+            stripper.setColorBank(i, stripper.decodeColor(ulColor));
+            current = current->getNext();
+            i++;
+        }
+    }
+
+
     current = root->getChild("com");
     if (current == NULL) { return; }
     ulCom = current->getValueAsULong();
@@ -187,29 +207,9 @@ void processJson(String str) {
         i++;
     }
 
-    current = root->getChild("colors");
-    if (current == NULL)
-        current = root->getChild("colors");
-    if (current == NULL || current->getValueType() != JSONTYPE::JSONTYPE_ARRAY) { return; }
-    //we got the key, let's get the array
-    current = current->getChildAt(0);
-    //now let's get the first item in the array
-    current = current->getChildAt(0);
-    i = 0;
-    while (current && i < COLOR_COUNT) {
-        ulColor = current->getValueAsULong();
-        stripper.setColorBank(i, stripper.decodeColor(ulColor));
-        current = current->getNext();
-        i++;
-    }
-
     stripper.setNewValues((STRIP_PROGRAMS)ulCom, ulDelay, values[0], values[1], values[2]);
     stripper.setBrightness(ulBrightness);
     stripper.initProgram(stripper.getProgram());
-
-    /*if ((STRIP_PROGRAMS)ulCom == STRIP_PROGRAMS::RESET) {
-        devicePins.get(BRIGHTNESS_DEVICE_PIN)->setValue(stripper.getBrightness() * 4);
-    }*/
     
 }
 
@@ -239,7 +239,7 @@ void stripInit() {
     pinMode(DATA_PIN, OUTPUT);
     pinMode(CLOCK_PIN, OUTPUT);
     FastLED.addLeds<STRIP_TYPE, DATA_PIN, CLOCK_PIN, COLOR_SCHEME>(leds, NUM_LEDS);
-    stripper.initialize(&FastLED);
+    stripper.initialize(&FastLED, stripType, COLOR_SCHEME, DATA_PIN, CLOCK_PIN);
     Serial.println("- - - - - - - -     Available strip commands     - - - - - - - -");
     Serial.println(stripper.getAllProgramNames());
     Serial.println("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");

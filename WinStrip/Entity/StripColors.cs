@@ -5,10 +5,8 @@ using System.Text;
 
 namespace WinStrip.Entity
 {
-    public class StripProgram
+    public class StripColors
     {
-        public string name;
-        public string description;
-        public List<string> values;
+        public List<ulong> colors { get; set; }
     }
 }

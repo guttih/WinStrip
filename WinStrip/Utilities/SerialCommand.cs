@@ -17,6 +17,7 @@ namespace WinStrip.Utilities
         [Description("COLORS")      ] COLORS,
         [Description("VALUES")      ] VALUES,
         [Description("PIXELCOUNT")  ] PIXELCOUNT,
+        [Description("HARDWARE")    ] HARDWARE,
 
 
         //ADD NEW ITEMS BEFORE THIS LINE

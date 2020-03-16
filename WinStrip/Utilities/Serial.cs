@@ -107,6 +107,11 @@ namespace WinStrip.Utilities
             }
             
         }
+        public void Close()
+        {
+            port.Close();
+        }
+
         public bool OpenSerialPort(string portName, int baudRate)
         {
             if (isConnected)

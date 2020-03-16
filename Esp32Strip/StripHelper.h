@@ -1,8 +1,9 @@
+#define FASTLED_INTERNAL
+#include <FastLED.h>
+
 #ifndef _StripHelper_h
 #define _StripHelper_h
 
-#define FASTLED_INTERNAL
-#include <FastLED.h>
 
 
 #define COLOR_COUNT 6
@@ -64,6 +65,11 @@ private:
     unsigned long value2;
     unsigned long value3;
 
+    const char *stripType;
+    EOrder colorScheme; 
+    int dataPin;
+    int clockPin;
+
     void fillByIndex(int startIndex, int endIndex, const struct CRGB& color);
     void reset();
 
@@ -80,10 +86,11 @@ private:
     int setDirection(bool forward);
     void toggleDirection();
     String quotes(String value);
-    String MakeJsonKeyVal(String key, String Value);
+    
     String ulToString(uint32_t number);
     CRGB fadeTowardColor(CRGB& cur, const CRGB& target, uint8_t amount);
     void nblendU8TowardU8(uint8_t& cur, const uint8_t target, uint8_t amount);
+    String colorSchemeToString();
 
     void programCylonFadeall();
     void programCylon();
@@ -101,7 +108,7 @@ public:
     bool stripMustBeOff;
 
     StripHelper();
-    void initialize(CFastLED* controller);
+    void initialize(CFastLED* controller, const char* stripType, EOrder colorScheme, int dataPin, int clockPin);
     CFastLED* getController();
     void run();
     STRIP_PROGRAMS getProgram();
@@ -117,6 +124,7 @@ public:
     String getAllProgramInfosAsJsonArray();
     String getColorsAsJson();
     String getValuesAsJson();
+    String getHardwareAsJson();
     String toJson();
     CRGB decodeColor(uint32_t uiColor);
     uint32_t encodeColor(CRGB color);
@@ -124,6 +132,7 @@ public:
     bool setColorBank(uint8_t index, CRGB newColor);
     void setNewValues(STRIP_PROGRAMS program, unsigned long stepDelay, unsigned long value1, unsigned long value2, unsigned long value3);
     void programOff();
+    String MakeJsonKeyVal(String key, String Value, bool surroundValueQuotationMark = false);
     int getProgramCount();
 };
 

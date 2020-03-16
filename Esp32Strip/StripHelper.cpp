@@ -4,10 +4,15 @@ StripHelper::StripHelper() {
     init();
 }
 
-void StripHelper::initialize(CFastLED* controller) {
+void StripHelper::initialize(CFastLED * controller, const char* stripType, EOrder colorScheme, int dataPin, int clockPin)
+{
     this->fastLED = controller;
     leds = fastLED->leds();
     ledCount = fastLED->size();
+    this->stripType   = stripType;
+    this->colorScheme = colorScheme;
+    this->dataPin     = dataPin;
+    this->clockPin    = clockPin;
 }
 
 CFastLED* StripHelper::getController() {
@@ -227,7 +232,7 @@ String StripHelper::getProgramInfoAsJsonArray(STRIP_PROGRAMS stripProgram) {
         break;
     case UP:
     case DOWN:
-    case UP_DOWN:   break;
+    case UP_DOWN: values += "\"Trail\""; break;
     case STARS:   colors = 2; values += "\"Number of stars\",\"Delay between new stars\"";
         break;
     case CYLON:   colors = 0;
@@ -300,9 +305,11 @@ String StripHelper::quotes(String value) {
     return "\"" + value + "\"";
 }
 
-String StripHelper::MakeJsonKeyVal(String key, String Value) {
+String StripHelper::MakeJsonKeyVal(String key, String Value, bool surroundValueQuotationMark) {
+    if (!surroundValueQuotationMark)
+        return "\"" + key + "\":" + Value;
 
-    return "\"" + key + "\":" + Value;
+    return "\"" + key + "\":" +"\""+ Value + "\"";
 }
 
 uint32_t StripHelper::encodeColor(CRGB color) {
@@ -338,20 +345,45 @@ String StripHelper::getColorsAsJson() {
 }
 
 String StripHelper::getValuesAsJson() {
-    int len = STRIP_PROGRAMS_COUNT;
+
     String ret = "{";
 
-    ret +=       MakeJsonKeyVal("delay", String(stepDelay));
-    ret += "," + MakeJsonKeyVal("com", String(program));
+    ret +=       MakeJsonKeyVal("delay"     , String(stepDelay));
+    ret += "," + MakeJsonKeyVal("com"       , String(program));
     ret += "," + MakeJsonKeyVal("brightness", String(getBrightness()));
-    ret += "," + MakeJsonKeyVal("values", "[" + String(value1) + "," + String(value2) + "," + String(value3) + "]");
+    ret += "," + MakeJsonKeyVal("values"    , "[" + String(value1) + "," + String(value2) + "," + String(value3) + "]");
+    ret += "}";
+    return ret;
+}
+String StripHelper::colorSchemeToString() {
+
+    switch (colorScheme)
+    {
+        case RGB: return "RGB";
+        case RBG: return "RBG";
+        case GRB: return "GRB";
+        case GBR: return "GBR";
+        case BRG: return "BRG";
+        case BGR: return "BGR";
+    }
+
+    return "";
+}
+String StripHelper::getHardwareAsJson() {
+    String 
+    ret  = "{" + MakeJsonKeyVal("type", stripType, true);
+    ret += "," + MakeJsonKeyVal("colorscheme", colorSchemeToString(), true);
+    ret += "," + MakeJsonKeyVal("datapin", String(dataPin));
+    ret += "," + MakeJsonKeyVal("clockpin", String(clockPin));
+    ret += "," + MakeJsonKeyVal("pixelcount", String(getCount()));
     ret += "}";
     return ret;
 }
 
+
+
 String StripHelper::toJson() {
 
-    int len = STRIP_PROGRAMS_COUNT;
     String ret = "{";
 
     ret += MakeJsonKeyVal("programs", getAllProgramInfosAsJsonArray());
@@ -420,7 +452,6 @@ void StripHelper::programUpDown() {
         toggleDirection();
     }
     else if (getTurns() == -1) {
-        leds[getLast()] = getColorBank(1);
         toggleDirection();
     }
 }
@@ -482,11 +513,13 @@ void StripHelper::programStarsInit() {
 
     ulWorker1 = 0;
     iWorker1 = 1;
+    
+    if (value1 >= getCount())
+        value1 = getCount();
+
     unsigned int starCount = value1;
 
     setDirection(true);  toggleDirection();
-    if (starCount >= getCount())
-        return; //nuts
 
     if (tempArray != NULL) {
         delete[] tempArray;
@@ -497,7 +530,6 @@ void StripHelper::programStarsInit() {
         return;
 
     tempArray = new unsigned int[starCount]();
-
     programStarsSelectNewStars();
 
 }

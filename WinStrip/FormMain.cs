@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
+using System.ComponentModel;
 using System.Linq;
 using System.Management;
-using System.Text;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using WinStrip.Entity;
+using WinStrip.EntityTransfer;
 using WinStrip.Utilities;
-using StripProgram = WinStrip.Entity.StripProgram;
 
 namespace WinStrip
 {
@@ -21,10 +19,12 @@ namespace WinStrip
         List<StripProgram> programs;
         List<ProgramParameter> parameters;
         public int PortSpeed { get; set; }
-        
+        List<Theme> Themes { get; set; }
+        public int ThemeSelectedIndex { get; private set; }
+
         public FormMain()
         {
-
+            ThemeSelectedIndex = -1;
             PortSpeed = 500000;
             InitializeComponent();
 
@@ -59,20 +59,119 @@ namespace WinStrip
 
         }
 
+        private Theme CreateDefaultTheme()
+        {
+            var theme = new Theme
+            {
+                Name = "Default",
+                Steps = new List<Step> {
+                    new Step {      From = 0,
+                                    Values = new StripValues { delay=0, com=2, brightness =   1, values = new List<int>  {0,0,0} },
+                                    Colors = new StripColors {   colors = new List<ulong>  {      255, 16711680, 32768, 255, 16777215, 10824234 } }
+                                },
+                    new Step {      From = 10,
+                                    Values = new StripValues { delay=0, com=2, brightness = 255, values = new List<int> {0,0,0} },
+                                    Colors = new StripColors {   colors = new List<ulong> {      255, 16711680, 32768, 255, 16777215, 10824234 } }
+                                },
+                    new Step {      From = 30,
+                                    Values = new StripValues { delay=0, com=2, brightness = 177, values = new List<int> {0,0,0} },
+                                    Colors = new StripColors {   colors = new List<ulong> {    65535, 16711680, 32768, 255, 16777215, 10824234 } }
+                                },
+                    new Step {      From = 50,
+                                    Values = new StripValues { delay=0, com=2, brightness = 240, values = new List<int> {0,0,0} },
+                                    Colors = new StripColors {   colors = new List<ulong> {    65280, 16711680, 32768, 255, 16777215, 10824234 } }
+                                },
+                    new Step {      From = 60,
+                                    Values = new StripValues { delay=0, com=2, brightness = 180, values = new List<int> {0,0,0} },
+                                    Colors = new StripColors {   colors = new List<ulong> { 16711808, 16711680, 32768, 255, 16777215, 10824234 } }
+                             },
+                    new Step {      From = 70,
+                                    Values = new StripValues { delay=0, com=2, brightness = 255, values = new List<int> {0,0,0} },
+                                    Colors = new StripColors {   colors = new List<ulong> { 16711680, 16711680, 32768, 255, 16777215, 10824234 } }
+                             },
+                    new Step {      From = 90,
+                                    Values = new StripValues { delay=2, com=7, brightness = 102, values = new List<int> {32,50,0} },
+                                    Colors = new StripColors {   colors = new List<ulong> { 16711680,        0, 32768, 255, 16777215, 10824234 } }
+                             },
+                    new Step {      From = 95,
+                                    Values = new StripValues { delay=2, com=7, brightness = 255, values = new List<int> {32,20,0} },
+                                    Colors = new StripColors {   colors = new List<ulong> { 16711680,        0, 32768, 255, 16777215, 10824234 } }
+                             },
+                    new Step {      From = 99,
+                                    Values = new StripValues { delay=1, com=7, brightness = 255, values = new List<int> {32,20,0} },
+                                    Colors = new StripColors {   colors = new List<ulong> { 16711680,        0, 32768, 255, 16777215, 10824234 } }
+                             }
+                }
+            };
+
+
+            return theme;
+        }
+        
+        private void SaveThemes(List<Theme> themes)
+        {
+            //Sort all themes
+            themes.Sort(new Theme());
+            //Sort all steps in all themes so that highest From value will be first.
+            themes.ForEach(theme => theme.SortStepsAndFix());
+            
+            var str = (new JavaScriptSerializer()).Serialize(themes);
+            Properties.Settings.Default.Themes = str;
+            Properties.Settings.Default.Save();
+        }
+
+        
+        void LoadThemes()
+        {
+            //Properties.Settings.Default.Themes = ""; Properties.Settings.Default.Save();
+            var str = Properties.Settings.Default.Themes;
+
+            if (string.IsNullOrEmpty(str))
+            {
+                SaveThemes(new List<Theme> { CreateDefaultTheme() });
+                str = Properties.Settings.Default.Themes;
+            }
+
+            var ser = new JavaScriptSerializer();
+            var themeList = ser.Deserialize<List<Theme>>(str);
+            
+            Themes = themeList;
+            
+
+            // now let's populate form
+            ThemesToForm();
+        }
+
+        void ThemesToForm()
+        {
+            if (Themes == null)
+                return;
+            comboThemes.Items.Clear();
+            Themes.ForEach(t => comboThemes.Items.Add(t.Name));
+            comboThemes.SelectedIndex = 0;
+        }
+
+
+
         private void FormMain_Load(object sender, EventArgs e)
         {
+            LoadThemes();
             labelStatus.Text = "";
             InitCombo();
             GetHardwareFromDevice();
+
+            radioButtonCpuTesting.Checked = true;
+            EnableDeviceRelatedControls(serial.isConnected);
         }
 
         private void GetHardwareFromDevice()
         {
-            serial.WriteLine(SerialCommand.HARDWARE.ToString());
-            var strBuffer = serial.ReadLine();
-            var serializer = new JavaScriptSerializer();
-            var ret = serializer.Deserialize<StripHardware>(strBuffer);
-
+            if (serial.isConnected) { 
+                serial.WriteLine(SerialCommand.HARDWARE.ToString());
+                var strBuffer = serial.ReadLine();
+                var serializer = new JavaScriptSerializer();
+                var ret = serializer.Deserialize<StripHardware>(strBuffer);
+            }
         }
 
         private void btnSend_Click(object sender, EventArgs e)
@@ -190,6 +289,27 @@ namespace WinStrip
             labelStatus.Text = "Unable to connect to any com port";
         }
 
+        void EnableDeviceRelatedControls(bool bEnable)
+        {
+            groupBoxDelay.Enabled = bEnable;
+            groupBoxBrightness.Enabled = bEnable;
+            groupBoxParameters.Enabled = bEnable;
+            comboPrograms.Enabled = bEnable;
+            btnGetValues.Enabled = bEnable;
+            btnSendAll.Enabled = bEnable;
+            btnColor1.Enabled = bEnable;
+            btnColor2.Enabled = bEnable;
+            btnColor3.Enabled = bEnable;
+            btnColor4.Enabled = bEnable;
+            btnColor5.Enabled = bEnable;
+            btnColor6.Enabled = bEnable;
+
+            btnSend.Enabled = bEnable;
+            if (comboPorts.Items.Count < 1)
+                btnConnection.Text = "Connect";
+            btnConnection.Enabled = comboPorts.Items.Count > 0;
+        }
+
         private void SetPortConnectionStatus(bool connectionStatus)
         {
             if (connectionStatus)
@@ -202,21 +322,7 @@ namespace WinStrip
 
             btnConnection.Enabled = comboPrograms.Items.Count > 0;
 
-            bool enabled = serial.isConnected;
-            groupBoxDelay.Enabled = enabled;
-            groupBoxBrightness.Enabled = enabled;
-            groupBoxParameters.Enabled = enabled;
-            comboPrograms.Enabled = enabled;
-            btnGetValues.Enabled = enabled;
-            btnSendAll.Enabled = enabled;
-            btnColor1.Enabled = enabled;
-            btnColor2.Enabled = enabled;
-            btnColor3.Enabled = enabled;
-            btnColor4.Enabled = enabled;
-            btnColor5.Enabled = enabled;
-            btnColor6.Enabled = enabled;
-
-            btnSend.Enabled = enabled;
+            EnableDeviceRelatedControls(serial.isConnected);
         }
 
         private void btnGetValues_Click(object sender, EventArgs e)
@@ -341,39 +447,55 @@ namespace WinStrip
             switch (control)
             {
                 case ValueControls.BRIGHTNESS:  
-                                                if (trackBarBrightness.Value      != newValue)       trackBarBrightness.Value = newValue;
-                                                if (numericUpDownBrightness.Value != newValue)  numericUpDownBrightness.Value = newValue;
+                                                if (trackBarBrightness.Value      != newValue)      trackBarBrightness.Value = newValue;
+                                                if (numericUpDownBrightness.Value != newValue) numericUpDownBrightness.Value = newValue;
                                                 break;
                 case ValueControls.DELAY:
-                                                if (trackBarDelay.Value           != newValue)            trackBarDelay.Value = newValue;
-                                                if (numericUpDownDelay.Value      != newValue)       numericUpDownDelay.Value = newValue;
+                                                if (trackBarDelay.Value           != newValue)           trackBarDelay.Value = newValue;
+                                                if (numericUpDownDelay.Value      != newValue)      numericUpDownDelay.Value = newValue;
                                                 break;
                 case ValueControls.VALUE1:
-                                                if (trackBarValue1.Value           != newValue)      trackBarValue1.Value = newValue;
-                                                if (numericUpDownValue1.Value      != newValue) numericUpDownValue1.Value = newValue;
+                                                if (trackBarValue1.Value           != newValue)         trackBarValue1.Value = newValue;
+                                                if (numericUpDownValue1.Value      != newValue)    numericUpDownValue1.Value = newValue;
                                                 break;
                 case ValueControls.VALUE2:
-                                                if (trackBarValue2.Value           != newValue)      trackBarValue2.Value = newValue;
-                                                if (numericUpDownValue2.Value      != newValue) numericUpDownValue2.Value = newValue;
+                                                if (trackBarValue2.Value           != newValue)         trackBarValue2.Value = newValue;
+                                                if (numericUpDownValue2.Value      != newValue)    numericUpDownValue2.Value = newValue;
                                                 break;                             
                 case ValueControls.VALUE3:                                         
-                                                if (trackBarValue3.Value           != newValue)      trackBarValue3.Value = newValue;
-                                                if (numericUpDownValue3.Value      != newValue) numericUpDownValue3.Value = newValue;
+                                                if (trackBarValue3.Value           != newValue)         trackBarValue3.Value = newValue;
+                                                if (numericUpDownValue3.Value      != newValue)    numericUpDownValue3.Value = newValue;
                                                 break;
+                case ValueControls.CPUTESTING:
+                                                
+                                                if (trackBarCpuTesting.Value       != newValue)      trackBarCpuTesting.Value = newValue;
+                                                if (numericUpDownCpuTesting.Value  != newValue) numericUpDownCpuTesting.Value = newValue;
+                                                UpdateLabelCpu(trackBarCpuTesting.Value);
+                    break;
             }
         }
 
-        private void SendValuesToDevice()
+        private void UpdateLabelCpu(int value)
         {
-
-            var values = new StripValues
+            string val = value.ToString();
+            if (labelCpu.Text != val)
             {
-                com = comboPrograms.SelectedIndex,
-                delay = trackBarDelay.Value,
-                //colors     = GetButtonColors(),
-                values = GetValues(),
-                brightness = trackBarBrightness.Value
-            };
+                labelCpu.Text = val;
+            }
+        }
+
+        private void SendValuesToDevice(StripValues values = null)
+        {
+            if (values == null) { 
+                values = new StripValues
+                {
+                    com = comboPrograms.SelectedIndex,
+                    delay = trackBarDelay.Value,
+                    //colors     = GetButtonColors(),
+                    values = GetValues(),
+                    brightness = trackBarBrightness.Value
+                };
+            }
 
             var serializer = new JavaScriptSerializer();
             var str = serializer.Serialize(values);
@@ -381,18 +503,24 @@ namespace WinStrip
 
         }
 
-        private void SendColorsToDevice()
+        private void SendColorsToDevice(StripColors colors = null)
         {
-
-            var values = new StripColors
-            {
-                colors     = GetButtonColors(),
-            };
-
+            if (colors == null) {
+                colors = new StripColors
+                {
+                    colors     = GetButtonColors(),
+                };
+            }
             var serializer = new JavaScriptSerializer();
-            var str = serializer.Serialize(values);
+            var str = serializer.Serialize(colors);
             serial.WriteLine(str);
 
+        }
+
+        private void SendStepToDevice(Step step)
+        {
+            var str = step.ToJson();
+            serial.WriteJson(str);
         }
 
         private void btnSendAll_Click(object sender, EventArgs e)
@@ -462,6 +590,9 @@ namespace WinStrip
                 case "trackBarValue3":
                 case "numericUpDownValue3":     return ValueControls.VALUE3;
 
+                case "trackBarCpuTesting":
+                case "numericUpDownCpuTesting": return ValueControls.CPUTESTING;
+
             }
             return ValueControls.INVALID;
         }
@@ -474,6 +605,21 @@ namespace WinStrip
                 var control = (TrackBar)sender;
                 SetControlValue(GetControlValueFromName(control.Name), control.Value);
                 SendValuesToDevice();
+            }
+            else if (typeName == "NumericUpDown")
+            {
+                var control = (NumericUpDown)sender;
+                SetControlValue(GetControlValueFromName(control.Name), (int)control.Value);
+            }
+        }
+
+        private void ValueControlNoSend_ValueChanged(object sender, EventArgs e)
+        {
+            var typeName = sender.GetType().Name;
+            if (typeName == "TrackBar")
+            {
+                var control = (TrackBar)sender;
+                SetControlValue(GetControlValueFromName(control.Name), control.Value);
             }
             else if (typeName == "NumericUpDown")
             {
@@ -510,6 +656,142 @@ namespace WinStrip
                 ConnectToPort(comboPorts.SelectedIndex);
 
             SetPortConnectionStatus(serial.isConnected);
+        }
+
+
+        private void radioButtonCpuLive_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton radioButton = (RadioButton)sender;
+            groupBoxCpuTest.Enabled = !radioButton.Checked;
+        }
+
+        void loadThemeToGrid(Theme theme) 
+        {
+            dataGridView1.Rows.Clear();
+
+            
+            dataGridView1.ColumnCount = 3;
+            dataGridView1.Columns[0].Name = "From";
+            dataGridView1.Columns[0].Width = 35;
+            dataGridView1.Columns[1].Name = "Values";
+            dataGridView1.Columns[1].Width = 240;
+            dataGridView1.Columns[2].Name = "Colors";
+            dataGridView1.Columns[2].Width = 240;
+
+            theme.Steps.ForEach(s => dataGridView1.Rows.Add(new string[] { s.From.ToString(), s.ValuesToJson(), s.ColorsToJson() }));
+        }
+
+        private void comboThemes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboThemes.SelectedIndex == -1)
+                return;
+            var index = Themes.FindIndex(a => a.Name == comboThemes.Text);
+            if (index == -1)
+                return;
+            ThemeSelectedIndex = index;
+            loadThemeToGrid(Themes[ThemeSelectedIndex]);
+        }
+        private void labelCpu_TextChanged(object sender, EventArgs e)
+        {
+            if (ThemeSelectedIndex > -1 )
+            {
+                try {
+                    int cpuValue = Convert.ToInt32(labelCpu.Text);
+                    var theme = Themes[ThemeSelectedIndex];
+                    Step step = theme.GetAppropriateStep(cpuValue);
+                    /*SendValuesToDevice(step.Values);
+                    SendColorsToDevice(step.Colors);*/
+                    SendStepToDevice(step);
+                } catch (Exception ex)
+                {
+                    //do nothing
+                }
+            }
+            
+        }
+
+
+
+        private void btnLoadTheme_Click(object sender, EventArgs e)
+        {
+            loadThemeToGrid(Themes[ThemeSelectedIndex]);
+        }
+
+        private void btnSaveTheme_Click(object sender, EventArgs e)
+        {
+            var theme = new Theme(comboThemes.Text);
+            bool error = false;
+
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                string strFrom;
+                var row = dataGridView1.Rows[i];
+                if (row.Cells[0].Value == null || row.Cells[1].Value == null || row.Cells[2].Value == null)
+                {
+                    error = true;
+                    if (i == dataGridView1.Rows.Count - 1) 
+                    { 
+                        break; //last row is null so let's stop
+                    }
+
+                    strFrom = $" (See line number {i+1})";
+                }
+                else
+                {
+                    strFrom = row.Cells[0].Value.ToString();
+                    error = !theme.AddStep(strFrom, row.Cells[1].Value.ToString(), row.Cells[2].Value.ToString());
+                }
+                if (error)
+                {
+                    MessageBox.Show(this, $"Cannot save\n\n There are invalid values in step {strFrom}", "Error adding step", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                
+            }
+            //we got valid steps
+            Themes[ThemeSelectedIndex] = theme;
+            SaveThemes(Themes);
+        }
+
+        private void btnResetThemes_Click(object sender, EventArgs e)
+        {
+            if ( MessageBox.Show("Are you sure you want to delete all themes and create a new default theme?", 
+                                 "Reset theme", 
+                                 MessageBoxButtons.YesNo, 
+                                 MessageBoxIcon.Warning    ) == DialogResult.Yes )
+            {
+
+                Properties.Settings.Default.Themes = ""; Properties.Settings.Default.Save();
+                LoadThemes();
+
+            }
+            
+        }
+
+        private void btnNewTheme_Click(object sender, EventArgs e)
+        {
+            var str = PromptDialog.ShowDialog("Please provide a new name for this theme", "Adding a new theme", 400);
+            if (str.Length > 0)
+            {
+                var newTheme = new Theme(str);
+                int i = Themes.FindIndex(t => t.Name == str);
+                if (i == -1)
+                {
+                    Themes.Add(new Theme(str));
+                    int index = comboThemes.Items.Add(str);
+                    comboThemes.SelectedIndex = index;
+                } else
+                {
+                    MessageBox.Show("There exists another theme with this name, please select another one!", "Name taken", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+                
+                
+            }
+        }
+
+        private void btnLoadAll_Click(object sender, EventArgs e)
+        {
+            LoadThemes();
         }
     }
 }

@@ -124,6 +124,7 @@ public:
     String getAllProgramInfosAsJsonArray();
     String getColorsAsJson();
     String getValuesAsJson();
+    String getValuesAndColorsAsJson();
     String getHardwareAsJson();
     String toJson();
     CRGB decodeColor(uint32_t uiColor);

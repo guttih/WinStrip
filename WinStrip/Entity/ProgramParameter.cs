@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace WinStrip.Entity
+﻿namespace WinStrip.Entity
 {
     public class ProgramParameter
     {

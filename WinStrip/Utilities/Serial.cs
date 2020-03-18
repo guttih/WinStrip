@@ -125,6 +125,9 @@ namespace WinStrip.Utilities
                 port.WriteTimeout = 1200;
                 port.Open();
                 var cmd = SerialCommand.STATUS.ToString();
+                if (!port.IsOpen)
+                    return false;
+
                 port.WriteLine(cmd);
 
                 if (ValidateSerialCommandResponse.Validate(SerialCommand.STATUS, ReadLine()))

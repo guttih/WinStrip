@@ -8,16 +8,18 @@ namespace WinStrip.Utilities
 {
     public enum SerialCommand
     {
-        [Description("STATUS")      ] STATUS,
-        [Description("BUFFERSIZE")  ] BUFFERSIZE,
-        [Description("SEPARATOR")   ] SEPARATOR,
-        [Description("PROGRAMCOUNT")] PROGRAMCOUNT,
-        [Description("PROGRAMINFO") ] PROGRAMINFO,
-        [Description("ALLSTATUS")   ] ALLSTATUS,
-        [Description("COLORS")      ] COLORS,
-        [Description("VALUES")      ] VALUES,
-        [Description("PIXELCOUNT")  ] PIXELCOUNT,
-        [Description("HARDWARE")    ] HARDWARE,
+        [Description("STATUS")       ] STATUS,
+        [Description("BUFFERSIZE")   ] BUFFERSIZE,
+        [Description("SEPARATOR")    ] SEPARATOR,
+        [Description("PROGRAMCOUNT") ] PROGRAMCOUNT,
+        [Description("PROGRAMINFO")  ] PROGRAMINFO,
+        [Description("ALLSTATUS")    ] ALLSTATUS,
+        [Description("COLORS")       ] COLORS,
+        [Description("VALUES")       ] VALUES,
+        [Description("PIXELCOUNT")   ] PIXELCOUNT,
+        [Description("HARDWARE")     ] HARDWARE,
+        [Description("VALUES_COLORS")] VALUES_COLORS,
+        
 
 
         //ADD NEW ITEMS BEFORE THIS LINE

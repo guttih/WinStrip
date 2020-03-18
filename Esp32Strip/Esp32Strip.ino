@@ -22,7 +22,7 @@ SerialReader reader;
 
 
 
-#define NUM_LEDS 30 
+#define NUM_LEDS 32 
 #define CLOCK_PIN 13  /*green wire*/
 #define DATA_PIN  14  /*blue wire*/
 /*
@@ -57,6 +57,7 @@ enum COMMAND
     COMMAND_VALUES,
     COMMAND_PIXELCOUNT,
     COMMAND_HARDWARE,
+    COMMAND_VALUES_COLORS,
     COMMAND_COUNT
 };
 
@@ -71,7 +72,8 @@ COMMAND_TEXT commands[COMMAND::COMMAND_COUNT] = {
     "COLORS",
     "VALUES",
     "PIXELCOUNT",
-    "HARDWARE"
+    "HARDWARE",
+    "VALUES_COLORS"
 };
 
 
@@ -124,6 +126,9 @@ void runCommand(int cmd) {
                                     break;
         case COMMAND_PIXELCOUNT:    Serial.println(stripper.getCount());
                                     break;
+        case COMMAND_VALUES_COLORS: SerialPrintLine(stripper.getValuesAndColorsAsJson());
+                                    break;
+                                    
     }
 }
 

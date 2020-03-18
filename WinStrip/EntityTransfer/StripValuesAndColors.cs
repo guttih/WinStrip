@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace WinStrip.Entity
+namespace WinStrip.EntityTransfer
 {
-    public class StripStatus
+    class StripValuesAndColors
     {
-        public List <StripProgram> programs { get; set; }
         public int delay { get; set; }
         public int com { get; set; }
         public int brightness { get; set; }

@@ -355,6 +355,19 @@ String StripHelper::getValuesAsJson() {
     ret += "}";
     return ret;
 }
+
+String StripHelper::getValuesAndColorsAsJson() {
+
+    String ret = "{";
+
+    ret += MakeJsonKeyVal("delay", String(stepDelay));
+    ret += "," + MakeJsonKeyVal("com", String(program));
+    ret += "," + MakeJsonKeyVal("brightness", String(getBrightness()));
+    ret += "," + MakeJsonKeyVal("values", "[" + String(value1) + "," + String(value2) + "," + String(value3) + "]");
+    ret += "," + MakeJsonKeyVal("colors", getColorsAsJson());
+    ret += "}";
+    return ret;
+}
 String StripHelper::colorSchemeToString() {
 
     switch (colorScheme)

@@ -8,9 +8,20 @@ namespace WinStrip.Entity
     class Step : IComparer<Step>
 
     {
+        public Step(int from, string valuesAndColors)
+        {
+            From = from;
+            var serializer = new JavaScriptSerializer();
+            ValuesAndColors =  serializer.Deserialize<StripValuesAndColors>(valuesAndColors);
+        }
+        public Step(Step step) {
+            From = step.From;
+            ValuesAndColors = new StripValuesAndColors(step.ValuesAndColors);
+        }
+
+        public Step() {}
         public int From { get; set; }
-        public StripValues Values { get; set; }
-        public StripColors Colors { get; set; }
+        public StripValuesAndColors ValuesAndColors{ get; set; }
 
         public int Compare(Step x, Step y)
         {
@@ -18,31 +29,10 @@ namespace WinStrip.Entity
         }
 
 
-        public string ToJson()
+        public string ValuesAndColorsToJson()
         {
             var serializer = new JavaScriptSerializer();
-            var ret = new {
-                delay = Values.delay,
-                com = Values.com,
-                brightness = Values.brightness,
-                values = Values.values,
-                colors = Colors.colors
-            };
-            return serializer.Serialize(ret);
-        }
-
-       
-
-        public string ColorsToJson()
-        {
-            var serializer = new JavaScriptSerializer();
-            return serializer.Serialize(Colors);
-        }
-
-        public string ValuesToJson()
-        {
-            var serializer = new JavaScriptSerializer();
-            return serializer.Serialize(Values);
+            return serializer.Serialize(ValuesAndColors);
         }
 
     }

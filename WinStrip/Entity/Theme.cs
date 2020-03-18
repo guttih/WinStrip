@@ -44,16 +44,15 @@ namespace WinStrip.Entity
             return step;
         }
 
-        public bool AddStep(string from, string values, string colors)
+        public bool AddStep(string from, string valuesAndColors)
         {
             try
             {
                 int fromInt = Convert.ToInt32(from);
                 var serializer = new JavaScriptSerializer();
 
-                var valuesObj = serializer.Deserialize<StripValues>(values);
-                var colorsObj = serializer.Deserialize<StripColors>(colors);
-                Steps.Add(new Step { From = fromInt, Colors = colorsObj, Values = valuesObj });
+                var valuesAndColorsObj = serializer.Deserialize<StripValuesAndColors>(valuesAndColors);
+                Steps.Add(new Step { From = fromInt, ValuesAndColors = valuesAndColorsObj });
 
             } catch (Exception ex)
             {

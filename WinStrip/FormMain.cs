@@ -65,49 +65,51 @@ namespace WinStrip
             {
                 Name = "Default",
                 Steps = new List<Step> {
-                    new Step {      From = 0,
-                                    Values = new StripValues { delay=0, com=2, brightness =   1, values = new List<int>  {0,0,0} },
-                                    Colors = new StripColors {   colors = new List<ulong>  {      255, 16711680, 32768, 255, 16777215, 10824234 } }
-                                },
-                    new Step {      From = 10,
-                                    Values = new StripValues { delay=0, com=2, brightness = 255, values = new List<int> {0,0,0} },
-                                    Colors = new StripColors {   colors = new List<ulong> {      255, 16711680, 32768, 255, 16777215, 10824234 } }
-                                },
-                    new Step {      From = 30,
-                                    Values = new StripValues { delay=0, com=2, brightness = 177, values = new List<int> {0,0,0} },
-                                    Colors = new StripColors {   colors = new List<ulong> {    65535, 16711680, 32768, 255, 16777215, 10824234 } }
-                                },
-                    new Step {      From = 50,
-                                    Values = new StripValues { delay=0, com=2, brightness = 240, values = new List<int> {0,0,0} },
-                                    Colors = new StripColors {   colors = new List<ulong> {    65280, 16711680, 32768, 255, 16777215, 10824234 } }
-                                },
-                    new Step {      From = 60,
-                                    Values = new StripValues { delay=0, com=2, brightness = 180, values = new List<int> {0,0,0} },
-                                    Colors = new StripColors {   colors = new List<ulong> { 16711808, 16711680, 32768, 255, 16777215, 10824234 } }
-                             },
-                    new Step {      From = 70,
-                                    Values = new StripValues { delay=0, com=2, brightness = 255, values = new List<int> {0,0,0} },
-                                    Colors = new StripColors {   colors = new List<ulong> { 16711680, 16711680, 32768, 255, 16777215, 10824234 } }
-                             },
-                    new Step {      From = 90,
-                                    Values = new StripValues { delay=2, com=7, brightness = 102, values = new List<int> {32,50,0} },
-                                    Colors = new StripColors {   colors = new List<ulong> { 16711680,        0, 32768, 255, 16777215, 10824234 } }
-                             },
-                    new Step {      From = 95,
-                                    Values = new StripValues { delay=2, com=7, brightness = 255, values = new List<int> {32,20,0} },
-                                    Colors = new StripColors {   colors = new List<ulong> { 16711680,        0, 32768, 255, 16777215, 10824234 } }
-                             },
-                    new Step {      From = 99,
-                                    Values = new StripValues { delay=1, com=7, brightness = 255, values = new List<int> {32,20,0} },
-                                    Colors = new StripColors {   colors = new List<ulong> { 16711680,        0, 32768, 255, 16777215, 10824234 } }
-                             }
+                    new Step { From = 0,  ValuesAndColors = new StripValuesAndColors { delay=0, com=2, brightness =   1, values = new List<int> { 0, 0,0}, colors = new List<ulong>  {     255, 16711680, 32768, 255, 16777215, 10824234 } } },
+                    new Step { From = 10, ValuesAndColors = new StripValuesAndColors { delay=0, com=2, brightness = 255, values = new List<int> { 0, 0,0}, colors = new List<ulong> {      255, 16711680, 32768, 255, 16777215, 10824234 } } },
+                    new Step { From = 30, ValuesAndColors = new StripValuesAndColors { delay=0, com=2, brightness = 177, values = new List<int> { 0, 0,0}, colors = new List<ulong> {    65535, 16711680, 32768, 255, 16777215, 10824234 } } },
+                    new Step { From = 50, ValuesAndColors = new StripValuesAndColors { delay=0, com=2, brightness = 240, values = new List<int> { 0, 0,0}, colors = new List<ulong> {    65280, 16711680, 32768, 255, 16777215, 10824234 } } },
+                    new Step { From = 60, ValuesAndColors = new StripValuesAndColors { delay=0, com=2, brightness = 180, values = new List<int> { 0, 0,0}, colors = new List<ulong> { 16711808, 16711680, 32768, 255, 16777215, 10824234 } } },
+                    new Step { From = 70, ValuesAndColors = new StripValuesAndColors { delay=0, com=2, brightness = 255, values = new List<int> { 0, 0,0}, colors = new List<ulong> { 16711680, 16711680, 32768, 255, 16777215, 10824234 } } },
+                    new Step { From = 90, ValuesAndColors = new StripValuesAndColors { delay=2, com=7, brightness = 102, values = new List<int> {32,50,0}, colors = new List<ulong> { 16711680,        0, 32768, 255, 16777215, 10824234 } } },
+                    new Step { From = 95, ValuesAndColors = new StripValuesAndColors { delay=2, com=7, brightness = 255, values = new List<int> {32,20,0}, colors = new List<ulong> { 16711680,        0, 32768, 255, 16777215, 10824234 } } },
+                    new Step { From = 99, ValuesAndColors = new StripValuesAndColors { delay=1, com=7, brightness = 255, values = new List<int> {32,20,0}, colors = new List<ulong> { 16711680,        0, 32768, 255, 16777215, 10824234 } } }
                 }
             };
 
 
             return theme;
         }
-        
+
+        private Theme CreateStepUpTheme()
+        {
+            var theme = new Theme
+            {
+                Name = "Default StepUp",
+                Steps = new List<Step>()
+            };
+
+            var step = new Step(0, "{\"delay\":500,\"com\":4,\"brightness\":10,\"values\":[1,0,0],\"colors\":[255,0,32768,255,16777215,10824234]}");
+            //step 100 skal ver 1 í delay
+            
+            var stepDown = 6;
+            step.ValuesAndColors.delay += stepDown;
+            for (int i = 0; i < 81; i++)
+            {
+                step.From = i;  step.ValuesAndColors.delay -= stepDown;
+                theme.Steps.Add(new Step(step));
+            }
+             stepDown = 1;
+            step.ValuesAndColors.delay += stepDown;
+            for (int i = 80; i < 101; i++)
+            {
+                step.From = i; step.ValuesAndColors.delay -= stepDown;
+                theme.Steps.Add(new Step(step));
+            }
+
+            return theme;
+        }
+
         private void SaveThemes(List<Theme> themes)
         {
             //Sort all themes
@@ -123,12 +125,12 @@ namespace WinStrip
         
         void LoadThemes()
         {
-            //Properties.Settings.Default.Themes = ""; Properties.Settings.Default.Save();
             var str = Properties.Settings.Default.Themes;
 
             if (string.IsNullOrEmpty(str))
             {
-                SaveThemes(new List<Theme> { CreateDefaultTheme() });
+
+                SaveThemes(new List<Theme> { CreateDefaultTheme(), CreateStepUpTheme()});
                 str = Properties.Settings.Default.Themes;
             }
 
@@ -519,7 +521,7 @@ namespace WinStrip
 
         private void SendStepToDevice(Step step)
         {
-            var str = step.ToJson();
+            var str = step.ValuesAndColorsToJson();
             serial.WriteJson(str);
         }
 
@@ -670,15 +672,13 @@ namespace WinStrip
             dataGridView1.Rows.Clear();
 
             
-            dataGridView1.ColumnCount = 3;
+            dataGridView1.ColumnCount = 2;
             dataGridView1.Columns[0].Name = "From";
             dataGridView1.Columns[0].Width = 35;
-            dataGridView1.Columns[1].Name = "Values";
-            dataGridView1.Columns[1].Width = 240;
-            dataGridView1.Columns[2].Name = "Colors";
-            dataGridView1.Columns[2].Width = 240;
+            dataGridView1.Columns[1].Name = "Values and colors";
+            dataGridView1.Columns[1].Width = 600;
 
-            theme.Steps.ForEach(s => dataGridView1.Rows.Add(new string[] { s.From.ToString(), s.ValuesToJson(), s.ColorsToJson() }));
+            theme.Steps.ForEach(s => dataGridView1.Rows.Add(new string[] { s.From.ToString(), s.ValuesAndColorsToJson() }));
         }
 
         private void comboThemes_SelectedIndexChanged(object sender, EventArgs e)
@@ -726,7 +726,7 @@ namespace WinStrip
             {
                 string strFrom;
                 var row = dataGridView1.Rows[i];
-                if (row.Cells[0].Value == null || row.Cells[1].Value == null || row.Cells[2].Value == null)
+                if (row.Cells[0].Value == null || row.Cells[1].Value == null)
                 {
                     error = true;
                     if (i == dataGridView1.Rows.Count - 1) 
@@ -739,7 +739,7 @@ namespace WinStrip
                 else
                 {
                     strFrom = row.Cells[0].Value.ToString();
-                    error = !theme.AddStep(strFrom, row.Cells[1].Value.ToString(), row.Cells[2].Value.ToString());
+                    error = !theme.AddStep(strFrom, row.Cells[1].Value.ToString());
                 }
                 if (error)
                 {

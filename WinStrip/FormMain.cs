@@ -162,8 +162,9 @@ namespace WinStrip
             InitCombo();
             GetHardwareFromDevice();
 
-            radioButtonCpuTesting.Checked = true;
             EnableDeviceRelatedControls(serial.isConnected);
+            timer1.Start();
+            radioButtonCpuLive.Checked = true; 
         }
 
         private void GetHardwareFromDevice()
@@ -488,6 +489,7 @@ namespace WinStrip
 
         private void SendValuesToDevice(StripValues values = null)
         {
+
             if (values == null) { 
                 values = new StripValues
                 {
@@ -606,7 +608,8 @@ namespace WinStrip
             {
                 var control = (TrackBar)sender;
                 SetControlValue(GetControlValueFromName(control.Name), control.Value);
-                SendValuesToDevice();
+                if (serial.isConnected)
+                    SendValuesToDevice();
             }
             else if (typeName == "NumericUpDown")
             {
@@ -792,6 +795,22 @@ namespace WinStrip
         private void btnLoadAll_Click(object sender, EventArgs e)
         {
             LoadThemes();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (radioButtonCpuLive.Checked) { 
+                float fCpu = performanceCounter1.NextValue();
+                labelCpu.Text = Convert.ToInt32(fCpu).ToString();
+            }
+        }
+
+        private void radioButtonCpuTesting_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButtonCpuTesting.Checked)
+            {
+                numericUpDownCpuTesting.Value = trackBarCpuTesting.Value;
+            }
         }
     }
 }

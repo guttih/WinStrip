@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnSend = new System.Windows.Forms.Button();
             this.comboPorts = new System.Windows.Forms.ComboBox();
             this.labelStatus = new System.Windows.Forms.Label();
@@ -69,6 +70,8 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBoxCustomSend = new System.Windows.Forms.TextBox();
             this.tabCPU = new System.Windows.Forms.TabPage();
+            this.btnLoadAll = new System.Windows.Forms.Button();
+            this.btnNewTheme = new System.Windows.Forms.Button();
             this.btnSaveAllThemes = new System.Windows.Forms.Button();
             this.btnResetThemes = new System.Windows.Forms.Button();
             this.btnLoadTheme = new System.Windows.Forms.Button();
@@ -84,8 +87,8 @@
             this.radioButtonCpuLive = new System.Windows.Forms.RadioButton();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.btnConnection = new System.Windows.Forms.Button();
-            this.btnNewTheme = new System.Windows.Forms.Button();
-            this.btnLoadAll = new System.Windows.Forms.Button();
+            this.performanceCounter1 = new System.Diagnostics.PerformanceCounter();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPrograms.SuspendLayout();
             this.groupBoxParameters.SuspendLayout();
@@ -112,6 +115,7 @@
             this.groupBoxCpuTest.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCpuTesting)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarCpuTesting)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).BeginInit();
             this.SuspendLayout();
             // 
             // btnSend
@@ -613,6 +617,26 @@
             this.tabCPU.TabIndex = 2;
             this.tabCPU.Text = "CPU monitoring";
             // 
+            // btnLoadAll
+            // 
+            this.btnLoadAll.Location = new System.Drawing.Point(199, 27);
+            this.btnLoadAll.Name = "btnLoadAll";
+            this.btnLoadAll.Size = new System.Drawing.Size(103, 23);
+            this.btnLoadAll.TabIndex = 6;
+            this.btnLoadAll.Text = "Load all themes";
+            this.btnLoadAll.UseVisualStyleBackColor = true;
+            this.btnLoadAll.Click += new System.EventHandler(this.btnLoadAll_Click);
+            // 
+            // btnNewTheme
+            // 
+            this.btnNewTheme.Location = new System.Drawing.Point(10, 56);
+            this.btnNewTheme.Name = "btnNewTheme";
+            this.btnNewTheme.Size = new System.Drawing.Size(75, 23);
+            this.btnNewTheme.TabIndex = 5;
+            this.btnNewTheme.Text = "New Theme";
+            this.btnNewTheme.UseVisualStyleBackColor = true;
+            this.btnNewTheme.Click += new System.EventHandler(this.btnNewTheme_Click);
+            // 
             // btnSaveAllThemes
             // 
             this.btnSaveAllThemes.Location = new System.Drawing.Point(199, 56);
@@ -749,6 +773,7 @@
             this.radioButtonCpuTesting.TabStop = true;
             this.radioButtonCpuTesting.Text = "Testing";
             this.radioButtonCpuTesting.UseVisualStyleBackColor = true;
+            this.radioButtonCpuTesting.CheckedChanged += new System.EventHandler(this.radioButtonCpuTesting_CheckedChanged);
             // 
             // radioButtonCpuLive
             // 
@@ -773,25 +798,16 @@
             this.btnConnection.UseVisualStyleBackColor = true;
             this.btnConnection.Click += new System.EventHandler(this.btnConnection_Click);
             // 
-            // btnNewTheme
+            // performanceCounter1
             // 
-            this.btnNewTheme.Location = new System.Drawing.Point(10, 56);
-            this.btnNewTheme.Name = "btnNewTheme";
-            this.btnNewTheme.Size = new System.Drawing.Size(75, 23);
-            this.btnNewTheme.TabIndex = 5;
-            this.btnNewTheme.Text = "New Theme";
-            this.btnNewTheme.UseVisualStyleBackColor = true;
-            this.btnNewTheme.Click += new System.EventHandler(this.btnNewTheme_Click);
+            this.performanceCounter1.CategoryName = "Processor";
+            this.performanceCounter1.CounterName = "% Processor Time";
+            this.performanceCounter1.InstanceName = "_Total";
             // 
-            // btnLoadAll
+            // timer1
             // 
-            this.btnLoadAll.Location = new System.Drawing.Point(199, 27);
-            this.btnLoadAll.Name = "btnLoadAll";
-            this.btnLoadAll.Size = new System.Drawing.Size(103, 23);
-            this.btnLoadAll.TabIndex = 6;
-            this.btnLoadAll.Text = "Load all themes";
-            this.btnLoadAll.UseVisualStyleBackColor = true;
-            this.btnLoadAll.Click += new System.EventHandler(this.btnLoadAll_Click);
+            this.timer1.Interval = 1200;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // FormMain
             // 
@@ -842,6 +858,7 @@
             this.groupBoxCpuTest.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCpuTesting)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarCpuTesting)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -905,6 +922,8 @@
         private System.Windows.Forms.Button btnResetThemes;
         private System.Windows.Forms.Button btnNewTheme;
         private System.Windows.Forms.Button btnLoadAll;
+        private System.Diagnostics.PerformanceCounter performanceCounter1;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

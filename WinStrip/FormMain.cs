@@ -361,8 +361,9 @@ namespace WinStrip
                         parameters.Add(new ProgramParameter { Name = value, Value=0 });
                     }
                     ShowAndSetParamNames();
+                    if (serial.isConnected)
+                        SendValuesToDevice();
 
-                    SendValuesToDevice();
                     if (name == "Reset")
                     {
                         GetValues();
@@ -829,6 +830,8 @@ namespace WinStrip
             {
                 numericUpDownCpuTesting.Value = trackBarCpuTesting.Value;
             }
+
+            SetDataGridButtonsState();
         }
 
         private void lightDimToBrightToolStripMenuItem_Click(object sender, EventArgs e)
@@ -911,13 +914,14 @@ namespace WinStrip
         {
             bool atLeastOneTheme = comboThemes.SelectedIndex > -1;
             bool atLeastOneLineInGrid = dataGridView1.Rows.Count > 1;
-
-            btnAddRow.Enabled = programs?.Count > 0;
-            btnWizard.Enabled = atLeastOneTheme;
-            btnAddRow.Enabled = atLeastOneTheme;
+            bool testMode = radioButtonCpuTesting.Checked;
+            btnAddRow.Enabled = testMode && programs?.Count > 0;
+            btnWizard.Enabled = testMode && atLeastOneTheme;
+            btnAddRow.Enabled = testMode && atLeastOneTheme;
             int selCount = dataGridView1.SelectedRows.Count;
 
-            btnChangeSteps.Enabled =    atLeastOneTheme                       && 
+            btnChangeSteps.Enabled =    testMode && 
+                                        atLeastOneTheme && 
                                         atLeastOneLineInGrid                  && 
                                         dataGridView1.SelectedRows.Count == 1 && 
                                         IsDatagridRowValid(dataGridView1.SelectedRows[0]);
@@ -948,7 +952,7 @@ namespace WinStrip
                 return;
             }
 
-            FormStep form = new FormStep(step, programs, colorDialog1);
+            FormStep form = new FormStep(step, programs, colorDialog1, serial);
             if (form.ShowDialog() == DialogResult.OK)
             {
                 dataGridView1.SelectedRows[0].Cells[1].Value = form.Step.ValuesAndColorsToJson();
@@ -974,7 +978,7 @@ namespace WinStrip
 
         private void btnAddRow_Click(object sender, EventArgs e)
         {
-            FormStep form = new FormStep(new Step(), programs, colorDialog1);
+            FormStep form = new FormStep(new Step(), programs, colorDialog1, serial);
             if (form.ShowDialog() == DialogResult.OK)
             {
                 dataGridView1.Rows.Add(new string[] { form.Step.From.ToString(), form.Step.ValuesAndColorsToJson() });

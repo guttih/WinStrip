@@ -8,7 +8,7 @@ using System.Text;
 namespace WinStrip.Utilities
 {
 
-    class Serial
+    public class Serial
     {
         public int BaudRate = 115200;
         private SerialPort port = null;

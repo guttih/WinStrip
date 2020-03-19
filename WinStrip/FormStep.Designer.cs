@@ -88,7 +88,7 @@
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 0;
-            this.btnSave.Text = "Save";
+            this.btnSave.Text = "Set";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
@@ -460,7 +460,7 @@
             this.MinimumSize = new System.Drawing.Size(624, 568);
             this.Name = "FormStep";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "FormStep";
+            this.Text = "Step in grid";
             this.Load += new System.EventHandler(this.FormStep_Load);
             this.groupBoxBrightness.ResumeLayout(false);
             this.groupBoxBrightness.PerformLayout();

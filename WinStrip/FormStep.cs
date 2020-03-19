@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using WinStrip.Entity;
 using WinStrip.Utilities;
 using WinStrip.EntityTransfer;
+using System.Web.Script.Serialization;
 
 namespace WinStrip
 {
@@ -19,14 +20,18 @@ namespace WinStrip
         List<StripProgram> Programs;
         List<ProgramParameter> Parameters;
         ColorDialog ColorDialog;
+        Serial serial;
+        bool doNotSendToDevice = false;
 
-        public FormStep(Step step, List<StripProgram> programs, ColorDialog colorDialog)
+        public FormStep(Step step, List<StripProgram> programs, ColorDialog colorDialog, Serial serial)
         {
 
             Step = step;
             Parameters = new List<ProgramParameter>();
             Programs = programs;
             ColorDialog = colorDialog;
+            this.serial = serial;
+            
 
             InitializeComponent();
         }
@@ -40,7 +45,17 @@ namespace WinStrip
             {
                 int i = comboPrograms.Items.IndexOf(Programs[Step.ValuesAndColors.com].name);
                 if (i > -1)
+                {
                     comboPrograms.SelectedIndex = i;
+                    doNotSendToDevice = false;
+                    if (serial.isConnected)
+                        serial.WriteJson(Step.ValuesAndColorsToJson());
+                }
+                else
+                {
+                    
+                }
+                    
             }
 
         }
@@ -80,6 +95,7 @@ namespace WinStrip
 
         private void FormStep_Load(object sender, EventArgs e)
         {
+            doNotSendToDevice = true;
             Programs.ForEach(m => comboPrograms.Items.Add(m.name));
             
             StepToForm();
@@ -97,6 +113,8 @@ namespace WinStrip
             {
                 var control = (TrackBar)sender;
                 SetControlValue(GetControlValueFromName(control.Name), control.Value);
+                if (serial.isConnected)
+                    SendValuesToDevice();
             }
             else if (typeName == "NumericUpDown")
             {
@@ -113,7 +131,34 @@ namespace WinStrip
             if (ColorDialog.ShowDialog() == DialogResult.OK)
             {
                 button.BackColor = ColorDialog.Color;
+                SendColorsToDevice();
             }
+        }
+
+        private void SendColorsToDevice(StripColors colors = null)
+        {
+            if (colors == null)
+            {
+                colors = new StripColors
+                {
+                    colors = GetButtonColors(),
+                };
+            }
+            var serializer = new JavaScriptSerializer();
+            var str = serializer.Serialize(colors);
+            serial.WriteLine(str);
+
+        }
+
+        private List<ulong> GetButtonColors()
+        {
+            List<ulong> list = new List<ulong>();
+            list.Add((new SColor(btnColor1.BackColor)).ToUlong());
+            list.Add((new SColor(btnColor2.BackColor)).ToUlong());
+            list.Add((new SColor(btnColor3.BackColor)).ToUlong());
+            list.Add((new SColor(btnColor4.BackColor)).ToUlong());
+            list.Add((new SColor(btnColor5.BackColor)).ToUlong());
+            return list;
         }
 
         private void SetControlValue(ValueControls control, int newValue)
@@ -194,10 +239,45 @@ namespace WinStrip
                         Parameters.Add(new ProgramParameter { Name = value, Value = 0 });
                     }
                     ShowAndSetParamNames();
+                    if (serial.isConnected)
+                        SendValuesToDevice();
 
                     return;
                 }
             }
+        }
+
+        private List<int> GetValues()
+        {
+            var list = new List<int>();
+            if (groupBoxValue1.Visible) list.Add(trackBarValue1.Value);
+            if (groupBoxValue2.Visible) list.Add(trackBarValue2.Value);
+            if (groupBoxValue3.Visible) list.Add(trackBarValue3.Value);
+
+            return list;
+        }
+
+        private void SendValuesToDevice(StripValues values = null)
+        {
+            if (doNotSendToDevice)
+                return;
+
+            if (values == null)
+            {
+                values = new StripValues
+                {
+                    com = comboPrograms.SelectedIndex,
+                    delay = trackBarDelay.Value,
+                    //colors     = GetButtonColors(),
+                    values = GetValues(),
+                    brightness = trackBarBrightness.Value
+                };
+            }
+
+            var serializer = new JavaScriptSerializer();
+            var str = serializer.Serialize(values);
+            serial.WriteLine(str);
+
         }
 
         private void ShowAndSetParamNames()

@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.btnSend = new System.Windows.Forms.Button();
             this.comboPorts = new System.Windows.Forms.ComboBox();
-            this.labelStatus = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPrograms = new System.Windows.Forms.TabPage();
             this.groupBoxParameters = new System.Windows.Forms.GroupBox();
@@ -70,11 +70,19 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBoxCustomSend = new System.Windows.Forms.TextBox();
             this.tabCPU = new System.Windows.Forms.TabPage();
-            this.btnLoadAll = new System.Windows.Forms.Button();
-            this.btnNewTheme = new System.Windows.Forms.Button();
-            this.btnSaveAllThemes = new System.Windows.Forms.Button();
-            this.btnResetThemes = new System.Windows.Forms.Button();
-            this.btnLoadTheme = new System.Windows.Forms.Button();
+            this.toolStrip3 = new System.Windows.Forms.ToolStrip();
+            this.btnChangeSteps = new System.Windows.Forms.ToolStripButton();
+            this.btnWizard = new System.Windows.Forms.ToolStripDropDownButton();
+            this.lightDimToBrightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.onLedTravelsSlowToFastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.btnNewTheme = new System.Windows.Forms.ToolStripButton();
+            this.btnReloadTheme = new System.Windows.Forms.ToolStripButton();
+            this.btnDeleteTheme = new System.Windows.Forms.ToolStripButton();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.btnSaveAllThemes = new System.Windows.Forms.ToolStripButton();
+            this.btnLoadAllThemes = new System.Windows.Forms.ToolStripButton();
+            this.btnResetAllThemes = new System.Windows.Forms.ToolStripButton();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label3 = new System.Windows.Forms.Label();
             this.comboThemes = new System.Windows.Forms.ComboBox();
@@ -89,6 +97,12 @@
             this.btnConnection = new System.Windows.Forms.Button();
             this.performanceCounter1 = new System.Diagnostics.PerformanceCounter();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.btnAddRow = new System.Windows.Forms.ToolStripButton();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabPrograms.SuspendLayout();
             this.groupBoxParameters.SuspendLayout();
@@ -110,18 +124,22 @@
             this.groupBox1.SuspendLayout();
             this.tabManual.SuspendLayout();
             this.tabCPU.SuspendLayout();
+            this.toolStrip3.SuspendLayout();
+            this.toolStrip2.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBoxCpuTest.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCpuTesting)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarCpuTesting)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnSend
             // 
             this.btnSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSend.Location = new System.Drawing.Point(531, 372);
+            this.btnSend.Location = new System.Drawing.Point(531, 389);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(75, 23);
             this.btnSend.TabIndex = 0;
@@ -134,22 +152,11 @@
             this.comboPorts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.comboPorts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboPorts.FormattingEnabled = true;
-            this.comboPorts.Location = new System.Drawing.Point(23, 459);
+            this.comboPorts.Location = new System.Drawing.Point(23, 476);
             this.comboPorts.Name = "comboPorts";
             this.comboPorts.Size = new System.Drawing.Size(92, 21);
             this.comboPorts.TabIndex = 8;
             this.comboPorts.SelectedIndexChanged += new System.EventHandler(this.comboPorts_SelectedIndexChanged);
-            // 
-            // labelStatus
-            // 
-            this.labelStatus.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.labelStatus.Location = new System.Drawing.Point(0, 491);
-            this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(652, 20);
-            this.labelStatus.TabIndex = 9;
-            this.labelStatus.Text = "labelStatus labelStatus labelStatus labelStatus labelStatus labelStatus labelStat" +
-    "us labelStatus labelStatus labelStatus labelStatus labelStatus labelStatus label" +
-    "Status labelStatus labelStatus ";
             // 
             // tabControl1
             // 
@@ -162,7 +169,7 @@
             this.tabControl1.Location = new System.Drawing.Point(13, 13);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(627, 440);
+            this.tabControl1.Size = new System.Drawing.Size(627, 457);
             this.tabControl1.TabIndex = 10;
             // 
             // tabPrograms
@@ -181,7 +188,7 @@
             this.tabPrograms.Location = new System.Drawing.Point(4, 22);
             this.tabPrograms.Name = "tabPrograms";
             this.tabPrograms.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPrograms.Size = new System.Drawing.Size(619, 414);
+            this.tabPrograms.Size = new System.Drawing.Size(619, 431);
             this.tabPrograms.TabIndex = 1;
             this.tabPrograms.Text = "Programs";
             // 
@@ -540,7 +547,7 @@
             this.tabManual.Location = new System.Drawing.Point(4, 22);
             this.tabManual.Name = "tabManual";
             this.tabManual.Padding = new System.Windows.Forms.Padding(3);
-            this.tabManual.Size = new System.Drawing.Size(619, 414);
+            this.tabManual.Size = new System.Drawing.Size(619, 431);
             this.tabManual.TabIndex = 0;
             this.tabManual.Text = "Manual";
             // 
@@ -565,7 +572,7 @@
             // btnClearText2
             // 
             this.btnClearText2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnClearText2.Location = new System.Drawing.Point(11, 372);
+            this.btnClearText2.Location = new System.Drawing.Point(11, 389);
             this.btnClearText2.Name = "btnClearText2";
             this.btnClearText2.Size = new System.Drawing.Size(75, 23);
             this.btnClearText2.TabIndex = 2;
@@ -583,7 +590,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
             this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox2.Size = new System.Drawing.Size(600, 289);
+            this.textBox2.Size = new System.Drawing.Size(600, 306);
             this.textBox2.TabIndex = 1;
             // 
             // textBoxCustomSend
@@ -600,11 +607,12 @@
             // tabCPU
             // 
             this.tabCPU.BackColor = System.Drawing.SystemColors.Control;
-            this.tabCPU.Controls.Add(this.btnLoadAll);
-            this.tabCPU.Controls.Add(this.btnNewTheme);
-            this.tabCPU.Controls.Add(this.btnSaveAllThemes);
-            this.tabCPU.Controls.Add(this.btnResetThemes);
-            this.tabCPU.Controls.Add(this.btnLoadTheme);
+            this.tabCPU.Controls.Add(this.textBox1);
+            this.tabCPU.Controls.Add(this.label7);
+            this.tabCPU.Controls.Add(this.label6);
+            this.tabCPU.Controls.Add(this.toolStrip3);
+            this.tabCPU.Controls.Add(this.toolStrip2);
+            this.tabCPU.Controls.Add(this.toolStrip1);
             this.tabCPU.Controls.Add(this.dataGridView1);
             this.tabCPU.Controls.Add(this.label3);
             this.tabCPU.Controls.Add(this.comboThemes);
@@ -613,59 +621,165 @@
             this.tabCPU.Location = new System.Drawing.Point(4, 22);
             this.tabCPU.Name = "tabCPU";
             this.tabCPU.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCPU.Size = new System.Drawing.Size(619, 414);
+            this.tabCPU.Size = new System.Drawing.Size(619, 431);
             this.tabCPU.TabIndex = 2;
             this.tabCPU.Text = "CPU monitoring";
             // 
-            // btnLoadAll
+            // toolStrip3
             // 
-            this.btnLoadAll.Location = new System.Drawing.Point(199, 27);
-            this.btnLoadAll.Name = "btnLoadAll";
-            this.btnLoadAll.Size = new System.Drawing.Size(103, 23);
-            this.btnLoadAll.TabIndex = 6;
-            this.btnLoadAll.Text = "Load all themes";
-            this.btnLoadAll.UseVisualStyleBackColor = true;
-            this.btnLoadAll.Click += new System.EventHandler(this.btnLoadAll_Click);
+            this.toolStrip3.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnAddRow,
+            this.btnChangeSteps,
+            this.btnWizard});
+            this.toolStrip3.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+            this.toolStrip3.Location = new System.Drawing.Point(229, 190);
+            this.toolStrip3.Name = "toolStrip3";
+            this.toolStrip3.Size = new System.Drawing.Size(107, 23);
+            this.toolStrip3.TabIndex = 9;
+            this.toolStrip3.Text = "toolStrip3";
+            // 
+            // btnChangeSteps
+            // 
+            this.btnChangeSteps.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnChangeSteps.Image = ((System.Drawing.Image)(resources.GetObject("btnChangeSteps.Image")));
+            this.btnChangeSteps.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnChangeSteps.Name = "btnChangeSteps";
+            this.btnChangeSteps.Size = new System.Drawing.Size(23, 20);
+            this.btnChangeSteps.Text = "toolStripButton2";
+            this.btnChangeSteps.ToolTipText = "Change the steps in a theme \r\naccoording to your selection\r\n\r\nIn order to be able" +
+    " to change a row\r\nyou must first select the entire row\r\nby clicking in the area " +
+    "on the left of it";
+            this.btnChangeSteps.Click += new System.EventHandler(this.btnChangeSteps_Click);
+            // 
+            // btnWizard
+            // 
+            this.btnWizard.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnWizard.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lightDimToBrightToolStripMenuItem,
+            this.onLedTravelsSlowToFastToolStripMenuItem});
+            this.btnWizard.Image = ((System.Drawing.Image)(resources.GetObject("btnWizard.Image")));
+            this.btnWizard.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnWizard.Name = "btnWizard";
+            this.btnWizard.Size = new System.Drawing.Size(29, 20);
+            this.btnWizard.Text = "toolStripDropDownButton1";
+            this.btnWizard.ToolTipText = "Generate series of steps";
+            // 
+            // lightDimToBrightToolStripMenuItem
+            // 
+            this.lightDimToBrightToolStripMenuItem.Name = "lightDimToBrightToolStripMenuItem";
+            this.lightDimToBrightToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.lightDimToBrightToolStripMenuItem.Text = "Light dim to bright";
+            this.lightDimToBrightToolStripMenuItem.ToolTipText = "Creates series of steps where light goes from \r\none value to a nother";
+            this.lightDimToBrightToolStripMenuItem.Click += new System.EventHandler(this.lightDimToBrightToolStripMenuItem_Click);
+            // 
+            // onLedTravelsSlowToFastToolStripMenuItem
+            // 
+            this.onLedTravelsSlowToFastToolStripMenuItem.Name = "onLedTravelsSlowToFastToolStripMenuItem";
+            this.onLedTravelsSlowToFastToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.onLedTravelsSlowToFastToolStripMenuItem.Text = "On led travels slow to fast";
+            this.onLedTravelsSlowToFastToolStripMenuItem.ToolTipText = "Generates steps where one light \r\nstarts movig slowly and goes faster\r\nwhen the p" +
+    "rocessor load increases";
+            this.onLedTravelsSlowToFastToolStripMenuItem.Click += new System.EventHandler(this.onLedTravelsSlowToFastToolStripMenuItem_Click);
+            // 
+            // toolStrip2
+            // 
+            this.toolStrip2.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnNewTheme,
+            this.btnReloadTheme,
+            this.btnDeleteTheme});
+            this.toolStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+            this.toolStrip2.Location = new System.Drawing.Point(235, 122);
+            this.toolStrip2.Name = "toolStrip2";
+            this.toolStrip2.Size = new System.Drawing.Size(70, 23);
+            this.toolStrip2.TabIndex = 8;
+            this.toolStrip2.Text = "toolStrip2";
             // 
             // btnNewTheme
             // 
-            this.btnNewTheme.Location = new System.Drawing.Point(10, 56);
+            this.btnNewTheme.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnNewTheme.Image = ((System.Drawing.Image)(resources.GetObject("btnNewTheme.Image")));
+            this.btnNewTheme.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnNewTheme.Name = "btnNewTheme";
-            this.btnNewTheme.Size = new System.Drawing.Size(75, 23);
-            this.btnNewTheme.TabIndex = 5;
-            this.btnNewTheme.Text = "New Theme";
-            this.btnNewTheme.UseVisualStyleBackColor = true;
+            this.btnNewTheme.Size = new System.Drawing.Size(23, 20);
+            this.btnNewTheme.Text = "toolStripButton2";
+            this.btnNewTheme.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
+            this.btnNewTheme.ToolTipText = "Add a new theme\r\n\r\nThe theme will be added but not saved.\r\n\r\nTo save the theme yo" +
+    "u will need to press\r\nthe save button.";
             this.btnNewTheme.Click += new System.EventHandler(this.btnNewTheme_Click);
+            // 
+            // btnReloadTheme
+            // 
+            this.btnReloadTheme.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnReloadTheme.Image = ((System.Drawing.Image)(resources.GetObject("btnReloadTheme.Image")));
+            this.btnReloadTheme.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnReloadTheme.Name = "btnReloadTheme";
+            this.btnReloadTheme.Size = new System.Drawing.Size(23, 20);
+            this.btnReloadTheme.Text = "toolStripButton2";
+            this.btnReloadTheme.ToolTipText = "Reload selected theme\r\n\r\nThat is, throw away any changes made \r\nto this theme and" +
+    " load the saved theme\r\nto owerwrite changes.";
+            this.btnReloadTheme.Click += new System.EventHandler(this.btnReloadTheme_Click);
+            // 
+            // btnDeleteTheme
+            // 
+            this.btnDeleteTheme.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnDeleteTheme.Image = ((System.Drawing.Image)(resources.GetObject("btnDeleteTheme.Image")));
+            this.btnDeleteTheme.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDeleteTheme.Name = "btnDeleteTheme";
+            this.btnDeleteTheme.Size = new System.Drawing.Size(23, 20);
+            this.btnDeleteTheme.Text = "toolStripButton1";
+            this.btnDeleteTheme.ToolTipText = "Remove selected theme\r\n\r\nIf you want to delete the theme permanently\r\nyou will ne" +
+    "ed to press the save all themes button";
+            this.btnDeleteTheme.Click += new System.EventHandler(this.btnDeleteTheme_Click);
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnSaveAllThemes,
+            this.btnLoadAllThemes,
+            this.btnResetAllThemes});
+            this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+            this.toolStrip1.Location = new System.Drawing.Point(236, 12);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.Size = new System.Drawing.Size(70, 23);
+            this.toolStrip1.TabIndex = 7;
+            this.toolStrip1.Text = "toolStrip1";
             // 
             // btnSaveAllThemes
             // 
-            this.btnSaveAllThemes.Location = new System.Drawing.Point(199, 56);
+            this.btnSaveAllThemes.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnSaveAllThemes.Image = ((System.Drawing.Image)(resources.GetObject("btnSaveAllThemes.Image")));
+            this.btnSaveAllThemes.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSaveAllThemes.Name = "btnSaveAllThemes";
-            this.btnSaveAllThemes.Size = new System.Drawing.Size(103, 23);
-            this.btnSaveAllThemes.TabIndex = 4;
-            this.btnSaveAllThemes.Text = "Save all themes";
-            this.btnSaveAllThemes.UseVisualStyleBackColor = true;
-            this.btnSaveAllThemes.Click += new System.EventHandler(this.btnSaveTheme_Click);
+            this.btnSaveAllThemes.Size = new System.Drawing.Size(23, 20);
+            this.btnSaveAllThemes.Text = "toolStripButton3";
+            this.btnSaveAllThemes.ToolTipText = "Save all themes";
+            this.btnSaveAllThemes.Click += new System.EventHandler(this.btnSaveAllThemes_Click);
             // 
-            // btnResetThemes
+            // btnLoadAllThemes
             // 
-            this.btnResetThemes.Location = new System.Drawing.Point(118, 56);
-            this.btnResetThemes.Name = "btnResetThemes";
-            this.btnResetThemes.Size = new System.Drawing.Size(75, 23);
-            this.btnResetThemes.TabIndex = 4;
-            this.btnResetThemes.Text = "Reset all themes";
-            this.btnResetThemes.UseVisualStyleBackColor = true;
-            this.btnResetThemes.Click += new System.EventHandler(this.btnResetThemes_Click);
+            this.btnLoadAllThemes.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnLoadAllThemes.Image = ((System.Drawing.Image)(resources.GetObject("btnLoadAllThemes.Image")));
+            this.btnLoadAllThemes.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnLoadAllThemes.Name = "btnLoadAllThemes";
+            this.btnLoadAllThemes.Size = new System.Drawing.Size(23, 20);
+            this.btnLoadAllThemes.Text = "toolStripButton5";
+            this.btnLoadAllThemes.ToolTipText = "Throw away all changes and \r\nload all saved themes again.";
+            this.btnLoadAllThemes.Click += new System.EventHandler(this.btnLoadAllThemes_Click);
             // 
-            // btnLoadTheme
+            // btnResetAllThemes
             // 
-            this.btnLoadTheme.Location = new System.Drawing.Point(10, 189);
-            this.btnLoadTheme.Name = "btnLoadTheme";
-            this.btnLoadTheme.Size = new System.Drawing.Size(75, 23);
-            this.btnLoadTheme.TabIndex = 4;
-            this.btnLoadTheme.Text = "Load again";
-            this.btnLoadTheme.UseVisualStyleBackColor = true;
-            this.btnLoadTheme.Click += new System.EventHandler(this.btnLoadTheme_Click);
+            this.btnResetAllThemes.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnResetAllThemes.Image = ((System.Drawing.Image)(resources.GetObject("btnResetAllThemes.Image")));
+            this.btnResetAllThemes.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnResetAllThemes.Name = "btnResetAllThemes";
+            this.btnResetAllThemes.Size = new System.Drawing.Size(23, 20);
+            this.btnResetAllThemes.Text = "toolStripButton4";
+            this.btnResetAllThemes.ToolTipText = "Reset All\r\n\r\nDeletes all saved themes and \r\ncreates the default themes again,\r\nsa" +
+    "ves and loads them.";
+            this.btnResetAllThemes.Click += new System.EventHandler(this.btnResetAllThemes_Click);
             // 
             // dataGridView1
             // 
@@ -673,10 +787,13 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(10, 218);
+            this.dataGridView1.Location = new System.Drawing.Point(6, 218);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(597, 190);
+            this.dataGridView1.Size = new System.Drawing.Size(601, 207);
             this.dataGridView1.TabIndex = 3;
+            this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView1_RowsChanged);
+            this.dataGridView1.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dataGridView1_RowsChanged);
+            this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             // 
             // label3
             // 
@@ -694,7 +811,7 @@
             this.comboThemes.FormattingEnabled = true;
             this.comboThemes.Location = new System.Drawing.Point(6, 150);
             this.comboThemes.Name = "comboThemes";
-            this.comboThemes.Size = new System.Drawing.Size(296, 21);
+            this.comboThemes.Size = new System.Drawing.Size(299, 21);
             this.comboThemes.TabIndex = 1;
             this.comboThemes.SelectedIndexChanged += new System.EventHandler(this.comboThemes_SelectedIndexChanged);
             // 
@@ -790,7 +907,7 @@
             // btnConnection
             // 
             this.btnConnection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnConnection.Location = new System.Drawing.Point(136, 459);
+            this.btnConnection.Location = new System.Drawing.Point(136, 476);
             this.btnConnection.Name = "btnConnection";
             this.btnConnection.Size = new System.Drawing.Size(75, 23);
             this.btnConnection.TabIndex = 11;
@@ -809,14 +926,73 @@
             this.timer1.Interval = 1200;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.labelStatus});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 506);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(652, 22);
+            this.statusStrip1.TabIndex = 13;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // labelStatus
+            // 
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(64, 17);
+            this.labelStatus.Text = "labelStatus";
+            // 
+            // btnAddRow
+            // 
+            this.btnAddRow.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnAddRow.Image = ((System.Drawing.Image)(resources.GetObject("btnAddRow.Image")));
+            this.btnAddRow.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnAddRow.Name = "btnAddRow";
+            this.btnAddRow.Size = new System.Drawing.Size(23, 20);
+            this.btnAddRow.Text = "toolStripButton1";
+            this.btnAddRow.ToolTipText = "Add a new step to this theme\r\n\r\nThe step will be added to the table\r\nbut to save " +
+    "it, you will need to press\r\nthe save button";
+            this.btnAddRow.Click += new System.EventHandler(this.btnAddRow_Click);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(7, 199);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(34, 13);
+            this.label6.TabIndex = 10;
+            this.label6.Text = "Steps";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            this.label7.Location = new System.Drawing.Point(7, 12);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(69, 13);
+            this.label7.TabIndex = 11;
+            this.label7.Text = "All Themes";
+            // 
+            // textBox1
+            // 
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Location = new System.Drawing.Point(7, 39);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(298, 84);
+            this.textBox1.TabIndex = 12;
+            this.textBox1.TabStop = false;
+            this.textBox1.Text = resources.GetString("textBox1.Text");
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(652, 511);
+            this.ClientSize = new System.Drawing.Size(652, 528);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.btnConnection);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.comboPorts);
             this.MinimumSize = new System.Drawing.Size(540, 550);
             this.Name = "FormMain";
@@ -851,6 +1027,12 @@
             this.tabManual.PerformLayout();
             this.tabCPU.ResumeLayout(false);
             this.tabCPU.PerformLayout();
+            this.toolStrip3.ResumeLayout(false);
+            this.toolStrip3.PerformLayout();
+            this.toolStrip2.ResumeLayout(false);
+            this.toolStrip2.PerformLayout();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -859,14 +1041,16 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCpuTesting)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarCpuTesting)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
         private System.Windows.Forms.Button btnSend;
         private System.Windows.Forms.ComboBox comboPorts;
-        private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabManual;
         private System.Windows.Forms.TabPage tabPrograms;
@@ -917,13 +1101,27 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox comboThemes;
-        private System.Windows.Forms.Button btnSaveAllThemes;
-        private System.Windows.Forms.Button btnLoadTheme;
-        private System.Windows.Forms.Button btnResetThemes;
-        private System.Windows.Forms.Button btnNewTheme;
-        private System.Windows.Forms.Button btnLoadAll;
         private System.Diagnostics.PerformanceCounter performanceCounter1;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel labelStatus;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton btnSaveAllThemes;
+        private System.Windows.Forms.ToolStripButton btnResetAllThemes;
+        private System.Windows.Forms.ToolStripButton btnLoadAllThemes;
+        private System.Windows.Forms.ToolStrip toolStrip2;
+        private System.Windows.Forms.ToolStripButton btnNewTheme;
+        private System.Windows.Forms.ToolStripButton btnReloadTheme;
+        private System.Windows.Forms.ToolStrip toolStrip3;
+        private System.Windows.Forms.ToolStripButton btnChangeSteps;
+        private System.Windows.Forms.ToolStripDropDownButton btnWizard;
+        private System.Windows.Forms.ToolStripMenuItem lightDimToBrightToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem onLedTravelsSlowToFastToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton btnDeleteTheme;
+        private System.Windows.Forms.ToolStripButton btnAddRow;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 

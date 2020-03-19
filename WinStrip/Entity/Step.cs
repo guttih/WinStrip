@@ -5,9 +5,14 @@ using WinStrip.EntityTransfer;
 
 namespace WinStrip.Entity
 {
-    class Step : IComparer<Step>
+    public class Step : IComparer<Step>
 
     {
+        public int From { get; set; }
+        public StripValuesAndColors ValuesAndColors { get; set; }
+        public Step() {
+            ValuesAndColors = new StripValuesAndColors();
+        }
         public Step(int from, string valuesAndColors)
         {
             From = from;
@@ -19,9 +24,8 @@ namespace WinStrip.Entity
             ValuesAndColors = new StripValuesAndColors(step.ValuesAndColors);
         }
 
-        public Step() {}
-        public int From { get; set; }
-        public StripValuesAndColors ValuesAndColors{ get; set; }
+        
+        
 
         public int Compare(Step x, Step y)
         {

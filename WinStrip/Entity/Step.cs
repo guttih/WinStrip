@@ -13,8 +13,22 @@ namespace WinStrip.Entity
         public Step() {
             ValuesAndColors = new StripValuesAndColors();
         }
-        public Step(int from, string valuesAndColors)
+        /// <summary>
+        /// Constructor for a step created from one int and a json string
+        /// </summary>
+        /// <param name="from">From value in the step</param>
+        /// <param name="valuesAndColors">The Json string to create the step from</param>
+        /// <param name="fixSpacesAndTabs">If spaces and tabs are found in the string valuesAndColors, remove them.</param>
+        public Step(int from, string valuesAndColors, bool fixSpacesAndTabs = false)
         {
+            if (fixSpacesAndTabs)
+            {
+                valuesAndColors = valuesAndColors.Replace(" ", "");
+                valuesAndColors = valuesAndColors.Replace("\t", "");
+                valuesAndColors = valuesAndColors.Replace("\r", "");
+                valuesAndColors = valuesAndColors.Replace("\n", "");
+            }
+            
             From = from;
             var serializer = new JavaScriptSerializer();
             ValuesAndColors =  serializer.Deserialize<StripValuesAndColors>(valuesAndColors);

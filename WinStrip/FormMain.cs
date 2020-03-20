@@ -424,7 +424,7 @@ namespace WinStrip
             
                 ValuesToControls(ret.brightness, ret.delay, ret.values, ret.colors);
                 return true;
-            } catch(Exception ex)
+            } catch(Exception)
             {
                 return false;
             }
@@ -434,8 +434,6 @@ namespace WinStrip
         {
             SetControlValue(ValueControls.DELAY, delay);
             SetControlValue(ValueControls.BRIGHTNESS, brightness);
-
-            int i;
 
             if (colors != null && colors.Count == 6 )
             { 
@@ -726,7 +724,7 @@ namespace WinStrip
                     /*SendValuesToDevice(step.Values);
                     SendColorsToDevice(step.Colors);*/
                     SendStepToDevice(step);
-                } catch (Exception ex)
+                } catch (Exception)
                 {
                     //do nothing
                 }
@@ -873,7 +871,8 @@ namespace WinStrip
             {
                 try {
                     iFrom = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells[0].Value.ToString());
-                } catch (Exception ex) {
+                } catch (Exception)
+                {
                     MessageBox.Show("From is not an valid number", "Invalid number", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return null;
                 }
@@ -882,7 +881,7 @@ namespace WinStrip
             Step step;
             try {
                 step = new Step(iFrom, dataGridView1.SelectedRows[0].Cells[1].Value.ToString());
-            } catch (Exception ex) {
+            } catch (Exception) {
                 MessageBox.Show("Values and colors contains invalid command", "Invalid number", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }

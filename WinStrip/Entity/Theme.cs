@@ -54,7 +54,7 @@ namespace WinStrip.Entity
                 var valuesAndColorsObj = serializer.Deserialize<StripValuesAndColors>(valuesAndColors);
                 Steps.Add(new Step { From = fromInt, ValuesAndColors = valuesAndColorsObj });
 
-            } catch (Exception ex)
+            } catch (Exception)
             {
                 return false;
             }

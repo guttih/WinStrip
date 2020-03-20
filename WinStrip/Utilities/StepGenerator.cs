@@ -8,6 +8,11 @@ namespace WinStrip.Utilities
 {
     public static class StepGenerator
     {
+        public static List<Step> StripSteps(Step firstStep, Step lastStep)
+        {
+            var list = new List<Step>();
+            return list;
+        }
         public static List<Step> StripDimToBright(Step baseStep, ulong startColor, ulong endColor, UInt16 startIndex, UInt16 endIndex, UInt16 interval = 1 )
         {
             var colorFrom    = new SColor(startColor);

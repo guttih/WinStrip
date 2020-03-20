@@ -39,7 +39,18 @@ namespace WinStrip
                 item.Click += new EventHandler(textBoxCustomSenditem_Click);
             }
         }
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            LoadThemes();
+            labelStatus.Text = "";
+            InitComboPorts();
+            GetHardwareFromDevice();
 
+            EnableDeviceRelatedControls(serial.isConnected);
+            timer1.Start();
+            radioButtonCpuLive.Checked = true; 
+
+        }
         void textBoxCustomSenditem_Click(object sender, EventArgs e)
         {
             MenuItem clickedItem = sender as MenuItem;
@@ -110,7 +121,7 @@ namespace WinStrip
             return theme;
         }
 
-        private void SaveThemes(List<Theme> themes)
+        private void SaveThemes(List<Theme> themes, int selectedThemeIndex)
         {
             //Sort all themes
             themes.Sort(new Theme());
@@ -119,6 +130,7 @@ namespace WinStrip
             
             var str = (new JavaScriptSerializer()).Serialize(themes);
             Properties.Settings.Default.Themes = str;
+            //Properties.Settings.Default.ThemeSelectedIndex = selectedThemeIndex;
             Properties.Settings.Default.Save();
         }
 
@@ -130,13 +142,15 @@ namespace WinStrip
             if (string.IsNullOrEmpty(str))
             {
 
-                SaveThemes(new List<Theme> { CreateDefaultTheme(), CreateStepUpTheme()});
+                SaveThemes(new List<Theme> { CreateDefaultTheme(), CreateStepUpTheme()}, 0);
                 str = Properties.Settings.Default.Themes;
             }
 
             var ser = new JavaScriptSerializer();
             var themeList = ser.Deserialize<List<Theme>>(str);
-            
+            //ThemeSelectedIndex = Properties.Settings.Default.ThemeSelectedIndex;
+            ThemeSelectedIndex = 0;
+
             Themes = themeList;
             
 
@@ -152,24 +166,17 @@ namespace WinStrip
             if (Themes.Count > 0) 
             { 
                 Themes.ForEach(t => comboThemes.Items.Add(t.Name));
-                comboThemes.SelectedIndex = 0;
+                if (ThemeSelectedIndex > -1 && ThemeSelectedIndex < Themes.Count)
+                {
+                    comboThemes.SelectedIndex = comboThemes.FindStringExact(Themes[ThemeSelectedIndex].Name);
+                }
             }
             SetThemeButtonsState();
         }
 
 
 
-        private void FormMain_Load(object sender, EventArgs e)
-        {
-            LoadThemes();
-            labelStatus.Text = "";
-            InitCombo();
-            GetHardwareFromDevice();
-
-            EnableDeviceRelatedControls(serial.isConnected);
-            timer1.Start();
-            radioButtonCpuLive.Checked = true; 
-        }
+        
 
         private void GetHardwareFromDevice()
         {
@@ -258,7 +265,7 @@ namespace WinStrip
         }
 
 
-        public void InitCombo()
+        public void InitComboPorts()
         {
             string[] ports = serial.getPortNames();
 
@@ -669,18 +676,23 @@ namespace WinStrip
             groupBoxCpuTest.Enabled = !radioButton.Checked;
         }
 
-        void loadThemeToGrid(Theme theme) 
+        void ThemeToGrid(Theme theme) 
+        {
+            StepsToGrid(theme.Steps);
+        }
+
+        void StepsToGrid(List<Step> steps)
         {
             dataGridView1.Rows.Clear();
 
-            
+
             dataGridView1.ColumnCount = 2;
             dataGridView1.Columns[0].Name = "From";
             dataGridView1.Columns[0].Width = 35;
             dataGridView1.Columns[1].Name = "Values and colors";
             dataGridView1.Columns[1].Width = 600;
 
-            theme.Steps.ForEach(s => dataGridView1.Rows.Add(new string[] { s.From.ToString(), s.ValuesAndColorsToJson() }));
+            steps.ForEach(s => dataGridView1.Rows.Add(new string[] { s.From.ToString(), s.ValuesAndColorsToJson() }));
             SetThemeButtonsState();
         }
 
@@ -699,7 +711,7 @@ namespace WinStrip
                 return;
             }
             ThemeSelectedIndex = index;
-            loadThemeToGrid(Themes[ThemeSelectedIndex]);
+            ThemeToGrid(Themes[ThemeSelectedIndex]);
 
 
         }
@@ -728,10 +740,10 @@ namespace WinStrip
         {
             if (ThemeSelectedIndex < 0)
                 return;
-            loadThemeToGrid(Themes[ThemeSelectedIndex]);
+            ThemeToGrid(Themes[ThemeSelectedIndex]);
             var text = Themes[ThemeSelectedIndex].Name;
             
-            loadThemeToGrid(Themes[ThemeSelectedIndex]);
+            ThemeToGrid(Themes[ThemeSelectedIndex]);
         }
 
         private void btnSaveAllThemes_Click(object sender, EventArgs e)
@@ -768,7 +780,7 @@ namespace WinStrip
             //we got valid steps
             if (ThemeSelectedIndex > -1 && Themes.Count > 0)
                 Themes[ThemeSelectedIndex] = theme;
-            SaveThemes(Themes);
+            SaveThemes(Themes, ThemeSelectedIndex);
         }
 
         private void btnResetAllThemes_Click(object sender, EventArgs e)
@@ -788,7 +800,7 @@ namespace WinStrip
 
         private void btnNewTheme_Click(object sender, EventArgs e)
         {
-            var str = PromptDialog.ShowDialog("Please provide a new name for this theme", "Adding a new theme", 400);
+            var str = PromptDialog.ShowDialog("Please provide a new name for this theme", "Adding a new theme", "", 400);
             if (str.Length > 0)
             {
                 var newTheme = new Theme(str);
@@ -802,13 +814,33 @@ namespace WinStrip
                 {
                     MessageBox.Show("There exists another theme with this name, please select another one!", "Name taken", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 }
-                
-                
             }
 
-            
             SetThemeButtonsState();
 
+        }
+
+        private void btnRenameTheme_Click(object sender, EventArgs e)
+        {
+            var oldName = comboThemes.Text;
+            var str = PromptDialog.ShowDialog("Please provide a new name for this theme", "Adding a new theme", oldName, 400);
+            if (str.Length > 0)
+            {
+                int i = Themes.FindIndex(t => t.Name == oldName);
+                if (i != -1)
+                {
+                    Themes[i].Name = str;
+                    comboThemes.Items.RemoveAt(comboThemes.SelectedIndex);
+                    int index = comboThemes.Items.Add(str);
+                    comboThemes.SelectedIndex = index;
+                }
+                else
+                {
+                    MessageBox.Show("There exists another theme with this name, please select another one!", "Name taken", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+            }
+
+            SetThemeButtonsState();
         }
 
         private void btnLoadAllThemes_Click(object sender, EventArgs e)
@@ -834,10 +866,31 @@ namespace WinStrip
             SetDataGridButtonsState();
         }
 
-        private void lightDimToBrightToolStripMenuItem_Click(object sender, EventArgs e)
+        private Step ExtractSelectedStepFromStrip(bool ignoreFrom = false)
         {
-            MessageBox.Show("This feature is not yet implemented", "Not implemented yet");
+            int iFrom = 0;
+            if (!ignoreFrom) 
+            {
+                try {
+                    iFrom = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells[0].Value.ToString());
+                } catch (Exception ex) {
+                    MessageBox.Show("From is not an valid number", "Invalid number", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
+            }
+
+            Step step;
+            try {
+                step = new Step(iFrom, dataGridView1.SelectedRows[0].Cells[1].Value.ToString());
+            } catch (Exception ex) {
+                MessageBox.Show("Values and colors contains invalid command", "Invalid number", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+
+            return step;
         }
+
+        
 
         private void onLedTravelsSlowToFastToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -893,6 +946,7 @@ namespace WinStrip
 
             //ComboBox Themes
             comboThemes.Enabled = comboThemes.Items.Count > 0;
+            btnRenameTheme.Enabled = atLeastOneTheme;
             btnReloadTheme.Enabled = atLeastOneTheme;
             btnDeleteTheme.Enabled = atLeastOneTheme;
             SetDataGridButtonsState();
@@ -919,39 +973,25 @@ namespace WinStrip
             btnWizard.Enabled = testMode && atLeastOneTheme;
             btnAddRow.Enabled = testMode && atLeastOneTheme;
             int selCount = dataGridView1.SelectedRows.Count;
-
-            btnChangeSteps.Enabled =    testMode && 
-                                        atLeastOneTheme && 
-                                        atLeastOneLineInGrid                  && 
-                                        dataGridView1.SelectedRows.Count == 1 && 
+            bool IsRowReadyForEditing = testMode &&
+                                        atLeastOneTheme &&
+                                        atLeastOneLineInGrid &&
+                                        dataGridView1.SelectedRows.Count == 1 &&
                                         IsDatagridRowValid(dataGridView1.SelectedRows[0]);
+            btnChangeSteps.Enabled = IsRowReadyForEditing;
+
+            DimToBrightBlueToolStripMenuItem.Enabled = IsRowReadyForEditing;
+            DimToBrightGreenToolStripMenuItem.Enabled = IsRowReadyForEditing;
+            DimToBrightRedToolStripMenuItem.Enabled = IsRowReadyForEditing;
 
         }
 
         private void btnChangeSteps_Click(object sender, EventArgs e)
         {
 
-            int iFrom;
-            try
-            {
-                iFrom = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells[0].Value.ToString());
-            } catch(Exception ex)
-            {
-                MessageBox.Show("From is not an valid number", "Invalid number", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            var step = ExtractSelectedStepFromStrip();
+            if (step == null)
                 return;
-            }
-
-            Step step;
-            try
-            {
-                step = new Step(iFrom, dataGridView1.SelectedRows[0].Cells[1].Value.ToString());
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Values and colors contains invalid command", "Invalid number", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
             FormStep form = new FormStep(step, programs, colorDialog1, serial);
             if (form.ShowDialog() == DialogResult.OK)
             {
@@ -984,5 +1024,30 @@ namespace WinStrip
                 dataGridView1.Rows.Add(new string[] { form.Step.From.ToString(), form.Step.ValuesAndColorsToJson() });
             }
         }
+
+        private void LightDimToBrightStepsToGrid(ulong ulColor)
+        {
+            var step = ExtractSelectedStepFromStrip(false);
+
+            if (step == null)
+                return;
+
+            StepsToGrid(StepGenerator.StripDimToBright(step, 0, ulColor, 0, 31));
+        }
+        private void DimToBrightBlueToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LightDimToBrightStepsToGrid(0x0000ff);
+        }
+
+        private void dimToBrightGreenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LightDimToBrightStepsToGrid(0x00ff00);
+        }
+
+        private void dimToBrightRedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LightDimToBrightStepsToGrid(0xff0000);
+        }
+
     }
 }

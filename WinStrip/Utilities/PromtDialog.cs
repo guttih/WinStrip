@@ -8,7 +8,16 @@ namespace WinStrip.Utilities
 {
     public static class PromptDialog
     {
-        public static string ShowDialog(string text, string caption, int width = 500)
+
+        /// <summary>
+        /// Shows a prompt dialog asking the user to write some text
+        /// </summary>
+        /// <param name="text">Text to describe what you are asking for</param>
+        /// <param name="caption">Title of the text dialog</param>
+        /// <param name="initialText">Default text in the text box which the user can write to.</param>
+        /// <param name="width">With of the dialog</param>
+        /// <returns></returns>
+        public static string ShowDialog(string text, string caption, string initialText="", int width = 500)
         {
             Form prompt = new Form()
             {
@@ -26,7 +35,7 @@ namespace WinStrip.Utilities
             prompt.Controls.Add(confirmation);
             prompt.Controls.Add(textLabel);
             prompt.AcceptButton = confirmation;
-
+            textBox.Text= initialText;
 
             textBox.TextChanged += new EventHandler(textBoxNoSend_TextChanged);
 

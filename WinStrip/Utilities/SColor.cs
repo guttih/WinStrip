@@ -15,6 +15,13 @@ namespace WinStrip.Utilities
             Blue  = blue;
         }
 
+        public SColor(SColor sColor)
+        {
+            Red   = sColor.Red;
+            Green = sColor.Green;
+            Blue  = sColor.Blue;
+        }
+
         public SColor(Color color)
         {
             Red   = color.R;

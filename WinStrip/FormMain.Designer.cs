@@ -77,7 +77,7 @@
             this.btnAddRow = new System.Windows.Forms.ToolStripButton();
             this.btnChangeSteps = new System.Windows.Forms.ToolStripButton();
             this.btnWizard = new System.Windows.Forms.ToolStripDropDownButton();
-            this.lightDimToBrightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DimToBrightBlueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.onLedTravelsSlowToFastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.btnNewTheme = new System.Windows.Forms.ToolStripButton();
@@ -103,6 +103,9 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.DimToBrightGreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DimToBrightRedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnRenameTheme = new System.Windows.Forms.ToolStripButton();
             this.tabControl1.SuspendLayout();
             this.tabPrograms.SuspendLayout();
             this.groupBoxParameters.SuspendLayout();
@@ -164,8 +167,8 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPrograms);
-            this.tabControl1.Controls.Add(this.tabManual);
             this.tabControl1.Controls.Add(this.tabCPU);
+            this.tabControl1.Controls.Add(this.tabManual);
             this.tabControl1.Location = new System.Drawing.Point(13, 13);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -699,7 +702,9 @@
             // 
             this.btnWizard.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.btnWizard.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lightDimToBrightToolStripMenuItem,
+            this.DimToBrightBlueToolStripMenuItem,
+            this.DimToBrightGreenToolStripMenuItem,
+            this.DimToBrightRedToolStripMenuItem,
             this.onLedTravelsSlowToFastToolStripMenuItem});
             this.btnWizard.Image = ((System.Drawing.Image)(resources.GetObject("btnWizard.Image")));
             this.btnWizard.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -708,13 +713,13 @@
             this.btnWizard.Text = "toolStripDropDownButton1";
             this.btnWizard.ToolTipText = "Generate series of steps";
             // 
-            // lightDimToBrightToolStripMenuItem
+            // DimToBrightBlueToolStripMenuItem
             // 
-            this.lightDimToBrightToolStripMenuItem.Name = "lightDimToBrightToolStripMenuItem";
-            this.lightDimToBrightToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
-            this.lightDimToBrightToolStripMenuItem.Text = "Light dim to bright";
-            this.lightDimToBrightToolStripMenuItem.ToolTipText = "Creates series of steps where light goes from \r\none value to a nother";
-            this.lightDimToBrightToolStripMenuItem.Click += new System.EventHandler(this.lightDimToBrightToolStripMenuItem_Click);
+            this.DimToBrightBlueToolStripMenuItem.Name = "DimToBrightBlueToolStripMenuItem";
+            this.DimToBrightBlueToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.DimToBrightBlueToolStripMenuItem.Text = "Dim to Bright blue";
+            this.DimToBrightBlueToolStripMenuItem.ToolTipText = "Creates series of steps where light goes from \r\none value to a nother";
+            this.DimToBrightBlueToolStripMenuItem.Click += new System.EventHandler(this.DimToBrightBlueToolStripMenuItem_Click);
             // 
             // onLedTravelsSlowToFastToolStripMenuItem
             // 
@@ -730,12 +735,13 @@
             this.toolStrip2.Dock = System.Windows.Forms.DockStyle.None;
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnNewTheme,
+            this.btnRenameTheme,
             this.btnReloadTheme,
             this.btnDeleteTheme});
             this.toolStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.toolStrip2.Location = new System.Drawing.Point(235, 122);
+            this.toolStrip2.Location = new System.Drawing.Point(214, 122);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(70, 23);
+            this.toolStrip2.Size = new System.Drawing.Size(93, 23);
             this.toolStrip2.TabIndex = 8;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -855,6 +861,7 @@
             this.comboThemes.Location = new System.Drawing.Point(6, 150);
             this.comboThemes.Name = "comboThemes";
             this.comboThemes.Size = new System.Drawing.Size(299, 21);
+            this.comboThemes.Sorted = true;
             this.comboThemes.TabIndex = 1;
             this.comboThemes.SelectedIndexChanged += new System.EventHandler(this.comboThemes_SelectedIndexChanged);
             // 
@@ -984,6 +991,32 @@
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(64, 17);
             this.labelStatus.Text = "labelStatus";
+            // 
+            // DimToBrightGreenToolStripMenuItem
+            // 
+            this.DimToBrightGreenToolStripMenuItem.Name = "DimToBrightGreenToolStripMenuItem";
+            this.DimToBrightGreenToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.DimToBrightGreenToolStripMenuItem.Text = "Dim to Bright green";
+            this.DimToBrightGreenToolStripMenuItem.Click += new System.EventHandler(this.dimToBrightGreenToolStripMenuItem_Click);
+            // 
+            // DimToBrightRedToolStripMenuItem
+            // 
+            this.DimToBrightRedToolStripMenuItem.Name = "DimToBrightRedToolStripMenuItem";
+            this.DimToBrightRedToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.DimToBrightRedToolStripMenuItem.Text = "Dim to Bright Red";
+            this.DimToBrightRedToolStripMenuItem.Click += new System.EventHandler(this.dimToBrightRedToolStripMenuItem_Click);
+            // 
+            // btnRenameTheme
+            // 
+            this.btnRenameTheme.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnRenameTheme.Image = ((System.Drawing.Image)(resources.GetObject("btnRenameTheme.Image")));
+            this.btnRenameTheme.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRenameTheme.Name = "btnRenameTheme";
+            this.btnRenameTheme.Size = new System.Drawing.Size(23, 20);
+            this.btnRenameTheme.Text = "toolStripButton1";
+            this.btnRenameTheme.ToolTipText = "Rename theme\r\n\r\nRename the selected theme\r\n\r\nNote, you will have to press save to" +
+    " make the \r\nchange permanent";
+            this.btnRenameTheme.Click += new System.EventHandler(this.btnRenameTheme_Click);
             // 
             // FormMain
             // 
@@ -1115,13 +1148,16 @@
         private System.Windows.Forms.ToolStrip toolStrip3;
         private System.Windows.Forms.ToolStripButton btnChangeSteps;
         private System.Windows.Forms.ToolStripDropDownButton btnWizard;
-        private System.Windows.Forms.ToolStripMenuItem lightDimToBrightToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DimToBrightBlueToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem onLedTravelsSlowToFastToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton btnDeleteTheme;
         private System.Windows.Forms.ToolStripButton btnAddRow;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.ToolStripMenuItem DimToBrightGreenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DimToBrightRedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton btnRenameTheme;
     }
 }
 

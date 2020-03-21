@@ -63,12 +63,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.labelDescription = new System.Windows.Forms.Label();
             this.comboPrograms = new System.Windows.Forms.ComboBox();
-            this.tabManual = new System.Windows.Forms.TabPage();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btnClearText2 = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBoxCustomSend = new System.Windows.Forms.TextBox();
             this.tabCPU = new System.Windows.Forms.TabPage();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -78,9 +72,12 @@
             this.btnChangeSteps = new System.Windows.Forms.ToolStripButton();
             this.btnWizard = new System.Windows.Forms.ToolStripDropDownButton();
             this.DimToBrightBlueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.onLedTravelsSlowToFastToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DimToBrightGreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DimToBrightRedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.GenerateStepsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.btnNewTheme = new System.Windows.Forms.ToolStripButton();
+            this.btnRenameTheme = new System.Windows.Forms.ToolStripButton();
             this.btnReloadTheme = new System.Windows.Forms.ToolStripButton();
             this.btnDeleteTheme = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -97,15 +94,18 @@
             this.trackBarCpuTesting = new System.Windows.Forms.TrackBar();
             this.radioButtonCpuTesting = new System.Windows.Forms.RadioButton();
             this.radioButtonCpuLive = new System.Windows.Forms.RadioButton();
+            this.tabManual = new System.Windows.Forms.TabPage();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnClearText2 = new System.Windows.Forms.Button();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBoxCustomSend = new System.Windows.Forms.TextBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.btnConnection = new System.Windows.Forms.Button();
             this.performanceCounter1 = new System.Diagnostics.PerformanceCounter();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.DimToBrightGreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DimToBrightRedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnRenameTheme = new System.Windows.Forms.ToolStripButton();
             this.tabControl1.SuspendLayout();
             this.tabPrograms.SuspendLayout();
             this.groupBoxParameters.SuspendLayout();
@@ -125,7 +125,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrightness)).BeginInit();
             this.groupBox1.SuspendLayout();
-            this.tabManual.SuspendLayout();
             this.tabCPU.SuspendLayout();
             this.toolStrip3.SuspendLayout();
             this.toolStrip2.SuspendLayout();
@@ -135,6 +134,7 @@
             this.groupBoxCpuTest.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCpuTesting)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarCpuTesting)).BeginInit();
+            this.tabManual.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -538,75 +538,6 @@
             this.comboPrograms.TabIndex = 0;
             this.comboPrograms.SelectedIndexChanged += new System.EventHandler(this.comboPrograms_SelectedIndexChanged);
             // 
-            // tabManual
-            // 
-            this.tabManual.BackColor = System.Drawing.SystemColors.Control;
-            this.tabManual.Controls.Add(this.label2);
-            this.tabManual.Controls.Add(this.label1);
-            this.tabManual.Controls.Add(this.btnClearText2);
-            this.tabManual.Controls.Add(this.textBox2);
-            this.tabManual.Controls.Add(this.textBoxCustomSend);
-            this.tabManual.Controls.Add(this.btnSend);
-            this.tabManual.Location = new System.Drawing.Point(4, 22);
-            this.tabManual.Name = "tabManual";
-            this.tabManual.Padding = new System.Windows.Forms.Padding(3);
-            this.tabManual.Size = new System.Drawing.Size(619, 431);
-            this.tabManual.TabIndex = 0;
-            this.tabManual.Text = "Manual";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 8);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(32, 13);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Send";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 61);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(56, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "Responce";
-            // 
-            // btnClearText2
-            // 
-            this.btnClearText2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnClearText2.Location = new System.Drawing.Point(11, 389);
-            this.btnClearText2.Name = "btnClearText2";
-            this.btnClearText2.Size = new System.Drawing.Size(75, 23);
-            this.btnClearText2.TabIndex = 2;
-            this.btnClearText2.Text = "Clear";
-            this.btnClearText2.UseVisualStyleBackColor = true;
-            this.btnClearText2.Click += new System.EventHandler(this.btnClearText2_Click);
-            // 
-            // textBox2
-            // 
-            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.Location = new System.Drawing.Point(6, 77);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox2.Size = new System.Drawing.Size(600, 306);
-            this.textBox2.TabIndex = 1;
-            // 
-            // textBoxCustomSend
-            // 
-            this.textBoxCustomSend.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCustomSend.Location = new System.Drawing.Point(6, 24);
-            this.textBoxCustomSend.Name = "textBoxCustomSend";
-            this.textBoxCustomSend.Size = new System.Drawing.Size(605, 20);
-            this.textBoxCustomSend.TabIndex = 0;
-            this.textBoxCustomSend.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
-            // 
             // tabCPU
             // 
             this.tabCPU.BackColor = System.Drawing.SystemColors.Control;
@@ -669,7 +600,7 @@
             this.toolStrip3.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.toolStrip3.Location = new System.Drawing.Point(229, 190);
             this.toolStrip3.Name = "toolStrip3";
-            this.toolStrip3.Size = new System.Drawing.Size(76, 23);
+            this.toolStrip3.Size = new System.Drawing.Size(107, 23);
             this.toolStrip3.TabIndex = 9;
             this.toolStrip3.Text = "toolStrip3";
             // 
@@ -705,7 +636,7 @@
             this.DimToBrightBlueToolStripMenuItem,
             this.DimToBrightGreenToolStripMenuItem,
             this.DimToBrightRedToolStripMenuItem,
-            this.onLedTravelsSlowToFastToolStripMenuItem});
+            this.GenerateStepsToolStripMenuItem});
             this.btnWizard.Image = ((System.Drawing.Image)(resources.GetObject("btnWizard.Image")));
             this.btnWizard.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnWizard.Name = "btnWizard";
@@ -716,19 +647,33 @@
             // DimToBrightBlueToolStripMenuItem
             // 
             this.DimToBrightBlueToolStripMenuItem.Name = "DimToBrightBlueToolStripMenuItem";
-            this.DimToBrightBlueToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
+            this.DimToBrightBlueToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.DimToBrightBlueToolStripMenuItem.Text = "Dim to Bright blue";
             this.DimToBrightBlueToolStripMenuItem.ToolTipText = "Creates series of steps where light goes from \r\none value to a nother";
             this.DimToBrightBlueToolStripMenuItem.Click += new System.EventHandler(this.DimToBrightBlueToolStripMenuItem_Click);
             // 
-            // onLedTravelsSlowToFastToolStripMenuItem
+            // DimToBrightGreenToolStripMenuItem
             // 
-            this.onLedTravelsSlowToFastToolStripMenuItem.Name = "onLedTravelsSlowToFastToolStripMenuItem";
-            this.onLedTravelsSlowToFastToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
-            this.onLedTravelsSlowToFastToolStripMenuItem.Text = "On led travels slow to fast";
-            this.onLedTravelsSlowToFastToolStripMenuItem.ToolTipText = "Generates steps where one light \r\nstarts movig slowly and goes faster\r\nwhen the p" +
-    "rocessor load increases";
-            this.onLedTravelsSlowToFastToolStripMenuItem.Click += new System.EventHandler(this.onLedTravelsSlowToFastToolStripMenuItem_Click);
+            this.DimToBrightGreenToolStripMenuItem.Name = "DimToBrightGreenToolStripMenuItem";
+            this.DimToBrightGreenToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.DimToBrightGreenToolStripMenuItem.Text = "Dim to Bright green";
+            this.DimToBrightGreenToolStripMenuItem.Click += new System.EventHandler(this.dimToBrightGreenToolStripMenuItem_Click);
+            // 
+            // DimToBrightRedToolStripMenuItem
+            // 
+            this.DimToBrightRedToolStripMenuItem.Name = "DimToBrightRedToolStripMenuItem";
+            this.DimToBrightRedToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.DimToBrightRedToolStripMenuItem.Text = "Dim to Bright Red";
+            this.DimToBrightRedToolStripMenuItem.Click += new System.EventHandler(this.dimToBrightRedToolStripMenuItem_Click);
+            // 
+            // GenerateStepsToolStripMenuItem
+            // 
+            this.GenerateStepsToolStripMenuItem.Name = "GenerateStepsToolStripMenuItem";
+            this.GenerateStepsToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.GenerateStepsToolStripMenuItem.Text = "Generate steps from two steps";
+            this.GenerateStepsToolStripMenuItem.ToolTipText = "Generates steps between two steps\r\n\r\nThe wizard will calculate the difference bet" +
+    "weeen\r\nthe two steps an inserts missing steps between them\r\n";
+            this.GenerateStepsToolStripMenuItem.Click += new System.EventHandler(this.GenerateStepsToolStripMenuItem_Click);
             // 
             // toolStrip2
             // 
@@ -757,6 +702,18 @@
             this.btnNewTheme.ToolTipText = "Add a new theme\r\n\r\nThe theme will be added but not saved.\r\n\r\nTo save the theme yo" +
     "u will need to press\r\nthe save button.";
             this.btnNewTheme.Click += new System.EventHandler(this.btnNewTheme_Click);
+            // 
+            // btnRenameTheme
+            // 
+            this.btnRenameTheme.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnRenameTheme.Image = ((System.Drawing.Image)(resources.GetObject("btnRenameTheme.Image")));
+            this.btnRenameTheme.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnRenameTheme.Name = "btnRenameTheme";
+            this.btnRenameTheme.Size = new System.Drawing.Size(23, 20);
+            this.btnRenameTheme.Text = "toolStripButton1";
+            this.btnRenameTheme.ToolTipText = "Rename theme\r\n\r\nRename the selected theme\r\n\r\nNote, you will have to press save to" +
+    " make the \r\nchange permanent";
+            this.btnRenameTheme.Click += new System.EventHandler(this.btnRenameTheme_Click);
             // 
             // btnReloadTheme
             // 
@@ -954,6 +911,75 @@
             this.radioButtonCpuLive.UseVisualStyleBackColor = true;
             this.radioButtonCpuLive.CheckedChanged += new System.EventHandler(this.radioButtonCpuLive_CheckedChanged);
             // 
+            // tabManual
+            // 
+            this.tabManual.BackColor = System.Drawing.SystemColors.Control;
+            this.tabManual.Controls.Add(this.label2);
+            this.tabManual.Controls.Add(this.label1);
+            this.tabManual.Controls.Add(this.btnClearText2);
+            this.tabManual.Controls.Add(this.textBox2);
+            this.tabManual.Controls.Add(this.textBoxCustomSend);
+            this.tabManual.Controls.Add(this.btnSend);
+            this.tabManual.Location = new System.Drawing.Point(4, 22);
+            this.tabManual.Name = "tabManual";
+            this.tabManual.Padding = new System.Windows.Forms.Padding(3);
+            this.tabManual.Size = new System.Drawing.Size(619, 431);
+            this.tabManual.TabIndex = 0;
+            this.tabManual.Text = "Manual";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(8, 8);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(32, 13);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Send";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(8, 61);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(56, 13);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Responce";
+            // 
+            // btnClearText2
+            // 
+            this.btnClearText2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnClearText2.Location = new System.Drawing.Point(11, 389);
+            this.btnClearText2.Name = "btnClearText2";
+            this.btnClearText2.Size = new System.Drawing.Size(75, 23);
+            this.btnClearText2.TabIndex = 2;
+            this.btnClearText2.Text = "Clear";
+            this.btnClearText2.UseVisualStyleBackColor = true;
+            this.btnClearText2.Click += new System.EventHandler(this.btnClearText2_Click);
+            // 
+            // textBox2
+            // 
+            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBox2.Location = new System.Drawing.Point(6, 77);
+            this.textBox2.Multiline = true;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
+            this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBox2.Size = new System.Drawing.Size(600, 306);
+            this.textBox2.TabIndex = 1;
+            // 
+            // textBoxCustomSend
+            // 
+            this.textBoxCustomSend.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCustomSend.Location = new System.Drawing.Point(6, 24);
+            this.textBoxCustomSend.Name = "textBoxCustomSend";
+            this.textBoxCustomSend.Size = new System.Drawing.Size(605, 20);
+            this.textBoxCustomSend.TabIndex = 0;
+            this.textBoxCustomSend.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
+            // 
             // btnConnection
             // 
             this.btnConnection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -991,32 +1017,6 @@
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(64, 17);
             this.labelStatus.Text = "labelStatus";
-            // 
-            // DimToBrightGreenToolStripMenuItem
-            // 
-            this.DimToBrightGreenToolStripMenuItem.Name = "DimToBrightGreenToolStripMenuItem";
-            this.DimToBrightGreenToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
-            this.DimToBrightGreenToolStripMenuItem.Text = "Dim to Bright green";
-            this.DimToBrightGreenToolStripMenuItem.Click += new System.EventHandler(this.dimToBrightGreenToolStripMenuItem_Click);
-            // 
-            // DimToBrightRedToolStripMenuItem
-            // 
-            this.DimToBrightRedToolStripMenuItem.Name = "DimToBrightRedToolStripMenuItem";
-            this.DimToBrightRedToolStripMenuItem.Size = new System.Drawing.Size(209, 22);
-            this.DimToBrightRedToolStripMenuItem.Text = "Dim to Bright Red";
-            this.DimToBrightRedToolStripMenuItem.Click += new System.EventHandler(this.dimToBrightRedToolStripMenuItem_Click);
-            // 
-            // btnRenameTheme
-            // 
-            this.btnRenameTheme.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnRenameTheme.Image = ((System.Drawing.Image)(resources.GetObject("btnRenameTheme.Image")));
-            this.btnRenameTheme.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnRenameTheme.Name = "btnRenameTheme";
-            this.btnRenameTheme.Size = new System.Drawing.Size(23, 20);
-            this.btnRenameTheme.Text = "toolStripButton1";
-            this.btnRenameTheme.ToolTipText = "Rename theme\r\n\r\nRename the selected theme\r\n\r\nNote, you will have to press save to" +
-    " make the \r\nchange permanent";
-            this.btnRenameTheme.Click += new System.EventHandler(this.btnRenameTheme_Click);
             // 
             // FormMain
             // 
@@ -1056,8 +1056,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrightness)).EndInit();
             this.groupBox1.ResumeLayout(false);
-            this.tabManual.ResumeLayout(false);
-            this.tabManual.PerformLayout();
             this.tabCPU.ResumeLayout(false);
             this.tabCPU.PerformLayout();
             this.toolStrip3.ResumeLayout(false);
@@ -1073,6 +1071,8 @@
             this.groupBoxCpuTest.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCpuTesting)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarCpuTesting)).EndInit();
+            this.tabManual.ResumeLayout(false);
+            this.tabManual.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
@@ -1149,7 +1149,7 @@
         private System.Windows.Forms.ToolStripButton btnChangeSteps;
         private System.Windows.Forms.ToolStripDropDownButton btnWizard;
         private System.Windows.Forms.ToolStripMenuItem DimToBrightBlueToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem onLedTravelsSlowToFastToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem GenerateStepsToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton btnDeleteTheme;
         private System.Windows.Forms.ToolStripButton btnAddRow;
         private System.Windows.Forms.Label label7;

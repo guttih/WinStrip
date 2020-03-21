@@ -13,6 +13,14 @@ namespace WinStrip.Entity
         public Step() {
             ValuesAndColors = new StripValuesAndColors();
         }
+
+        public Step(int from, StripValuesAndColors valuesAndColors)
+        {
+            From = from;
+            ValuesAndColors = valuesAndColors;
+
+        }
+
         /// <summary>
         /// Constructor for a step created from one int and a json string
         /// </summary>

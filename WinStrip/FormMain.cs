@@ -723,7 +723,8 @@ namespace WinStrip
                     Step step = theme.GetAppropriateStep(cpuValue);
                     /*SendValuesToDevice(step.Values);
                     SendColorsToDevice(step.Colors);*/
-                    SendStepToDevice(step);
+                    if (step != null)
+                        SendStepToDevice(step);
                 } catch (Exception)
                 {
                     //do nothing
@@ -889,11 +890,35 @@ namespace WinStrip
             return step;
         }
 
-        
-
-        private void onLedTravelsSlowToFastToolStripMenuItem_Click(object sender, EventArgs e)
+        private List<Step> ExtractSelectedStepFromStrips()
         {
-            MessageBox.Show("This feature is not yet implemented", "Not implemented yet");
+            var list = new List<Step>();
+            for (int i = 0; i < dataGridView1.SelectedRows.Count; i++)
+            {
+                int iFrom;
+                try
+                {
+                    iFrom = Convert.ToInt32(dataGridView1.SelectedRows[i].Cells[0].Value.ToString());
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("From is not an valid number", "Invalid number", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
+
+                Step step;
+                try
+                {
+                    step = new Step(iFrom, dataGridView1.SelectedRows[i].Cells[1].Value.ToString());
+                    list.Add(step);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Values and colors contains invalid command", "Invalid number", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
+            }
+            return list;
         }
 
         private void btnDeleteTheme_Click(object sender, EventArgs e)
@@ -977,11 +1002,14 @@ namespace WinStrip
                                         atLeastOneLineInGrid &&
                                         dataGridView1.SelectedRows.Count == 1 &&
                                         IsDatagridRowValid(dataGridView1.SelectedRows[0]);
+            
             btnChangeSteps.Enabled = IsRowReadyForEditing;
 
             DimToBrightBlueToolStripMenuItem.Enabled = IsRowReadyForEditing;
             DimToBrightGreenToolStripMenuItem.Enabled = IsRowReadyForEditing;
-            DimToBrightRedToolStripMenuItem.Enabled = IsRowReadyForEditing;
+            GenerateStepsToolStripMenuItem.Enabled =    dataGridView1.SelectedRows.Count == 2 && 
+                                                        IsDatagridRowValid(dataGridView1.SelectedRows[1]) &&
+                                                        IsDatagridRowValid(dataGridView1.SelectedRows[0]);
 
         }
 
@@ -994,6 +1022,7 @@ namespace WinStrip
             FormStep form = new FormStep(step, programs, colorDialog1, serial);
             if (form.ShowDialog() == DialogResult.OK)
             {
+                dataGridView1.SelectedRows[0].Cells[0].Value = form.Step.From;
                 dataGridView1.SelectedRows[0].Cells[1].Value = form.Step.ValuesAndColorsToJson();
             }
 
@@ -1048,5 +1077,20 @@ namespace WinStrip
             LightDimToBrightStepsToGrid(0xff0000);
         }
 
+        private void GenerateStepsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var steps = ExtractSelectedStepFromStrips();
+            if (steps == null)
+                return;
+
+            if (steps.Count < 2)
+            {
+                MessageBox.Show("Two valid rows must be selected", "Invalid number", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            var list = StepGenerator.StripSteps(steps[0], steps[1]);
+            list.Reverse();
+            StepsToGrid(list);
+        }
     }
 }

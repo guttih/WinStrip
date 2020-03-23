@@ -71,16 +71,25 @@ void StripHelper::setNewValues(STRIP_PROGRAMS program, unsigned long stepDelay, 
 //will reverse current direction set turns to 0
 //if new direction is forward  then step will be set to first pixel index
 //if new direction is backward then step will be set to the last pixel index
-void StripHelper::toggleDirection() {
-    step = 0;
+void StripHelper::toggleDirection(bool resetStep=true) {
+        
     turns = 0;
     bool directionForward = direction == 1 ? false : true;
-    if (!directionForward) {
-        direction = -1;
-        step = getLast();
-    }
-    else
+    if (directionForward) {
         direction = 1;
+        if (resetStep)
+            step = 0;
+        else
+            fixStep();
+    }
+    else {
+        direction = -1;
+        if (resetStep)
+            step = getLast();
+        else
+            fixStep();
+    }
+        
 }
 
 // returns true if step had to be fixed
@@ -443,18 +452,97 @@ void StripHelper::programSections() {
     fastLED->show();
 }
 
+
+void StripHelper::SerialLogPrint(const char* str1, int value1,  bool endLine) {
+    Serial.print(" "); Serial.print(str1); Serial.print("="); 
+    if (value1 < 10)
+        Serial.print("00");
+    else if (value1 < 100)
+        Serial.print("0");
+    Serial.print(value1);
+    if (endLine)
+        Serial.println();
+    
+}
+void StripHelper::SerialLogPrint(const char* str1, int value1,  const char* str2, int value2,  bool endLine) {
+    SerialLogPrint(str1, value1);
+    SerialLogPrint(str2, value2, endLine);
+}
+void StripHelper::SerialLogPrint(const char* str1, int value1,  const char* str2, int value2,  const char* str3, int value3,   bool endLine) {
+    
+    SerialLogPrint(str1, value1, str2, value2, false);
+    SerialLogPrint(str3, value3, endLine);
+}
+
+void StripHelper::fillTrail(int startIndex, CRGB onColor, CRGB trailColor, uint trailCount, bool addToFrontToo) {
+    
+    
+
+    uint8_t step = 255 / trailCount + 1;
+    int index = abs(startIndex % getCount()),
+        frontIndex, endIndex, blendAmount;
+    
+    if (trailCount == 0) {
+        //todo: fix so this if segment is un-necessary
+        frontIndex       = (index - 1 < 0) ? getLast()  : index - 1;
+        leds[frontIndex] = trailColor;
+        if (index==0)
+            leds[getLast()] = trailColor;
+        leds[index     ] = onColor;
+        endIndex         = (index + 1 > getLast()) ? 0 : index + 1;
+        leds[endIndex  ] = trailColor;
+        return;
+    }
+    
+    
+        for (int i = 0; i < (int)trailCount; i++) {
+            frontIndex = abs(  (  (i + startIndex)-(int)trailCount    )       % getCount() );
+            endIndex =   abs(  (  (  (int)trailCount + startIndex  )-(i)  )   % getCount()  );
+            blendAmount = step * i+1;
+            CRGB workTrailColor = trailColor;
+            workTrailColor = fadeTowardColor(workTrailColor, onColor, blendAmount);
+            if (addToFrontToo)
+                leds[frontIndex] = workTrailColor;
+
+            leds[endIndex] = workTrailColor;
+        }
+    
+
+    leds[index] = onColor;
+    
+    //wipe front
+    leds[abs(((startIndex - 1) - (int)trailCount) % getCount())] = trailColor;
+
+    //wipe end
+    leds[abs((((int)trailCount + startIndex)   +1 ) % getCount())] = trailColor;
+
+    
+   
+   
+
+    
+}
+int StripHelper::incAndFixOverflow() {
+    const int maxInt = 32767;
+    if (getDirection() == -1 && iWorker1 < getCount())
+        iWorker1 = ( iWorker1 % getCount() ) +  (  (  (  maxInt / getCount()  ) * getCount() ) - getCount() );
+    else if (getDirection() == 1 && iWorker1 > maxInt - (getCount() * 2)) //32767 - getCount()
+        iWorker1 = iWorker1 % getCount() * 2 ;
+    
+    iWorker1 += getDirection();
+    return iWorker1;
+}
+
 void StripHelper::programStepOne(CRGB onColor, CRGB trailColor) {
 
     int index = getStep();
-
-    if (getDirection() == 1 && index == 0)
-        leds[getLast()] = trailColor;
-    else if (getDirection() == -1 && index == getLast())
-        leds[0] = trailColor;
-    else
-        leds[index - getDirection()] = trailColor;
-    leds[index] = onColor;
+    int trailColorIndex;
+    int trailCount = value1; 
+    
+    iWorker1 = incAndFixOverflow();
+    fillTrail(iWorker1, onColor, trailColor, trailCount, true);
     fastLED->show();
+
 }
 
 void StripHelper::programUpDown() {
@@ -506,9 +594,9 @@ void StripHelper::nblendU8TowardU8(uint8_t& cur, const uint8_t target, uint8_t a
 // This function modifies 'cur' in place.
 CRGB StripHelper::fadeTowardColor(CRGB& cur, const CRGB& target, uint8_t amount)
 {
-    nblendU8TowardU8(cur.red, target.red, amount);
+    nblendU8TowardU8(cur.red,   target.red,   amount);
     nblendU8TowardU8(cur.green, target.green, amount);
-    nblendU8TowardU8(cur.blue, target.blue, amount);
+    nblendU8TowardU8(cur.blue,  target.blue,  amount);
     return cur;
 }
 
@@ -620,15 +708,15 @@ void StripHelper::initProgram(STRIP_PROGRAMS programToSet) {
     switch (programToSet) {
 
     case OFF:
-    case SINGLE_COLOR: break;
-    case MULTI_COLOR: setDirection(true); break;
-    case RESET: reset(); initProgram(getProgram());     break;
-    case UP: setDirection(true);  break;
-    case DOWN: setDirection(false); break;
-    case UP_DOWN: setDirection(false); toggleDirection(); break;
-    case RAINBOW: setDirection(true); break;
-    case CYLON: setDirection(true);  toggleDirection(); break;
-    case STARS: programStarsInit(); break;
+    case SINGLE_COLOR   : break;
+    case MULTI_COLOR    : setDirection(true); break;
+    case RESET          : reset(); initProgram(getProgram());     break;
+    case UP             : setDirection(true);  break;
+    case DOWN           : setDirection(false); break;
+    case UP_DOWN        : setDirection(false); toggleDirection(true); iWorker1 = 1; break;
+    case RAINBOW        : setDirection(true); break;
+    case CYLON          : setDirection(true);  toggleDirection(); break;
+    case STARS          : programStarsInit(); break;
 
     }
 }

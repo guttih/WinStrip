@@ -72,7 +72,7 @@
     <Compile Include="Utilities\PromtDialog.cs" />
     <Compile Include="Utilities\StepGenerator.cs" />
     <Compile Include="Utilities\ValueControls.cs" />
-    <Compile Include="Utilities\GHSColor.cs" />
+    <Compile Include="Utilities\SColor.cs" />
     <Compile Include="Utilities\Serial.cs" />
     <Compile Include="Utilities\SerialCommand.cs" />
     <EmbeddedResource Include="FormMain.resx">

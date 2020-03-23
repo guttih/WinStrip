@@ -84,9 +84,11 @@ private:
     int stepDown();
     int getDirection();
     int setDirection(bool forward);
-    void toggleDirection();
+    void toggleDirection(bool resetStep);
+    void SerialLogPrint(const char* str1, int value1, bool endLine = false);
+    void SerialLogPrint(const char* str1, int value1, const char* str2, int value2, bool endLine = false);
+    void SerialLogPrint(const char* str1, int value1, const char* str2, int value2, const char* str3, int value3, bool endLine = false);
     String quotes(String value);
-    
     String ulToString(uint32_t number);
     CRGB fadeTowardColor(CRGB& cur, const CRGB& target, uint8_t amount);
     void nblendU8TowardU8(uint8_t& cur, const uint8_t target, uint8_t amount);
@@ -95,6 +97,8 @@ private:
     void programCylonFadeall();
     void programCylon();
     void programSections();
+    void fillTrail(int startIndex, CRGB onColor, CRGB trailColor, uint trailCount, bool addToFrontToo);
+    int incAndFixOverflow();
     void programStepOne(CRGB onColor, CRGB trailColor);
     void programUpDown();
     void programSingleColor();

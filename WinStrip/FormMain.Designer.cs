@@ -106,6 +106,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.checkDefault = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPrograms.SuspendLayout();
             this.groupBoxParameters.SuspendLayout();
@@ -541,6 +542,7 @@
             // tabCPU
             // 
             this.tabCPU.BackColor = System.Drawing.SystemColors.Control;
+            this.tabCPU.Controls.Add(this.checkDefault);
             this.tabCPU.Controls.Add(this.textBox1);
             this.tabCPU.Controls.Add(this.label7);
             this.tabCPU.Controls.Add(this.label6);
@@ -600,7 +602,7 @@
             this.toolStrip3.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.toolStrip3.Location = new System.Drawing.Point(229, 190);
             this.toolStrip3.Name = "toolStrip3";
-            this.toolStrip3.Size = new System.Drawing.Size(107, 23);
+            this.toolStrip3.Size = new System.Drawing.Size(76, 23);
             this.toolStrip3.TabIndex = 9;
             this.toolStrip3.Text = "toolStrip3";
             // 
@@ -684,7 +686,7 @@
             this.btnReloadTheme,
             this.btnDeleteTheme});
             this.toolStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.toolStrip2.Location = new System.Drawing.Point(214, 122);
+            this.toolStrip2.Location = new System.Drawing.Point(214, 121);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Size = new System.Drawing.Size(93, 23);
             this.toolStrip2.TabIndex = 8;
@@ -830,7 +832,7 @@
             this.groupBox2.Controls.Add(this.radioButtonCpuTesting);
             this.groupBox2.Controls.Add(this.radioButtonCpuLive);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(312, 12);
+            this.groupBox2.Location = new System.Drawing.Point(312, 11);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(301, 200);
             this.groupBox2.TabIndex = 0;
@@ -1018,6 +1020,17 @@
             this.labelStatus.Size = new System.Drawing.Size(64, 17);
             this.labelStatus.Text = "labelStatus";
             // 
+            // checkDefault
+            // 
+            this.checkDefault.AutoSize = true;
+            this.checkDefault.Location = new System.Drawing.Point(53, 130);
+            this.checkDefault.Name = "checkDefault";
+            this.checkDefault.Size = new System.Drawing.Size(60, 17);
+            this.checkDefault.TabIndex = 13;
+            this.checkDefault.Text = "Default";
+            this.checkDefault.UseVisualStyleBackColor = true;
+            this.checkDefault.Click += new System.EventHandler(this.checkDefault_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1158,6 +1171,7 @@
         private System.Windows.Forms.ToolStripMenuItem DimToBrightGreenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DimToBrightRedToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton btnRenameTheme;
+        private System.Windows.Forms.CheckBox checkDefault;
     }
 }
 

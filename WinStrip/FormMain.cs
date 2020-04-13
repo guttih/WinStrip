@@ -21,13 +21,14 @@ namespace WinStrip
         public int PortSpeed { get; set; }
         List<Theme> Themes { get; set; }
         public int ThemeSelectedIndex { get; private set; }
+        ToolTip toolTip1;
 
         public FormMain()
         {
             ThemeSelectedIndex = -1;
             PortSpeed = 500000;
             InitializeComponent();
-
+            toolTip1 = new ToolTip();
             serial = new Serial();
             parameters = new List<ProgramParameter>();
 
@@ -47,9 +48,9 @@ namespace WinStrip
             GetHardwareFromDevice();
 
             EnableDeviceRelatedControls(serial.isConnected);
-            timer1.Start();
-            radioButtonCpuLive.Checked = true; 
 
+            radioButtonCpuLive.Checked = selectedComboThemeIsDefaultTheme();
+            timer1.Start();
         }
         void textBoxCustomSenditem_Click(object sender, EventArgs e)
         {
@@ -148,7 +149,6 @@ namespace WinStrip
 
             var ser = new JavaScriptSerializer();
             var themeList = ser.Deserialize<List<Theme>>(str);
-            //ThemeSelectedIndex = Properties.Settings.Default.ThemeSelectedIndex;
             ThemeSelectedIndex = 0;
 
             Themes = themeList;
@@ -166,7 +166,12 @@ namespace WinStrip
             if (Themes.Count > 0) 
             { 
                 Themes.ForEach(t => comboThemes.Items.Add(t.Name));
-                if (ThemeSelectedIndex > -1 && ThemeSelectedIndex < Themes.Count)
+                int defaultIndex = Themes.FindIndex(t => t.Default == true);
+                if (defaultIndex > -1)
+                {
+                    comboThemes.SelectedIndex = comboThemes.FindStringExact(Themes[defaultIndex].Name);
+                }
+                else if (ThemeSelectedIndex > -1 && ThemeSelectedIndex < Themes.Count)
                 {
                     comboThemes.SelectedIndex = comboThemes.FindStringExact(Themes[ThemeSelectedIndex].Name);
                 }
@@ -745,9 +750,15 @@ namespace WinStrip
             ThemeToGrid(Themes[ThemeSelectedIndex]);
         }
 
-        private void btnSaveAllThemes_Click(object sender, EventArgs e)
+        private void SaveAllThemes()
         {
-            var theme = new Theme(comboThemes.Text);
+            int index = Themes.FindIndex(t => t.Name == comboThemes.Text);
+
+            Theme theme;
+            if (index > -1)
+                theme = new Theme(Themes[index].Name, Themes[index].Default);
+            else
+                theme = new Theme(comboThemes.Text);
             bool error = false;
 
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
@@ -757,12 +768,12 @@ namespace WinStrip
                 if (row.Cells[0].Value == null || row.Cells[1].Value == null)
                 {
                     error = true;
-                    if (i == dataGridView1.Rows.Count - 1) 
-                    { 
+                    if (i == dataGridView1.Rows.Count - 1)
+                    {
                         break; //last row is null so let's stop
                     }
 
-                    strFrom = $" (See line number {i+1})";
+                    strFrom = $" (See line number {i + 1})";
                 }
                 else
                 {
@@ -774,12 +785,17 @@ namespace WinStrip
                     MessageBox.Show(this, $"Cannot save\n\n There are invalid values in step {strFrom}", "Error adding step", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                
+
             }
             //we got valid steps
             if (ThemeSelectedIndex > -1 && Themes.Count > 0)
                 Themes[ThemeSelectedIndex] = theme;
             SaveThemes(Themes, ThemeSelectedIndex);
+        }
+
+        private void btnSaveAllThemes_Click(object sender, EventArgs e)
+        {
+            SaveAllThemes();
         }
 
         private void btnResetAllThemes_Click(object sender, EventArgs e)
@@ -840,6 +856,37 @@ namespace WinStrip
             }
 
             SetThemeButtonsState();
+        }
+
+        private bool SetDefaultTheme(bool enable)
+        {
+            var oldName = comboThemes.Text;
+            int i = Themes.FindIndex(t => t.Name == oldName);
+            if (i != -1)
+            {
+                string str = enable ? "to be able set this theme as default" : "to be able to remove this theme from default";
+                if (MessageBox.Show($"You will need to save all themes {str}.\n\nDo you want to save all themes?",
+                            "Set default theme",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Warning) == DialogResult.Yes) 
+                { 
+                    //remove older default themes
+                    Themes.ForEach(theme => theme.Default = false);
+                    Themes[i].Default = enable;
+                    SaveAllThemes();
+                    return true;
+                }
+            }
+            else
+            {
+                MessageBox.Show("An fatal error, please restart the application.", "Could not find selected theme", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return false;
+        }
+
+        private void btnSetDefaultTheme_Click(object sender, EventArgs e)
+        {
+           
         }
 
         private void btnLoadAllThemes_Click(object sender, EventArgs e)
@@ -966,7 +1013,6 @@ namespace WinStrip
         public void SetThemeButtonsState()
         {
             bool atLeastOneTheme      = comboThemes.SelectedIndex > -1;
-            
 
             //ComboBox Themes
             comboThemes.Enabled = comboThemes.Items.Count > 0;
@@ -974,9 +1020,26 @@ namespace WinStrip
             btnReloadTheme.Enabled = atLeastOneTheme;
             btnDeleteTheme.Enabled = atLeastOneTheme;
             SetDataGridButtonsState();
+            SetDefaultThemeState();
+        }
+
+        private bool selectedComboThemeIsDefaultTheme()
+        {
+            bool ret = false;
+            int defaultIndex = Themes.FindIndex(t => t.Default == true);
+            if (defaultIndex < 0)
+                return false;
+
+            return comboThemes.Text == Themes[defaultIndex].Name;
+        }
+        private void SetDefaultThemeState()
+        {   bool isDefault = selectedComboThemeIsDefaultTheme();
+            string str = isDefault ? "To disable Live CPU on startup, remove this check-mark"
+                                   : "Check this mark to make this theme the default theme.";
             
+            toolTip1.SetToolTip(checkDefault, str);
 
-
+            checkDefault.Checked = isDefault;
         }
 
         private bool IsDatagridRowValid(DataGridViewRow row)
@@ -1091,6 +1154,16 @@ namespace WinStrip
             var list = StepGenerator.StripSteps(steps[0], steps[1]);
             list.Reverse();
             StepsToGrid(list);
+        }
+
+        private void checkDefault_Click(object sender, EventArgs e)
+        {
+            bool newState = checkDefault.Checked;
+
+            if (!SetDefaultTheme(newState))
+            {
+                checkDefault.Checked = !newState;
+            }
         }
     }
 }

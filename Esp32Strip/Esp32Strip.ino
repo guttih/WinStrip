@@ -21,7 +21,7 @@ SerialReader reader;
 #include "StripHelper.h"
 
 
-#define NUM_LEDS 32 
+#define NUM_LEDS 19 
 #define CLOCK_PIN 13  /*green wire*/
 #define DATA_PIN  14  /*blue wire*/
 /*
@@ -264,14 +264,12 @@ void setup() {
 
     stripInit();
 
-    /*
+    
       //todo: remove after debugging
-    stripper.setColorBank(0, CRGB::Blue);
-    stripper.setColorBank(1, CRGB::Black);
     stripper.setBrightness(255);
-    stripper.setNewValues(UP, 44, 0, 0, 0);
+    stripper.setNewValues(STRIP_PROGRAMS::RAINBOW,30, 1, 0, 0);
     stripper.initProgram(stripper.getProgram());
-    */
+    
 }
 
 void loop() {

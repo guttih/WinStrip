@@ -500,7 +500,7 @@ void StripHelper::fillTrail(int startIndex, CRGB onColor, CRGB trailColor, uint 
             endIndex =   abs(  (  (  (int)trailCount + startIndex  )-(i)  )   % getCount()  );
             blendAmount = step * i+1;
             CRGB workTrailColor = trailColor;
-            workTrailColor = fadeTowardColor(workTrailColor, onColor, blendAmount);
+            workTrailColor = fadeTowardColorSlowFirst(workTrailColor, onColor, blendAmount, i+1, trailCount);
             if (addToFrontToo)
                 leds[frontIndex] = workTrailColor;
 
@@ -526,7 +526,7 @@ int StripHelper::incAndFixOverflow() {
     const int maxInt = 32767;
     if (getDirection() == -1 && iWorker1 < getCount())
         iWorker1 = ( iWorker1 % getCount() ) +  (  (  (  maxInt / getCount()  ) * getCount() ) - getCount() );
-    else if (getDirection() == 1 && iWorker1 > maxInt - (getCount() * 2)) //32767 - getCount()
+    else if (getDirection() == 1 && iWorker1 > maxInt - (getCount() * 2))
         iWorker1 = iWorker1 % getCount() * 2 ;
     
     iWorker1 += getDirection();
@@ -575,8 +575,9 @@ void StripHelper::programSingleColor() {
 // Helper function that blends one uint8_t toward another by a given amount
 void StripHelper::nblendU8TowardU8(uint8_t& cur, const uint8_t target, uint8_t amount)
 {
+    
     if (cur == target) return;
-
+//    fadeToBlackBy()
     if (cur < target) {
         uint8_t delta = target - cur;
         delta = scale8_video(delta, amount);
@@ -587,6 +588,7 @@ void StripHelper::nblendU8TowardU8(uint8_t& cur, const uint8_t target, uint8_t a
         delta = scale8_video(delta, amount);
         cur -= delta;
     }
+
 }
 
 // Blend one CRGB color toward another CRGB color by a given amount.
@@ -594,9 +596,23 @@ void StripHelper::nblendU8TowardU8(uint8_t& cur, const uint8_t target, uint8_t a
 // This function modifies 'cur' in place.
 CRGB StripHelper::fadeTowardColor(CRGB& cur, const CRGB& target, uint8_t amount)
 {
+
     nblendU8TowardU8(cur.red,   target.red,   amount);
     nblendU8TowardU8(cur.green, target.green, amount);
     nblendU8TowardU8(cur.blue,  target.blue,  amount);
+    return cur;
+}
+
+CRGB StripHelper::fadeTowardColorSlowFirst(CRGB& cur, const CRGB& target, uint8_t amount, int currentStep, int stepCount)
+{
+    if (stepCount > 4 && currentStep < 4) {
+        amount = (float)amount / (float)10;
+    }
+    //double dPortion = (double)amount * ((double)currentStep / (double)128);
+    //double dNewAmount = pow(step, dPortion);
+    nblendU8TowardU8(cur.red, target.red, amount);
+    nblendU8TowardU8(cur.green, target.green, amount);
+    nblendU8TowardU8(cur.blue, target.blue, amount);
     return cur;
 }
 

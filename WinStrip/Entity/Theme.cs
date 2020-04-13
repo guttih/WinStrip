@@ -5,19 +5,25 @@ using WinStrip.EntityTransfer;
 
 namespace WinStrip.Entity
 {
-    class Theme:IComparer<Theme>
+    class Theme : IComparer<Theme>
     {
         public Theme()
         {
             Steps = new List<Step>();
         }
-        public Theme(string name)
+        public Theme(string name, bool isDefault = false)
         {
-            this.Name = name;
+            Name = name;
+            Default = isDefault;
             Steps = new List<Step>();
         }
 
         public string Name { get; set; }
+        
+        /// <summary>
+        /// Is this theme the them which will start when the application starts
+        /// </summary>
+        public bool Default {get; set; }
         public List<Step> Steps { get; set; }
 
         /// <summary>

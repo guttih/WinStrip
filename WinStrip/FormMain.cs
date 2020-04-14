@@ -1025,7 +1025,6 @@ namespace WinStrip
 
         private bool selectedComboThemeIsDefaultTheme()
         {
-            bool ret = false;
             int defaultIndex = Themes.FindIndex(t => t.Default == true);
             if (defaultIndex < 0)
                 return false;

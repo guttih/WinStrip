@@ -1,9 +1,7 @@
-﻿using WinStrip.Utilities;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using WinStrip.Entity;
 using System.Globalization;
-using WinStrip.Utilities;
 namespace WinStrip.Utilities.Tests
 {
     [TestClass()]

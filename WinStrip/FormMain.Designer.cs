@@ -64,6 +64,7 @@
             this.labelDescription = new System.Windows.Forms.Label();
             this.comboPrograms = new System.Windows.Forms.ComboBox();
             this.tabCPU = new System.Windows.Forms.TabPage();
+            this.checkDefault = new System.Windows.Forms.CheckBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -106,7 +107,6 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.checkDefault = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabPrograms.SuspendLayout();
             this.groupBoxParameters.SuspendLayout();
@@ -560,6 +560,17 @@
             this.tabCPU.Size = new System.Drawing.Size(619, 431);
             this.tabCPU.TabIndex = 2;
             this.tabCPU.Text = "CPU monitoring";
+            // 
+            // checkDefault
+            // 
+            this.checkDefault.AutoSize = true;
+            this.checkDefault.Location = new System.Drawing.Point(53, 130);
+            this.checkDefault.Name = "checkDefault";
+            this.checkDefault.Size = new System.Drawing.Size(60, 17);
+            this.checkDefault.TabIndex = 13;
+            this.checkDefault.Text = "Default";
+            this.checkDefault.UseVisualStyleBackColor = true;
+            this.checkDefault.Click += new System.EventHandler(this.checkDefault_Click);
             // 
             // textBox1
             // 
@@ -1020,17 +1031,6 @@
             this.labelStatus.Size = new System.Drawing.Size(64, 17);
             this.labelStatus.Text = "labelStatus";
             // 
-            // checkDefault
-            // 
-            this.checkDefault.AutoSize = true;
-            this.checkDefault.Location = new System.Drawing.Point(53, 130);
-            this.checkDefault.Name = "checkDefault";
-            this.checkDefault.Size = new System.Drawing.Size(60, 17);
-            this.checkDefault.TabIndex = 13;
-            this.checkDefault.Text = "Default";
-            this.checkDefault.UseVisualStyleBackColor = true;
-            this.checkDefault.Click += new System.EventHandler(this.checkDefault_Click);
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1040,6 +1040,7 @@
             this.Controls.Add(this.btnConnection);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.comboPorts);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(540, 550);
             this.Name = "FormMain";
             this.Text = "WinStrip";

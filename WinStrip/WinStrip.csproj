@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>WinStrip</RootNamespace>
     <AssemblyName>WinStrip</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
@@ -141,4 +141,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>mkdir $(TargetDir)\Esp32Strip
+
+del "$(TargetDir)\Esp32Strip\*.ino"
+copy "..\..\..\Esp32Strip\*.ino" "$(TargetDir)\Esp32Strip"
+
+del "$(TargetDir)\Esp32Strip\*.h"
+copy "..\..\..\Esp32Strip\*.h" "$(TargetDir)\Esp32Strip"
+
+del "$(TargetDir)\Esp32Strip\*.cpp"
+copy "..\..\..\Esp32Strip\*.cpp" "$(TargetDir)\Esp32Strip"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

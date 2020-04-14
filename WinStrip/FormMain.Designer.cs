@@ -107,6 +107,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.btnExportCode = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPrograms.SuspendLayout();
             this.groupBoxParameters.SuspendLayout();
@@ -927,6 +928,7 @@
             // tabManual
             // 
             this.tabManual.BackColor = System.Drawing.SystemColors.Control;
+            this.tabManual.Controls.Add(this.btnExportCode);
             this.tabManual.Controls.Add(this.label2);
             this.tabManual.Controls.Add(this.label1);
             this.tabManual.Controls.Add(this.btnClearText2);
@@ -939,6 +941,7 @@
             this.tabManual.Size = new System.Drawing.Size(619, 431);
             this.tabManual.TabIndex = 0;
             this.tabManual.Text = "Manual";
+            this.tabManual.Click += new System.EventHandler(this.tabManual_Click);
             // 
             // label2
             // 
@@ -1030,6 +1033,16 @@
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(64, 17);
             this.labelStatus.Text = "labelStatus";
+            // 
+            // btnExportCode
+            // 
+            this.btnExportCode.Location = new System.Drawing.Point(264, 389);
+            this.btnExportCode.Name = "btnExportCode";
+            this.btnExportCode.Size = new System.Drawing.Size(75, 23);
+            this.btnExportCode.TabIndex = 4;
+            this.btnExportCode.Text = "Export Code";
+            this.btnExportCode.UseVisualStyleBackColor = true;
+            this.btnExportCode.Click += new System.EventHandler(this.btnExportCode_Click);
             // 
             // FormMain
             // 
@@ -1173,6 +1186,7 @@
         private System.Windows.Forms.ToolStripMenuItem DimToBrightRedToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton btnRenameTheme;
         private System.Windows.Forms.CheckBox checkDefault;
+        private System.Windows.Forms.Button btnExportCode;
     }
 }
 

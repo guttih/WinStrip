@@ -941,7 +941,6 @@
             this.tabManual.Size = new System.Drawing.Size(619, 431);
             this.tabManual.TabIndex = 0;
             this.tabManual.Text = "Manual";
-            this.tabManual.Click += new System.EventHandler(this.tabManual_Click);
             // 
             // label2
             // 

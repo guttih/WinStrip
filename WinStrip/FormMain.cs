@@ -1168,25 +1168,40 @@ namespace WinStrip
 
         private void btnExportCode_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
-            folderBrowserDialog.Description = "Please select the folder to place the code";
-            //folderBrowserDialog.RootFolder = Environment.SpecialFolder.MyDocuments;
-            folderBrowserDialog.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            if (Directory.Exists($"{folderBrowserDialog.SelectedPath}\\Arduino"))
+            var fromPath = $"{Path.GetDirectoryName(Application.ExecutablePath)}\\Esp32Strip";
+            var inoFiles = GetFilesByExtensions(new DirectoryInfo(fromPath), new string[] { ".ino" });
+            if (inoFiles == null || inoFiles.Count() < 1)
             {
-                folderBrowserDialog.SelectedPath += "\\Arduino";
+                
+                MessageBox.Show(this, $"Could not find any .ino files in source code", "Ino file missing", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
-            {
-                var toPath = $"{folderBrowserDialog.SelectedPath}\\Esp32Strip";
-                var fromPath = $"{Path.GetDirectoryName(Application.ExecutablePath)}\\Esp32Strip";
-                try { 
-                    CopyFiles(fromPath, toPath, "*.ino;*.h;*.cpp");
-                } 
-                catch(Exception ex) {
-                    MessageBox.Show(this, $"There was an error when copying files\n\n {ex.Message}", "Error copying source files", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            
+            string inoFilePath = $"{fromPath}\\{inoFiles[0].Name}";
+            var frmExport = new FormExport(inoFilePath);
+            if (frmExport.ShowDialog() == DialogResult.OK) { 
+            
+                FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+                folderBrowserDialog.Description = "Please select the folder to place the code";
+                folderBrowserDialog.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                if (Directory.Exists($"{folderBrowserDialog.SelectedPath}\\Arduino"))
+                {
+                    folderBrowserDialog.SelectedPath += "\\Arduino";
                 }
+                if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                {
+                    var toPath = $"{folderBrowserDialog.SelectedPath}\\Esp32Strip";
+               
+                    try { 
+                        CopyFiles(fromPath, toPath, "*.h;*.cpp");
+                        inoFilePath = $"{toPath}\\{inoFiles[0].Name}";
+                        frmExport.WriteSelectedContentToFile(inoFilePath);
+                    } 
+                    catch(Exception ex) {
+                        MessageBox.Show(this, $"There was an error when copying files\n\n {ex.Message}", "Error copying source files", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
 
+                }
             }
         }
 
@@ -1197,33 +1212,15 @@ namespace WinStrip
             DirectoryInfo dest = Directory.Exists(toPath)? new DirectoryInfo(toPath)
                                                          : Directory.CreateDirectory(toPath);
 
-
-            //FileInfo[] files = source.GetFiles(searchPatthern);
             searchPatthern = searchPatthern.Replace("*.", ".");
             var files = GetFilesByExtensions(source, searchPatthern.Split(';'));
             foreach(var file in files)
             {
                 file.CopyTo(dest.FullName + "\\" + file.Name, true);
             }
-            /*var list = new List<FileInfo>();
-            var extendions = searchPatthern.Split(';');
-            foreach(var ext in extendions)
-            {
-                var files = source.GetFiles(ext);
-                foreach(var file in files)
-                {
-                    list.Add(file);
-                }
-            }
-            
-            foreach (var file in list)
-            {
-                file.CopyTo(dest.FullName + "\\" + file.Name, true);
-            }*/
-
         }
 
-        public FileInfo[] GetFilesByExtensions(DirectoryInfo dir, params string[] extensions)
+        public FileInfo[] GetFilesByExtensions(DirectoryInfo dir, string[] extensions)
         {
             if (extensions == null)
                 throw new ArgumentNullException("extensions");
@@ -1231,11 +1228,5 @@ namespace WinStrip
             return files.Where(f => extensions.Contains(f.Extension)).ToArray();
         }
 
-
-
-        private void tabManual_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

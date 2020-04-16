@@ -81,6 +81,12 @@
     <Compile Include="EntityTransfer\StripValues.cs" />
     <Compile Include="Entity\Step.cs" />
     <Compile Include="Entity\Theme.cs" />
+    <Compile Include="FormExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormExport.Designer.cs">
+      <DependentUpon>FormExport.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,6 +108,9 @@
     <Compile Include="Utilities\SColor.cs" />
     <Compile Include="Utilities\Serial.cs" />
     <Compile Include="Utilities\SerialCommand.cs" />
+    <EmbeddedResource Include="FormExport.resx">
+      <DependentUpon>FormExport.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>

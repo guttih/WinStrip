@@ -17,21 +17,20 @@
 
 SerialReader reader;
 
-//STRIP_TYPE, DATA_PIN, CLOCK_PIN, COLOR_SCHEME > (leds, NUM_LEDS
 #include "StripHelper.h"
-
 
 #define NUM_LEDS 19 
 #define CLOCK_PIN 13  /*green wire*/
 #define DATA_PIN  14  /*blue wire*/
-/*
-#define STRIP_TYPE WS2801
-#define COLOR_SCHEME RBG
-*/
 
 #define STRIP_TYPE APA102
 const char* stripType = "APA102";
 #define COLOR_SCHEME BGR 
+
+/*
+#define STRIP_TYPE WS2801
+#define COLOR_SCHEME RBG
+*/
 
 
 CRGB leds[NUM_LEDS];

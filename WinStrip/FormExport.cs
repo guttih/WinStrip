@@ -22,11 +22,6 @@ namespace WinStrip
         const string FASTLED_ADDLEDS      = "FastLED.addLeds<STRIP_TYPE, DATA_PIN, ";
         public FormExport(string codeFilePath)
         {
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            MaximizeBox = false;
-            MinimizeBox = false;
-            StartPosition = FormStartPosition.CenterParent;
-            
             CodeFilePath = codeFilePath;
             InitializeComponent();
             

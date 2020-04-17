@@ -84,6 +84,7 @@
     <Compile Include="EntityTransfer\StripValues.cs" />
     <Compile Include="Entity\Step.cs" />
     <Compile Include="Entity\Theme.cs" />
+    <Compile Include="Entity\VersionInformation.cs" />
     <Compile Include="FormExport.cs">
       <SubType>Form</SubType>
     </Compile>

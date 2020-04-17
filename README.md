@@ -11,5 +11,5 @@ To achieve this two applications are needed.
 One running on the Windows computer and another one running on the Esp32 microcontroller.
 The Windows application is called **WinStrip** and the application running on the Esp32 is called **Esp32Strip**.
 
- ## Progress
- This project is being developed and is **not ready yet**.
+ ## Documentation
+Documentation and setup can be found [here](https://guttih.com/public/projects/winstrip/release/)

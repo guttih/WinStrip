@@ -4,12 +4,29 @@ namespace WinStrip
 {
     public partial class BaseForm : Form
     {
-        public string HelpRootUrl { get {
+        public string RootUrl
+        {
+            get
+            {
+                return Properties.Settings.Default.HelpRootUrl;
+            }
+        }
+
+        public string MajorMinorVersion
+        {
+            get
+            {
                 var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+                return $"{version.Major}.{version.Minor}";
+            }
+        }
+
+        public string HelpRootUrl { get {
                 var rootUrl = Properties.Settings.Default.HelpRootUrl;
-                return $"{rootUrl}/{version.Major}.{version.Minor}";
+                return $"{rootUrl}/{MajorMinorVersion}";
             } 
         }
+
         public void VisitHelpUrl(string webpageName = null)
         {
             var href = HelpRootUrl;

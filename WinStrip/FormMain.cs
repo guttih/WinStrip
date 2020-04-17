@@ -10,6 +10,7 @@ using WinStrip.Entity;
 using WinStrip.EntityTransfer;
 using WinStrip.Utilities;
 using System.IO;
+using System.Net;
 
 namespace WinStrip
 {
@@ -60,7 +61,7 @@ namespace WinStrip
             toolTip1.SetToolTip(linkLabelPrograms, "Visit help page for the programs tab");
             toolTip1.SetToolTip(linkLabelCpu,      "Visit help page for the CPU tab");
             toolTip1.SetToolTip(linkLabelManual,   "Visit help page for the manual tab");
-            toolTip1.SetToolTip(linkLabelMain,     "Visit help page for the application");
+            toolTip1.SetToolTip(textBoxCustomSend, "Left click to select available commands");
         }
 
         void textBoxCustomSenditem_Click(object sender, EventArgs e)
@@ -1178,6 +1179,10 @@ namespace WinStrip
 
         private void btnExportCode_Click(object sender, EventArgs e)
         {
+        }
+
+        private void ExportCode()
+        {
             var fromPath = $"{Path.GetDirectoryName(Application.ExecutablePath)}\\Esp32Strip";
             var inoFiles = GetFilesByExtensions(new DirectoryInfo(fromPath), new string[] { ".ino" });
             if (inoFiles == null || inoFiles.Count() < 1)
@@ -1253,9 +1258,76 @@ namespace WinStrip
             VisitHelpUrl("maintabmanual.html");
         }
 
-        private void linkLabelMain_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
         {
             VisitHelpUrl();
+        }
+
+        private void exportCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportCode();
+        }
+
+        private void checkForUpdateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+            var url = $"{RootUrl}/release.json";
+            //url = "https://guttih.com/public/projects/winstrip/release/1.0/release.json";
+            string strRelease;
+            var webClient = new WebClient();
+            
+
+            try { 
+                strRelease = webClient.DownloadString(url);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(this, $"Unable to access version information file from server", "Error getting current version", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var serializer = new JavaScriptSerializer();
+            VersionInformation versionInfo;
+
+            try
+            {
+                versionInfo = serializer.Deserialize<VersionInformation>(strRelease);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(this, $"Unable to Deserialize version information", "Error deserializeing", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (versionInfo.Version == null || versionInfo.Version.Length < 3 || !versionInfo.Version.Contains('.'))
+            {
+                MessageBox.Show(this, $"Invalid version string information from server.", "Server version string is invalid", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            int compareServerVersion = versionInfo.CompareMajorMinorVersionStrings(MajorMinorVersion);
+
+            if(compareServerVersion <= 0)
+            {
+                MessageBox.Show(this, $"Your version \"{MajorMinorVersion}\" is the newest release", "Version up to date", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (MessageBox.Show("A newer version of this application has been released,\r\n do you want to visit it's download page?",
+                                 "A newer version exits",
+                                 MessageBoxButtons.YesNo,
+                                 MessageBoxIcon.Asterisk) == DialogResult.Yes)
+            {
+
+                url = $"{RootUrl}/release.html?version={versionInfo.Version}";
+                System.Diagnostics.Process.Start(url);
+            }
+
+
+        }
+
+        private void exportCodeToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
         }
     }
 }

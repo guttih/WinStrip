@@ -98,8 +98,9 @@
             this.radioButtonCpuTesting = new System.Windows.Forms.RadioButton();
             this.radioButtonCpuLive = new System.Windows.Forms.RadioButton();
             this.tabManual = new System.Windows.Forms.TabPage();
+            this.label9 = new System.Windows.Forms.Label();
             this.linkLabelManual = new System.Windows.Forms.LinkLabel();
-            this.btnExportCode = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.btnClearText2 = new System.Windows.Forms.Button();
@@ -111,7 +112,11 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.labelStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.linkLabelMain = new System.Windows.Forms.LinkLabel();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.mainToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkForUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPrograms.SuspendLayout();
             this.groupBoxParameters.SuspendLayout();
@@ -143,12 +148,13 @@
             this.tabManual.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).BeginInit();
             this.statusStrip1.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnSend
             // 
             this.btnSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSend.Location = new System.Drawing.Point(493, 389);
+            this.btnSend.Location = new System.Drawing.Point(531, 22);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(75, 23);
             this.btnSend.TabIndex = 0;
@@ -161,7 +167,7 @@
             this.comboPorts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.comboPorts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboPorts.FormattingEnabled = true;
-            this.comboPorts.Location = new System.Drawing.Point(23, 476);
+            this.comboPorts.Location = new System.Drawing.Point(23, 468);
             this.comboPorts.Name = "comboPorts";
             this.comboPorts.Size = new System.Drawing.Size(92, 21);
             this.comboPorts.TabIndex = 8;
@@ -175,10 +181,10 @@
             this.tabControl1.Controls.Add(this.tabPrograms);
             this.tabControl1.Controls.Add(this.tabCPU);
             this.tabControl1.Controls.Add(this.tabManual);
-            this.tabControl1.Location = new System.Drawing.Point(13, 13);
+            this.tabControl1.Location = new System.Drawing.Point(13, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(627, 457);
+            this.tabControl1.Size = new System.Drawing.Size(627, 450);
             this.tabControl1.TabIndex = 10;
             // 
             // tabPrograms
@@ -198,14 +204,14 @@
             this.tabPrograms.Location = new System.Drawing.Point(4, 22);
             this.tabPrograms.Name = "tabPrograms";
             this.tabPrograms.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPrograms.Size = new System.Drawing.Size(619, 431);
+            this.tabPrograms.Size = new System.Drawing.Size(619, 424);
             this.tabPrograms.TabIndex = 1;
             this.tabPrograms.Text = "Programs";
             // 
             // linkLabelPrograms
             // 
             this.linkLabelPrograms.AutoSize = true;
-            this.linkLabelPrograms.Location = new System.Drawing.Point(584, 1);
+            this.linkLabelPrograms.Location = new System.Drawing.Point(580, 406);
             this.linkLabelPrograms.Name = "linkLabelPrograms";
             this.linkLabelPrograms.Size = new System.Drawing.Size(29, 13);
             this.linkLabelPrograms.TabIndex = 16;
@@ -575,14 +581,14 @@
             this.tabCPU.Location = new System.Drawing.Point(4, 22);
             this.tabCPU.Name = "tabCPU";
             this.tabCPU.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCPU.Size = new System.Drawing.Size(619, 431);
+            this.tabCPU.Size = new System.Drawing.Size(619, 424);
             this.tabCPU.TabIndex = 2;
             this.tabCPU.Text = "CPU monitoring";
             // 
             // linkLabelCpu
             // 
             this.linkLabelCpu.AutoSize = true;
-            this.linkLabelCpu.Location = new System.Drawing.Point(584, 1);
+            this.linkLabelCpu.Location = new System.Drawing.Point(580, 406);
             this.linkLabelCpu.Name = "linkLabelCpu";
             this.linkLabelCpu.Size = new System.Drawing.Size(29, 13);
             this.linkLabelCpu.TabIndex = 17;
@@ -837,7 +843,7 @@
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(6, 218);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(607, 191);
+            this.dataGridView1.Size = new System.Drawing.Size(607, 185);
             this.dataGridView1.TabIndex = 3;
             this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView1_RowsChanged);
             this.dataGridView1.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dataGridView1_RowsChanged);
@@ -956,8 +962,9 @@
             // tabManual
             // 
             this.tabManual.BackColor = System.Drawing.SystemColors.Control;
+            this.tabManual.Controls.Add(this.label9);
             this.tabManual.Controls.Add(this.linkLabelManual);
-            this.tabManual.Controls.Add(this.btnExportCode);
+            this.tabManual.Controls.Add(this.label8);
             this.tabManual.Controls.Add(this.label2);
             this.tabManual.Controls.Add(this.label1);
             this.tabManual.Controls.Add(this.btnClearText2);
@@ -967,14 +974,23 @@
             this.tabManual.Location = new System.Drawing.Point(4, 22);
             this.tabManual.Name = "tabManual";
             this.tabManual.Padding = new System.Windows.Forms.Padding(3);
-            this.tabManual.Size = new System.Drawing.Size(619, 431);
+            this.tabManual.Size = new System.Drawing.Size(619, 424);
             this.tabManual.TabIndex = 0;
             this.tabManual.Text = "Manual";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(6, 8);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(54, 13);
+            this.label9.TabIndex = 18;
+            this.label9.Text = "Command";
             // 
             // linkLabelManual
             // 
             this.linkLabelManual.AutoSize = true;
-            this.linkLabelManual.Location = new System.Drawing.Point(584, 1);
+            this.linkLabelManual.Location = new System.Drawing.Point(580, 406);
             this.linkLabelManual.Name = "linkLabelManual";
             this.linkLabelManual.Size = new System.Drawing.Size(29, 13);
             this.linkLabelManual.TabIndex = 17;
@@ -982,29 +998,27 @@
             this.linkLabelManual.Text = "Help";
             this.linkLabelManual.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelManual_LinkClicked);
             // 
-            // btnExportCode
+            // label8
             // 
-            this.btnExportCode.Location = new System.Drawing.Point(264, 389);
-            this.btnExportCode.Name = "btnExportCode";
-            this.btnExportCode.Size = new System.Drawing.Size(75, 23);
-            this.btnExportCode.TabIndex = 4;
-            this.btnExportCode.Text = "Export Code";
-            this.btnExportCode.UseVisualStyleBackColor = true;
-            this.btnExportCode.Click += new System.EventHandler(this.btnExportCode_Click);
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 47);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(237, 13);
+            this.label8.TabIndex = 3;
+            this.label8.Text = "Left-click on the box above to select a command";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(8, 8);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(32, 13);
+            this.label2.Size = new System.Drawing.Size(0, 13);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Send";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 61);
+            this.label1.Location = new System.Drawing.Point(8, 80);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(56, 13);
             this.label1.TabIndex = 3;
@@ -1013,7 +1027,7 @@
             // btnClearText2
             // 
             this.btnClearText2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnClearText2.Location = new System.Drawing.Point(36, 389);
+            this.btnClearText2.Location = new System.Drawing.Point(531, 370);
             this.btnClearText2.Name = "btnClearText2";
             this.btnClearText2.Size = new System.Drawing.Size(75, 23);
             this.btnClearText2.TabIndex = 2;
@@ -1026,12 +1040,12 @@
             this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.Location = new System.Drawing.Point(6, 77);
+            this.textBox2.Location = new System.Drawing.Point(6, 96);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
             this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox2.Size = new System.Drawing.Size(600, 306);
+            this.textBox2.Size = new System.Drawing.Size(600, 268);
             this.textBox2.TabIndex = 1;
             // 
             // textBoxCustomSend
@@ -1041,14 +1055,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCustomSend.Location = new System.Drawing.Point(6, 24);
             this.textBoxCustomSend.Name = "textBoxCustomSend";
-            this.textBoxCustomSend.Size = new System.Drawing.Size(605, 20);
+            this.textBoxCustomSend.Size = new System.Drawing.Size(519, 20);
             this.textBoxCustomSend.TabIndex = 0;
             this.textBoxCustomSend.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // btnConnection
             // 
             this.btnConnection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnConnection.Location = new System.Drawing.Point(136, 476);
+            this.btnConnection.Location = new System.Drawing.Point(136, 468);
             this.btnConnection.Name = "btnConnection";
             this.btnConnection.Size = new System.Drawing.Size(75, 23);
             this.btnConnection.TabIndex = 11;
@@ -1071,7 +1085,7 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.labelStatus});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 506);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 498);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(652, 22);
             this.statusStrip1.TabIndex = 13;
@@ -1083,28 +1097,63 @@
             this.labelStatus.Size = new System.Drawing.Size(64, 17);
             this.labelStatus.Text = "labelStatus";
             // 
-            // linkLabelMain
+            // menuStrip1
             // 
-            this.linkLabelMain.AutoSize = true;
-            this.linkLabelMain.Location = new System.Drawing.Point(607, 479);
-            this.linkLabelMain.Name = "linkLabelMain";
-            this.linkLabelMain.Size = new System.Drawing.Size(29, 13);
-            this.linkLabelMain.TabIndex = 17;
-            this.linkLabelMain.TabStop = true;
-            this.linkLabelMain.Text = "Help";
-            this.linkLabelMain.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelMain_LinkClicked);
+            this.menuStrip1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mainToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(581, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 13, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(71, 24);
+            this.menuStrip1.TabIndex = 18;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // mainToolStripMenuItem
+            // 
+            this.mainToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportCodeToolStripMenuItem,
+            this.helpToolStripMenuItem,
+            this.checkForUpdateToolStripMenuItem});
+            this.mainToolStripMenuItem.Name = "mainToolStripMenuItem";
+            this.mainToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
+            this.mainToolStripMenuItem.Text = "Menu";
+            // 
+            // exportCodeToolStripMenuItem
+            // 
+            this.exportCodeToolStripMenuItem.Name = "exportCodeToolStripMenuItem";
+            this.exportCodeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportCodeToolStripMenuItem.Text = "Export code";
+            this.exportCodeToolStripMenuItem.Click += new System.EventHandler(this.exportCodeToolStripMenuItem_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.helpToolStripMenuItem.Text = "&Help";
+            this.helpToolStripMenuItem.ToolTipText = "Visit help page for the application";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            // 
+            // checkForUpdateToolStripMenuItem
+            // 
+            this.checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
+            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.checkForUpdateToolStripMenuItem.Text = "Check for &update";
+            this.checkForUpdateToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdateToolStripMenuItem_Click);
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(652, 528);
-            this.Controls.Add(this.linkLabelMain);
+            this.ClientSize = new System.Drawing.Size(652, 520);
             this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.btnConnection);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.comboPorts);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(540, 550);
             this.Name = "FormMain";
             this.Text = "WinStrip";
@@ -1154,6 +1203,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1237,11 +1288,16 @@
         private System.Windows.Forms.ToolStripMenuItem DimToBrightRedToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton btnRenameTheme;
         private System.Windows.Forms.CheckBox checkDefault;
-        private System.Windows.Forms.Button btnExportCode;
         private System.Windows.Forms.LinkLabel linkLabelPrograms;
         private System.Windows.Forms.LinkLabel linkLabelCpu;
         private System.Windows.Forms.LinkLabel linkLabelManual;
-        private System.Windows.Forms.LinkLabel linkLabelMain;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem mainToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem checkForUpdateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportCodeToolStripMenuItem;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label8;
     }
 }
 

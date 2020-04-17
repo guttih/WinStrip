@@ -1329,5 +1329,11 @@ namespace WinStrip
         private void exportCodeToolStripMenuItem1_Click(object sender, EventArgs e)
         {
         }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var about = new AboutForm();
+            about.ShowDialog();
+        }
     }
 }

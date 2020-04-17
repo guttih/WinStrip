@@ -34,5 +34,17 @@ namespace WinStrip.Properties {
                 this["Themes"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://guttih.com/public/projects/winstrip/release")]
+        public string HelpRootUrl {
+            get {
+                return ((string)(this["HelpRootUrl"]));
+            }
+            set {
+                this["HelpRootUrl"] = value;
+            }
+        }
     }
 }

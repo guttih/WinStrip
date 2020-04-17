@@ -72,6 +72,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="EntityTransfer\StripColors.cs" />
     <Compile Include="EntityTransfer\StripStatus.cs" />
     <Compile Include="EntityTransfer\StripValuesAndColors.cs" />

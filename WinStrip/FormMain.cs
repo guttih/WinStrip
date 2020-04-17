@@ -13,9 +13,9 @@ using System.IO;
 
 namespace WinStrip
 {
-    public partial class FormMain : Form
+    public partial class FormMain : BaseForm
     {
-        
+
         Serial serial;
         List<StripProgram> programs;
         List<ProgramParameter> parameters;
@@ -43,6 +43,7 @@ namespace WinStrip
         }
         private void FormMain_Load(object sender, EventArgs e)
         {
+            SetTooltips();
             LoadThemes();
             labelStatus.Text = "";
             InitComboPorts();
@@ -53,6 +54,15 @@ namespace WinStrip
             radioButtonCpuLive.Checked = selectedComboThemeIsDefaultTheme();
             timer1.Start();
         }
+
+        private void SetTooltips()
+        {
+            toolTip1.SetToolTip(linkLabelPrograms, "Visit help page for the programs tab");
+            toolTip1.SetToolTip(linkLabelCpu,      "Visit help page for the CPU tab");
+            toolTip1.SetToolTip(linkLabelManual,   "Visit help page for the manual tab");
+            toolTip1.SetToolTip(linkLabelMain,     "Visit help page for the application");
+        }
+
         void textBoxCustomSenditem_Click(object sender, EventArgs e)
         {
             MenuItem clickedItem = sender as MenuItem;
@@ -1038,7 +1048,7 @@ namespace WinStrip
                                    : "Check this mark to make this theme the default theme.";
             
             toolTip1.SetToolTip(checkDefault, str);
-
+            
             checkDefault.Checked = isDefault;
         }
 
@@ -1228,5 +1238,24 @@ namespace WinStrip
             return files.Where(f => extensions.Contains(f.Extension)).ToArray();
         }
 
+        private void linkLabelPrograms_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            VisitHelpUrl("maintabprograms.html");
+        }
+
+        private void linkLabelCpu_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            VisitHelpUrl("maintabcpu.html");
+        }
+
+        private void linkLabelManual_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            VisitHelpUrl("maintabmanual.html");
+        }
+
+        private void linkLabelMain_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            VisitHelpUrl();
+        }
     }
 }

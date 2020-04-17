@@ -5,5 +5,8 @@
     <Setting Name="Themes" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="HelpRootUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://guttih.com/public/projects/winstrip/release</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

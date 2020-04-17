@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace WinStrip
 {
-    public partial class FormExport : Form
+    public partial class FormExport : BaseForm
     {
         public List<string> FileContent;
         public string CodeFilePath { get; set; }
@@ -324,6 +324,11 @@ namespace WinStrip
         private void comboClockPin_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetButtonState();
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            VisitHelpUrl("exportcode.html");
         }
     }
 

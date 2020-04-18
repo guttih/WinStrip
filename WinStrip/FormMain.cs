@@ -26,35 +26,60 @@ namespace WinStrip
         public string LabelStatusSaveText { get; private set; }
 
         ToolTip toolTip1;
-
+        private FormSplash splash;
         public FormMain()
         {
+            splash = new FormSplash("initializing...");
+           
             ThemeSelectedIndex = -1;
             PortSpeed = 500000;
             InitializeComponent();
             toolTip1 = new ToolTip();
+            toolTip1.AutoPopDelay = 4000;
             serial = new Serial();
             parameters = new List<ProgramParameter>();
 
-            textBoxCustomSend.ContextMenu = new ContextMenu();
+            textBoxManualSend.ContextMenu = new ContextMenu();
             for (SerialCommand i = 0; i < SerialCommand.COUNT; i++)
             {
-
-                MenuItem item = textBoxCustomSend.ContextMenu.MenuItems.Add(i.ToString());
+                MenuItem item = textBoxManualSend.ContextMenu.MenuItems.Add(i.ToString());
                 item.Click += new EventHandler(textBoxCustomSenditem_Click);
             }
+           
         }
+
+        private void splashShow(string message, string title = null)
+        {
+            if (title == null)
+                title = Text;
+
+            splash.Set(title, message);
+            if (!splash.Visible)
+                splash.Show();
+        }
+
+        private void splashHide()
+        {
+            if (splash.Visible)
+                splash.Hide();
+        }
+
         private void FormMain_Load(object sender, EventArgs e)
         {
+            splashShow("initializing...");
             SetTooltips();
+            splashShow("loading themes...");
             LoadThemes();
             labelStatus.Text = "";
+            splashShow("Searching for available com ports...");
             InitComboPorts();
+            splashShow("Getting values from micro controller...");
             GetHardwareFromDevice();
 
             EnableDeviceRelatedControls(serial.isConnected);
-
             radioButtonCpuLive.Checked = selectedComboThemeIsDefaultTheme();
+
+            splashHide();
             timer1.Start();
         }
 
@@ -62,40 +87,44 @@ namespace WinStrip
         {
             toolTip1.SetToolTip(linkLabelPrograms, "Visit help page for the programs tab");
             toolTip1.SetToolTip(linkLabelCpu,      "Visit help page for the CPU tab");
-            toolTip1.SetToolTip(linkLabelManual,   "Visit help page for the manual tab");
-            toolTip1.SetToolTip(textBoxCustomSend, "Left click to select available commands");
+            toolTip1.SetToolTip(linkLabelManual,   "Visit help page for the command tab");
+            toolTip1.SetToolTip(textBoxManualSend, "Left click to select available commands");
             toolTip1.SetToolTip(btnGetValues,      "Download all values from the micro controller");
             toolTip1.SetToolTip(comboPrograms,     "Select strip program");
             toolTip1.SetToolTip(btnSendAll,        "Send all selected values to them micro contoller");
+            toolTip1.SetToolTip(comboPorts,        "The COM port the application is connected to");
+            toolTip1.SetToolTip(btnConnection, "Click to connect or disconnect the COM port");
 
-            string format;
-            format = "Slide up or down to increase or decreas the {0}";
+            string format = "Slide left or right to increase or decreas the {0}.  Use spin box for more precision";
             toolTip1.SetToolTip(trackBarValue1,     string.Format(format, "value"));
             toolTip1.SetToolTip(trackBarValue2,     string.Format(format, "value"));
             toolTip1.SetToolTip(trackBarValue3,     string.Format(format, "value"));
+            format = "Slide up or down to increase or decreas the {0}.  Use spin box for more precision";
             toolTip1.SetToolTip(trackBarDelay,      string.Format(format, "delay"));
             toolTip1.SetToolTip(trackBarBrightness, string.Format(format, "brightness"));
 
-            format = "Change the {0} by typing in the box or, click the up or down arrow";
-            toolTip1.SetToolTip(numericUpDownValue1, string.Format(format, "value"));
-            toolTip1.SetToolTip(numericUpDownValue2, string.Format(format, "value"));
-            toolTip1.SetToolTip(numericUpDownValue3, string.Format(format, "value"));
-            toolTip1.SetToolTip(trackBarDelay, string.Format(format, "delay"));
-            toolTip1.SetToolTip(trackBarBrightness, string.Format(format, "brightness"));
-
-            toolTip1.SetToolTip(btnConnection, "Click to connect or disconnect the COM port");
-
+            format = "Select select a new color for colorbank {0} and send it to the micro controller";
+            toolTip1.SetToolTip(btnColor1, string.Format(format, 1));
+            toolTip1.SetToolTip(btnColor2, string.Format(format, 2));
+            toolTip1.SetToolTip(btnColor3, string.Format(format, 3));
+            toolTip1.SetToolTip(btnColor4, string.Format(format, 4));
+            toolTip1.SetToolTip(btnColor5, string.Format(format, 5));
+            toolTip1.SetToolTip(btnColor6, string.Format(format, 6));
 
 
-            string btnColorText = "Select select a new color for colorbank {0} and send it to the micro controller";
-            toolTip1.SetToolTip(btnColor1, string.Format(btnColorText, 1));
-            toolTip1.SetToolTip(btnColor2, string.Format(btnColorText, 2));
-            toolTip1.SetToolTip(btnColor3, string.Format(btnColorText, 3));
-            toolTip1.SetToolTip(btnColor4, string.Format(btnColorText, 4));
-            toolTip1.SetToolTip(btnColor5, string.Format(btnColorText, 5));
-            toolTip1.SetToolTip(btnColor6, string.Format(btnColorText, 6));
+            // tab CPU Monitoring
+            format = "Slide left or right to increase or decreas the {0}.  Use spin box for more precision";            
+            toolTip1.SetToolTip(trackBarCpuTesting, string.Format(format, "CPU load test value"));
 
+            toolTip1.SetToolTip(comboThemes, "The active theme");
+            toolTip1.SetToolTip(radioButtonCpuLive,   "Select to start monitoring the CPU and update the value automatically");
+            toolTip1.SetToolTip(radioButtonCpuTesting,"Select to be able to change the CPU load value manually to test the active theme");
+            toolTip1.SetToolTip(labelCpu, "The current CPU load wich will determine which theme step is active");
 
+            // tab Manual
+            toolTip1.SetToolTip(textBoxManualSend, "Type or select by right clicking a command to send to the micro controller");
+            toolTip1.SetToolTip(btnManualSend, "Send the selected command to the Micro controller");
+            toolTip1.SetToolTip(btnClearText2, "Clear the responce box");
 
 
 
@@ -104,7 +133,7 @@ namespace WinStrip
         void textBoxCustomSenditem_Click(object sender, EventArgs e)
         {
             MenuItem clickedItem = sender as MenuItem;
-            textBoxCustomSend.Text = clickedItem.Text;
+            textBoxManualSend.Text = clickedItem.Text;
         }
 
 
@@ -244,19 +273,23 @@ namespace WinStrip
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-            var text = textBoxCustomSend.Text;
+            var text = textBoxManualSend.Text;
 
+            splashShow("Sending command...");
             serial.WriteLine(text);
-            try { 
-                textBox2.Text += "\r\n"+ serial.ReadLine();
+            try {
+                splashShow("Waiting for a responce...");
+                textBoxManualResponce.Text += "\r\n"+ serial.ReadLine();
             } catch (TimeoutException)
             {
                 labelStatus.Text = "";
-            }
-            
-            catch(Exception ex)
+            } catch(Exception ex)
             {
                 labelStatus.Text = ex.Message;
+            }
+            finally
+            {
+                splashHide();
             }
         }
 
@@ -264,9 +297,11 @@ namespace WinStrip
         {
         }
 
-        public void SetButtonStatus()
+        public void SetManualControlState()
         {
-            btnSend.Enabled = serial.isConnected;
+            bool connected = serial.isConnected;
+            textBoxManualSend.Enabled = connected;
+            btnManualSend.Enabled = connected && textBoxManualSend.Text.Length > 0;
         }
         public bool GetFullComputerDevices(string findPort)
         {
@@ -371,12 +406,14 @@ namespace WinStrip
             btnColor5.Enabled = bEnable;
             btnColor6.Enabled = bEnable;
 
-            btnSend.Enabled = bEnable;
+            btnManualSend.Enabled = bEnable;
             if (comboPorts.Items.Count < 1)
                 btnConnection.Text = "Connect";
             btnConnection.Enabled = comboPorts.Items.Count > 0;
 
             labelStatus.Text = serial.isConnected ? $"Connected to {comboPorts.Text}" : "";
+
+            SetManualControlState();
         }
 
         private void SetPortConnectionStatus(bool connectionStatus)
@@ -394,7 +431,7 @@ namespace WinStrip
 
         private void btnClearText2_Click(object sender, EventArgs e)
         {
-            textBox2.Text = "";
+            textBoxManualResponce.Text = "";
         }
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
@@ -1080,14 +1117,18 @@ namespace WinStrip
 
             return comboThemes.Text == Themes[defaultIndex].Name;
         }
+
+        private void SetCheckDefaultTootipMessage()
+        {
+            string str = checkDefault.Checked ? "To disable Live CPU on startup, remove this check-mark"
+                                              : "Check this mark to make this theme the default theme.";
+            toolTip1.SetToolTip(checkDefault, str);
+        }
         private void SetDefaultThemeState()
         {   bool isDefault = selectedComboThemeIsDefaultTheme();
-            string str = isDefault ? "To disable Live CPU on startup, remove this check-mark"
-                                   : "Check this mark to make this theme the default theme.";
-            
-            toolTip1.SetToolTip(checkDefault, str);
             
             checkDefault.Checked = isDefault;
+            SetCheckDefaultTootipMessage();
         }
 
         private bool IsDatagridRowValid(DataGridViewRow row)
@@ -1212,10 +1253,6 @@ namespace WinStrip
             {
                 checkDefault.Checked = !newState;
             }
-        }
-
-        private void btnExportCode_Click(object sender, EventArgs e)
-        {
         }
 
         private void ExportCode()
@@ -1426,6 +1463,16 @@ namespace WinStrip
         private void onControl_MouseEnter(object sender, EventArgs e)
         {
             SetTooltipOnLabelStatus(sender);
+        }
+
+        private void OnPossibleChangeStateOfbtnManualSend(object sender, EventArgs e)
+        {
+            SetManualControlState();
+        }
+
+        private void checkDefault_CheckedChanged(object sender, EventArgs e)
+        {
+            SetCheckDefaultTootipMessage();
         }
     }
 }

@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            this.btnSend = new System.Windows.Forms.Button();
+            this.btnManualSend = new System.Windows.Forms.Button();
             this.comboPorts = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPrograms = new System.Windows.Forms.TabPage();
@@ -93,15 +93,16 @@
             this.trackBarCpuTesting = new System.Windows.Forms.TrackBar();
             this.radioButtonCpuTesting = new System.Windows.Forms.RadioButton();
             this.radioButtonCpuLive = new System.Windows.Forms.RadioButton();
-            this.tabManual = new System.Windows.Forms.TabPage();
+            this.tabCommands = new System.Windows.Forms.TabPage();
+            this.label8 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.linkLabelManual = new System.Windows.Forms.LinkLabel();
-            this.label8 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.btnClearText2 = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBoxCustomSend = new System.Windows.Forms.TextBox();
+            this.textBoxManualResponce = new System.Windows.Forms.TextBox();
+            this.textBoxManualSend = new System.Windows.Forms.TextBox();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.btnConnection = new System.Windows.Forms.Button();
             this.performanceCounter1 = new System.Diagnostics.PerformanceCounter();
@@ -145,22 +146,24 @@
             this.groupBoxCpuTest.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCpuTesting)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarCpuTesting)).BeginInit();
-            this.tabManual.SuspendLayout();
+            this.tabCommands.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // btnSend
+            // btnManualSend
             // 
-            this.btnSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSend.Location = new System.Drawing.Point(531, 22);
-            this.btnSend.Name = "btnSend";
-            this.btnSend.Size = new System.Drawing.Size(75, 23);
-            this.btnSend.TabIndex = 0;
-            this.btnSend.Text = "Send";
-            this.btnSend.UseVisualStyleBackColor = true;
-            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
+            this.btnManualSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnManualSend.Location = new System.Drawing.Point(531, 63);
+            this.btnManualSend.Name = "btnManualSend";
+            this.btnManualSend.Size = new System.Drawing.Size(75, 23);
+            this.btnManualSend.TabIndex = 0;
+            this.btnManualSend.Text = "Send";
+            this.btnManualSend.UseVisualStyleBackColor = true;
+            this.btnManualSend.Click += new System.EventHandler(this.btnSend_Click);
+            this.btnManualSend.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.btnManualSend.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // comboPorts
             // 
@@ -182,7 +185,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPrograms);
             this.tabControl1.Controls.Add(this.tabCPU);
-            this.tabControl1.Controls.Add(this.tabManual);
+            this.tabControl1.Controls.Add(this.tabCommands);
             this.tabControl1.Location = new System.Drawing.Point(13, 4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -220,6 +223,8 @@
             this.linkLabelPrograms.TabStop = true;
             this.linkLabelPrograms.Text = "Help";
             this.linkLabelPrograms.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelPrograms_LinkClicked);
+            this.linkLabelPrograms.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.linkLabelPrograms.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // groupBoxParameters
             // 
@@ -589,6 +594,8 @@
             this.comboPrograms.Size = new System.Drawing.Size(285, 21);
             this.comboPrograms.TabIndex = 0;
             this.comboPrograms.SelectedIndexChanged += new System.EventHandler(this.comboPrograms_SelectedIndexChanged);
+            this.comboPrograms.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.comboPrograms.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // tabCPU
             // 
@@ -622,6 +629,8 @@
             this.linkLabelCpu.TabStop = true;
             this.linkLabelCpu.Text = "Help";
             this.linkLabelCpu.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelCpu_LinkClicked);
+            this.linkLabelCpu.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.linkLabelCpu.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // checkDefault
             // 
@@ -632,7 +641,10 @@
             this.checkDefault.TabIndex = 13;
             this.checkDefault.Text = "Default";
             this.checkDefault.UseVisualStyleBackColor = true;
+            this.checkDefault.CheckedChanged += new System.EventHandler(this.checkDefault_CheckedChanged);
             this.checkDefault.Click += new System.EventHandler(this.checkDefault_Click);
+            this.checkDefault.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.checkDefault.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // textBox1
             // 
@@ -850,6 +862,8 @@
             this.comboThemes.Sorted = true;
             this.comboThemes.TabIndex = 1;
             this.comboThemes.SelectedIndexChanged += new System.EventHandler(this.comboThemes_SelectedIndexChanged);
+            this.comboThemes.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.comboThemes.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // groupBox2
             // 
@@ -880,6 +894,8 @@
             this.labelCpu.Text = "0";
             this.labelCpu.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.labelCpu.TextChanged += new System.EventHandler(this.labelCpu_TextChanged);
+            this.labelCpu.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.labelCpu.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // groupBoxCpuTest
             // 
@@ -913,6 +929,8 @@
             this.trackBarCpuTesting.TabIndex = 9;
             this.trackBarCpuTesting.Value = 1;
             this.trackBarCpuTesting.ValueChanged += new System.EventHandler(this.ValueControl_ValueChanged);
+            this.trackBarCpuTesting.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.trackBarCpuTesting.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // radioButtonCpuTesting
             // 
@@ -927,6 +945,8 @@
             this.radioButtonCpuTesting.Text = "Testing";
             this.radioButtonCpuTesting.UseVisualStyleBackColor = true;
             this.radioButtonCpuTesting.CheckedChanged += new System.EventHandler(this.radioButtonCpuTesting_CheckedChanged);
+            this.radioButtonCpuTesting.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.radioButtonCpuTesting.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // radioButtonCpuLive
             // 
@@ -939,30 +959,55 @@
             this.radioButtonCpuLive.Text = "Live";
             this.radioButtonCpuLive.UseVisualStyleBackColor = true;
             this.radioButtonCpuLive.CheckedChanged += new System.EventHandler(this.radioButtonCpuLive_CheckedChanged);
+            this.radioButtonCpuLive.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.radioButtonCpuLive.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
-            // tabManual
+            // tabCommands
             // 
-            this.tabManual.BackColor = System.Drawing.SystemColors.Control;
-            this.tabManual.Controls.Add(this.label9);
-            this.tabManual.Controls.Add(this.linkLabelManual);
-            this.tabManual.Controls.Add(this.label8);
-            this.tabManual.Controls.Add(this.label2);
-            this.tabManual.Controls.Add(this.label1);
-            this.tabManual.Controls.Add(this.btnClearText2);
-            this.tabManual.Controls.Add(this.textBox2);
-            this.tabManual.Controls.Add(this.textBoxCustomSend);
-            this.tabManual.Controls.Add(this.btnSend);
-            this.tabManual.Location = new System.Drawing.Point(4, 22);
-            this.tabManual.Name = "tabManual";
-            this.tabManual.Padding = new System.Windows.Forms.Padding(3);
-            this.tabManual.Size = new System.Drawing.Size(619, 424);
-            this.tabManual.TabIndex = 0;
-            this.tabManual.Text = "Manual";
+            this.tabCommands.BackColor = System.Drawing.SystemColors.Control;
+            this.tabCommands.Controls.Add(this.label8);
+            this.tabCommands.Controls.Add(this.textBox2);
+            this.tabCommands.Controls.Add(this.label9);
+            this.tabCommands.Controls.Add(this.linkLabelManual);
+            this.tabCommands.Controls.Add(this.label2);
+            this.tabCommands.Controls.Add(this.label1);
+            this.tabCommands.Controls.Add(this.btnClearText2);
+            this.tabCommands.Controls.Add(this.textBoxManualResponce);
+            this.tabCommands.Controls.Add(this.textBoxManualSend);
+            this.tabCommands.Controls.Add(this.btnManualSend);
+            this.tabCommands.Location = new System.Drawing.Point(4, 22);
+            this.tabCommands.Name = "tabCommands";
+            this.tabCommands.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCommands.Size = new System.Drawing.Size(619, 424);
+            this.tabCommands.TabIndex = 0;
+            this.tabCommands.Text = "Commands";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 88);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(285, 13);
+            this.label8.TabIndex = 20;
+            this.label8.Text = "Right-click on the box above to select available commands";
+            // 
+            // textBox2
+            // 
+            this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox2.Location = new System.Drawing.Point(6, 15);
+            this.textBox2.Multiline = true;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
+            this.textBox2.Size = new System.Drawing.Size(603, 33);
+            this.textBox2.TabIndex = 19;
+            this.textBox2.TabStop = false;
+            this.textBox2.Text = "Here you can send text commands to the micro controller via the usb COM port.\r\nTh" +
+    "e responce from the micro controller will appear in the Responce box below.";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(6, 8);
+            this.label9.Location = new System.Drawing.Point(6, 51);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(54, 13);
             this.label9.TabIndex = 18;
@@ -978,15 +1023,8 @@
             this.linkLabelManual.TabStop = true;
             this.linkLabelManual.Text = "Help";
             this.linkLabelManual.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelManual_LinkClicked);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 47);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(237, 13);
-            this.label8.TabIndex = 3;
-            this.label8.Text = "Left-click on the box above to select a command";
+            this.linkLabelManual.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.linkLabelManual.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // label2
             // 
@@ -999,7 +1037,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 80);
+            this.label1.Location = new System.Drawing.Point(6, 117);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(56, 13);
             this.label1.TabIndex = 3;
@@ -1008,37 +1046,42 @@
             // btnClearText2
             // 
             this.btnClearText2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnClearText2.Location = new System.Drawing.Point(531, 370);
+            this.btnClearText2.Location = new System.Drawing.Point(6, 395);
             this.btnClearText2.Name = "btnClearText2";
             this.btnClearText2.Size = new System.Drawing.Size(75, 23);
             this.btnClearText2.TabIndex = 2;
             this.btnClearText2.Text = "Clear";
             this.btnClearText2.UseVisualStyleBackColor = true;
             this.btnClearText2.Click += new System.EventHandler(this.btnClearText2_Click);
+            this.btnClearText2.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.btnClearText2.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
-            // textBox2
+            // textBoxManualResponce
             // 
-            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.textBoxManualResponce.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.Location = new System.Drawing.Point(6, 96);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox2.Size = new System.Drawing.Size(600, 268);
-            this.textBox2.TabIndex = 1;
+            this.textBoxManualResponce.Location = new System.Drawing.Point(6, 135);
+            this.textBoxManualResponce.Multiline = true;
+            this.textBoxManualResponce.Name = "textBoxManualResponce";
+            this.textBoxManualResponce.ReadOnly = true;
+            this.textBoxManualResponce.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBoxManualResponce.Size = new System.Drawing.Size(600, 254);
+            this.textBoxManualResponce.TabIndex = 1;
             // 
-            // textBoxCustomSend
+            // textBoxManualSend
             // 
-            this.textBoxCustomSend.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.textBoxManualSend.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCustomSend.Location = new System.Drawing.Point(6, 24);
-            this.textBoxCustomSend.Name = "textBoxCustomSend";
-            this.textBoxCustomSend.Size = new System.Drawing.Size(519, 20);
-            this.textBoxCustomSend.TabIndex = 0;
-            this.textBoxCustomSend.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
+            this.textBoxManualSend.Location = new System.Drawing.Point(6, 65);
+            this.textBoxManualSend.Name = "textBoxManualSend";
+            this.textBoxManualSend.Size = new System.Drawing.Size(502, 20);
+            this.textBoxManualSend.TabIndex = 0;
+            this.textBoxManualSend.TextChanged += new System.EventHandler(this.OnPossibleChangeStateOfbtnManualSend);
+            this.textBoxManualSend.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
+            this.textBoxManualSend.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.textBoxManualSend.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // btnConnection
             // 
@@ -1243,8 +1286,8 @@
             this.groupBoxCpuTest.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCpuTesting)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarCpuTesting)).EndInit();
-            this.tabManual.ResumeLayout(false);
-            this.tabManual.PerformLayout();
+            this.tabCommands.ResumeLayout(false);
+            this.tabCommands.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
@@ -1256,14 +1299,14 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button btnSend;
+        private System.Windows.Forms.Button btnManualSend;
         private System.Windows.Forms.ComboBox comboPorts;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabManual;
+        private System.Windows.Forms.TabPage tabCommands;
         private System.Windows.Forms.TabPage tabPrograms;
         private System.Windows.Forms.Button btnClearText2;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBoxCustomSend;
+        private System.Windows.Forms.TextBox textBoxManualResponce;
+        private System.Windows.Forms.TextBox textBoxManualSend;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label4;
@@ -1338,12 +1381,13 @@
         private System.Windows.Forms.ToolStripMenuItem checkForUpdateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportCodeToolStripMenuItem;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem themesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAllThemesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reloadSavedThemesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetAllThemesToolStripMenuItem;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox textBox2;
     }
 }
 

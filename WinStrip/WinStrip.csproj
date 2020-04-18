@@ -81,9 +81,6 @@
     <Compile Include="BaseForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Controls\MyNumericUpDown.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="EntityTransfer\StripColors.cs" />
     <Compile Include="EntityTransfer\StripStatus.cs" />
     <Compile Include="EntityTransfer\StripValuesAndColors.cs" />
@@ -105,6 +102,12 @@
     </Compile>
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormSplash.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSplash.designer.cs">
+      <DependentUpon>FormSplash.cs</DependentUpon>
     </Compile>
     <Compile Include="FormStep.cs">
       <SubType>Form</SubType>
@@ -129,6 +132,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSplash.resx">
+      <DependentUpon>FormSplash.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormStep.resx">
       <DependentUpon>FormStep.cs</DependentUpon>

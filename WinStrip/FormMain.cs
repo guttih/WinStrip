@@ -73,7 +73,7 @@ namespace WinStrip
             labelStatus.Text = "";
             splashShow("Searching for available com ports...");
             InitComboPorts();
-            splashShow("Getting values from micro controller...");
+            splashShow("Getting values from the micro controller...");
             GetHardwareFromDevice();
 
             EnableDeviceRelatedControls(serial.isConnected);
@@ -275,7 +275,7 @@ namespace WinStrip
         {
             var text = textBoxManualSend.Text;
 
-            splashShow("Sending command...");
+            splashShow($"Sending command {text}...");
             serial.WriteLine(text);
             try {
                 splashShow("Waiting for a responce...");
@@ -339,7 +339,7 @@ namespace WinStrip
         }
 
 
-        private bool ConnectToPort(int comboPortsItemIndex)
+        private bool ConnectToPort(int comboPortsItemIndex, bool hideSplashWhenFinished = true)
         {
             var nextPortName = comboPorts.Items[comboPortsItemIndex].ToString();
             labelStatus.Text = $"{nextPortName}";
@@ -347,7 +347,7 @@ namespace WinStrip
             {
                 comboPorts.SelectedIndex = comboPortsItemIndex;
                 SetPortConnectionStatus(true);
-                GetAllFromDevice();
+                GetAllFromDevice(hideSplashWhenFinished);
                 return true;
             }
             return false;
@@ -382,7 +382,7 @@ namespace WinStrip
                 int index = 0;
                 while (index < comboPorts.Items.Count)
                 {
-                    if (ConnectToPort(index))
+                    if (ConnectToPort(index, false))
                         return;
                     
                     index++;
@@ -486,24 +486,33 @@ namespace WinStrip
         
         private void GetValuesAndColorsFromDevice()
         {
-            serial.WriteLine(SerialCommand.VALUES.ToString());
+            var command = SerialCommand.VALUES.ToString();
+            splashShow($"Sending command {command}...");
+            serial.WriteLine(command);
+            splashShow($"Waiting for responce from command {command}...");
             var strBuffer = serial.ReadLine();
             var serializer = new JavaScriptSerializer();
             var ret = serializer.Deserialize<StripValues>(strBuffer);
 
-            serial.WriteLine(SerialCommand.COLORS.ToString());
+            command = SerialCommand.COLORS.ToString();
+            splashShow($"Sending command {command}...");
+            serial.WriteLine(command);
+            splashShow($"Waiting for responce from command {command}...");
             strBuffer = serial.ReadLine();
             var colorObj = serializer.Deserialize<StripColors>(strBuffer);
 
             comboPrograms.SelectedIndex = ret.com;
             ValuesToControls(ret.brightness, ret.delay, ret.values, colorObj.colors);
-
+            splashHide();
         }
 
-        private bool GetAllFromDevice()
+        private bool GetAllFromDevice(bool hideSplashWhenFinished)
         {
-            try { 
-                serial.WriteLine(SerialCommand.ALLSTATUS.ToString());
+            bool returnValue = true;
+            try {
+                var command = SerialCommand.ALLSTATUS.ToString();
+                splashShow($"Sending command {command}...");
+                serial.WriteLine(command);
                 var strBuffer = serial.ReadLine();
                 var serializer = new JavaScriptSerializer();
                 StripStatus ret = serializer.Deserialize<StripStatus>(strBuffer);
@@ -514,11 +523,19 @@ namespace WinStrip
                 comboPrograms.SelectedIndex = ret.com;
             
                 ValuesToControls(ret.brightness, ret.delay, ret.values, ret.colors);
-                return true;
+                
             } catch(Exception)
             {
-                return false;
+                returnValue = false;
+            } finally
+            {
+                if (hideSplashWhenFinished)
+                    splashHide();
             }
+
+            return returnValue;
+
+
         }
 
         private void ValuesToControls(int brightness, int delay, List<int> values, List<ulong> colors)
@@ -584,7 +601,7 @@ namespace WinStrip
 
         private void SendValuesToDevice(StripValues values = null)
         {
-
+            splashShow("Sending values to micro controller...");
             if (values == null) { 
                 values = new StripValues
                 {
@@ -599,11 +616,12 @@ namespace WinStrip
             var serializer = new JavaScriptSerializer();
             var str = serializer.Serialize(values);
             serial.WriteLine(str);
-
+            splashHide();
         }
 
         private void SendColorsToDevice(StripColors colors = null)
         {
+            splashShow("Sending colors to micro controller...");
             if (colors == null) {
                 colors = new StripColors
                 {
@@ -613,7 +631,7 @@ namespace WinStrip
             var serializer = new JavaScriptSerializer();
             var str = serializer.Serialize(colors);
             serial.WriteLine(str);
-
+            splashHide();
         }
 
         private void SendStepToDevice(Step step)
@@ -744,18 +762,21 @@ namespace WinStrip
             int index = comboPorts.SelectedIndex;
             if (index > -1)
             {
+                splashShow("Connecting...");
                 ConnectToPort(index);
             }
         }
 
         private void btnConnection_Click(object sender, EventArgs e)
         {
+            splashShow("Disconnecting...");
             if (serial.isConnected)
                 serial.Close(); 
             else
                 ConnectToPort(comboPorts.SelectedIndex);
 
             SetPortConnectionStatus(serial.isConnected);
+            splashHide();
         }
 
 

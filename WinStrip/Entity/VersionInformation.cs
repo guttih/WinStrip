@@ -18,6 +18,7 @@ namespace WinStrip.Entity
         public string Name { get; set; }
         public string Version { get; set; }
         public string Description { get; set; }
+        public string Released { get; set; }
         public List<VesionFeature> NewFeatures { get; set; }
         public List<VesionFeature> BugFixes { get; set; }
         public string Setup { get; set; }

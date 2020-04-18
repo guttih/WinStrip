@@ -23,6 +23,8 @@ namespace WinStrip
         public int PortSpeed { get; set; }
         List<Theme> Themes { get; set; }
         public int ThemeSelectedIndex { get; private set; }
+        public string LabelStatusSaveText { get; private set; }
+
         ToolTip toolTip1;
 
         public FormMain()
@@ -62,6 +64,41 @@ namespace WinStrip
             toolTip1.SetToolTip(linkLabelCpu,      "Visit help page for the CPU tab");
             toolTip1.SetToolTip(linkLabelManual,   "Visit help page for the manual tab");
             toolTip1.SetToolTip(textBoxCustomSend, "Left click to select available commands");
+            toolTip1.SetToolTip(btnGetValues,      "Download all values from the micro controller");
+            toolTip1.SetToolTip(comboPrograms,     "Select strip program");
+            toolTip1.SetToolTip(btnSendAll,        "Send all selected values to them micro contoller");
+
+            string format;
+            format = "Slide up or down to increase or decreas the {0}";
+            toolTip1.SetToolTip(trackBarValue1,     string.Format(format, "value"));
+            toolTip1.SetToolTip(trackBarValue2,     string.Format(format, "value"));
+            toolTip1.SetToolTip(trackBarValue3,     string.Format(format, "value"));
+            toolTip1.SetToolTip(trackBarDelay,      string.Format(format, "delay"));
+            toolTip1.SetToolTip(trackBarBrightness, string.Format(format, "brightness"));
+
+            format = "Change the {0} by typing in the box or, click the up or down arrow";
+            toolTip1.SetToolTip(numericUpDownValue1, string.Format(format, "value"));
+            toolTip1.SetToolTip(numericUpDownValue2, string.Format(format, "value"));
+            toolTip1.SetToolTip(numericUpDownValue3, string.Format(format, "value"));
+            toolTip1.SetToolTip(trackBarDelay, string.Format(format, "delay"));
+            toolTip1.SetToolTip(trackBarBrightness, string.Format(format, "brightness"));
+
+            toolTip1.SetToolTip(btnConnection, "Click to connect or disconnect the COM port");
+
+
+
+            string btnColorText = "Select select a new color for colorbank {0} and send it to the micro controller";
+            toolTip1.SetToolTip(btnColor1, string.Format(btnColorText, 1));
+            toolTip1.SetToolTip(btnColor2, string.Format(btnColorText, 2));
+            toolTip1.SetToolTip(btnColor3, string.Format(btnColorText, 3));
+            toolTip1.SetToolTip(btnColor4, string.Format(btnColorText, 4));
+            toolTip1.SetToolTip(btnColor5, string.Format(btnColorText, 5));
+            toolTip1.SetToolTip(btnColor6, string.Format(btnColorText, 6));
+
+
+
+
+
         }
 
         void textBoxCustomSenditem_Click(object sender, EventArgs e)
@@ -1334,6 +1371,61 @@ namespace WinStrip
         {
             var about = new AboutForm();
             about.ShowDialog();
+        }
+
+        private void saveAllThemesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveAllThemes();
+        }
+
+        private void reloadSavedThemesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadThemes();
+        }
+
+        private void resetAllThemesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to delete all themes and create a new default theme?",
+                                 "Reset theme",
+                                 MessageBoxButtons.YesNo,
+                                 MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+
+                Properties.Settings.Default.Themes = ""; Properties.Settings.Default.Save();
+                LoadThemes();
+
+            }
+        }
+
+        private void saveAllThemesToolStripMenuItem_MouseHover(object sender, EventArgs e)
+        {
+        }
+
+        private void saveAllThemesToolStripMenuItem_MouseLeave(object sender, EventArgs e)
+        {
+        }
+
+
+
+        private void onControl_MouseLeave(object sender, EventArgs e)
+        {
+            labelStatus.Text = LabelStatusSaveText;
+        }
+
+        private void SetTooltipOnLabelStatus(object sender)
+        {
+            LabelStatusSaveText = labelStatus.Text;
+            var typeName = sender.GetType().Name;
+
+            if ( typeName == "ToolStripMenuItem")
+                labelStatus.Text = ((ToolStripMenuItem)sender).ToolTipText;
+            else 
+                labelStatus.Text = toolTip1.GetToolTip((Control)sender);
+        }
+
+        private void onControl_MouseEnter(object sender, EventArgs e)
+        {
+            SetTooltipOnLabelStatus(sender);
         }
     }
 }

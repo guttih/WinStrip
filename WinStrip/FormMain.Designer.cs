@@ -83,10 +83,6 @@
             this.btnRenameTheme = new System.Windows.Forms.ToolStripButton();
             this.btnReloadTheme = new System.Windows.Forms.ToolStripButton();
             this.btnDeleteTheme = new System.Windows.Forms.ToolStripButton();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.btnSaveAllThemes = new System.Windows.Forms.ToolStripButton();
-            this.btnLoadAllThemes = new System.Windows.Forms.ToolStripButton();
-            this.btnResetAllThemes = new System.Windows.Forms.ToolStripButton();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label3 = new System.Windows.Forms.Label();
             this.comboThemes = new System.Windows.Forms.ComboBox();
@@ -115,9 +111,13 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mainToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.themesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAllThemesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reloadSavedThemesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetAllThemesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPrograms.SuspendLayout();
             this.groupBoxParameters.SuspendLayout();
@@ -140,7 +140,6 @@
             this.tabCPU.SuspendLayout();
             this.toolStrip3.SuspendLayout();
             this.toolStrip2.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBoxCpuTest.SuspendLayout();
@@ -173,6 +172,8 @@
             this.comboPorts.Size = new System.Drawing.Size(92, 21);
             this.comboPorts.TabIndex = 8;
             this.comboPorts.SelectedIndexChanged += new System.EventHandler(this.comboPorts_SelectedIndexChanged);
+            this.comboPorts.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.comboPorts.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // tabControl1
             // 
@@ -272,6 +273,8 @@
             this.trackBarValue3.TabIndex = 9;
             this.trackBarValue3.Value = 1;
             this.trackBarValue3.ValueChanged += new System.EventHandler(this.ValueControl_ValueChanged);
+            this.trackBarValue3.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.trackBarValue3.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // groupBoxValue2
             // 
@@ -311,6 +314,8 @@
             this.trackBarValue2.TabIndex = 9;
             this.trackBarValue2.Value = 1;
             this.trackBarValue2.ValueChanged += new System.EventHandler(this.ValueControl_ValueChanged);
+            this.trackBarValue2.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.trackBarValue2.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // groupBoxValue1
             // 
@@ -350,6 +355,8 @@
             this.trackBarValue1.TabIndex = 9;
             this.trackBarValue1.Value = 1;
             this.trackBarValue1.ValueChanged += new System.EventHandler(this.ValueControl_ValueChanged);
+            this.trackBarValue1.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.trackBarValue1.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // groupBoxDelay
             // 
@@ -373,6 +380,8 @@
             this.trackBarDelay.TabIndex = 7;
             this.trackBarDelay.Value = 1;
             this.trackBarDelay.ValueChanged += new System.EventHandler(this.ValueControl_ValueChanged);
+            this.trackBarDelay.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.trackBarDelay.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // numericUpDownDelay
             // 
@@ -409,6 +418,8 @@
             this.trackBarBrightness.TabIndex = 7;
             this.trackBarBrightness.Value = 1;
             this.trackBarBrightness.ValueChanged += new System.EventHandler(this.ValueControl_ValueChanged);
+            this.trackBarBrightness.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.trackBarBrightness.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // numericUpDownBrightness
             // 
@@ -433,6 +444,8 @@
             this.btnSendAll.Text = "Send";
             this.btnSendAll.UseVisualStyleBackColor = true;
             this.btnSendAll.Click += new System.EventHandler(this.btnSendAll_Click);
+            this.btnSendAll.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.btnSendAll.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // btnGetValues
             // 
@@ -444,6 +457,8 @@
             this.btnGetValues.Text = "Get values";
             this.btnGetValues.UseVisualStyleBackColor = true;
             this.btnGetValues.Click += new System.EventHandler(this.btnGetValues_Click);
+            this.btnGetValues.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.btnGetValues.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // groupBox1
             // 
@@ -470,6 +485,8 @@
             this.btnColor6.Text = "Color 6";
             this.btnColor6.UseVisualStyleBackColor = true;
             this.btnColor6.Click += new System.EventHandler(this.buttonColor_Click);
+            this.btnColor6.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.btnColor6.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // btnColor5
             // 
@@ -480,6 +497,8 @@
             this.btnColor5.Text = "Color 5";
             this.btnColor5.UseVisualStyleBackColor = true;
             this.btnColor5.Click += new System.EventHandler(this.buttonColor_Click);
+            this.btnColor5.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.btnColor5.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // btnColor4
             // 
@@ -490,6 +509,8 @@
             this.btnColor4.Text = "Color 4";
             this.btnColor4.UseVisualStyleBackColor = true;
             this.btnColor4.Click += new System.EventHandler(this.buttonColor_Click);
+            this.btnColor4.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.btnColor4.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // btnColor3
             // 
@@ -500,6 +521,8 @@
             this.btnColor3.Text = "Color 3";
             this.btnColor3.UseVisualStyleBackColor = true;
             this.btnColor3.Click += new System.EventHandler(this.buttonColor_Click);
+            this.btnColor3.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.btnColor3.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // btnColor2
             // 
@@ -510,6 +533,8 @@
             this.btnColor2.Text = "Color 2";
             this.btnColor2.UseVisualStyleBackColor = true;
             this.btnColor2.Click += new System.EventHandler(this.buttonColor_Click);
+            this.btnColor2.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.btnColor2.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // btnColor1
             // 
@@ -520,6 +545,8 @@
             this.btnColor1.Text = "Color 1";
             this.btnColor1.UseVisualStyleBackColor = true;
             this.btnColor1.Click += new System.EventHandler(this.buttonColor_Click);
+            this.btnColor1.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.btnColor1.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // label4
             // 
@@ -573,7 +600,6 @@
             this.tabCPU.Controls.Add(this.label6);
             this.tabCPU.Controls.Add(this.toolStrip3);
             this.tabCPU.Controls.Add(this.toolStrip2);
-            this.tabCPU.Controls.Add(this.toolStrip1);
             this.tabCPU.Controls.Add(this.dataGridView1);
             this.tabCPU.Controls.Add(this.label3);
             this.tabCPU.Controls.Add(this.comboThemes);
@@ -600,7 +626,7 @@
             // checkDefault
             // 
             this.checkDefault.AutoSize = true;
-            this.checkDefault.Location = new System.Drawing.Point(53, 130);
+            this.checkDefault.Location = new System.Drawing.Point(53, 111);
             this.checkDefault.Name = "checkDefault";
             this.checkDefault.Size = new System.Drawing.Size(60, 17);
             this.checkDefault.TabIndex = 13;
@@ -611,14 +637,16 @@
             // textBox1
             // 
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Location = new System.Drawing.Point(7, 39);
+            this.textBox1.Location = new System.Drawing.Point(7, 44);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(298, 84);
+            this.textBox1.Size = new System.Drawing.Size(298, 59);
             this.textBox1.TabIndex = 12;
             this.textBox1.TabStop = false;
-            this.textBox1.Text = resources.GetString("textBox1.Text");
+            this.textBox1.Text = "You can also add, edit or delete steps in a theme.\r\nFrom property in a step is th" +
+    "e value that the cpu load must be equal or higher to run the associated Values a" +
+    "nd Corors \r\ncommand.";
             // 
             // label7
             // 
@@ -626,14 +654,14 @@
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             this.label7.Location = new System.Drawing.Point(7, 12);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(69, 13);
+            this.label7.Size = new System.Drawing.Size(51, 13);
             this.label7.TabIndex = 11;
-            this.label7.Text = "All Themes";
+            this.label7.Text = "Themes";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 199);
+            this.label6.Location = new System.Drawing.Point(7, 177);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(34, 13);
             this.label6.TabIndex = 10;
@@ -647,7 +675,7 @@
             this.btnChangeSteps,
             this.btnWizard});
             this.toolStrip3.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.toolStrip3.Location = new System.Drawing.Point(229, 190);
+            this.toolStrip3.Location = new System.Drawing.Point(226, 170);
             this.toolStrip3.Name = "toolStrip3";
             this.toolStrip3.Size = new System.Drawing.Size(76, 23);
             this.toolStrip3.TabIndex = 9;
@@ -733,7 +761,7 @@
             this.btnReloadTheme,
             this.btnDeleteTheme});
             this.toolStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.toolStrip2.Location = new System.Drawing.Point(214, 121);
+            this.toolStrip2.Location = new System.Drawing.Point(210, 12);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.Size = new System.Drawing.Size(93, 23);
             this.toolStrip2.TabIndex = 8;
@@ -788,63 +816,15 @@
     "ed to press the save all themes button";
             this.btnDeleteTheme.Click += new System.EventHandler(this.btnDeleteTheme_Click);
             // 
-            // toolStrip1
-            // 
-            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnSaveAllThemes,
-            this.btnLoadAllThemes,
-            this.btnResetAllThemes});
-            this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.toolStrip1.Location = new System.Drawing.Point(236, 12);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(70, 23);
-            this.toolStrip1.TabIndex = 7;
-            this.toolStrip1.Text = "toolStrip1";
-            // 
-            // btnSaveAllThemes
-            // 
-            this.btnSaveAllThemes.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnSaveAllThemes.Image = ((System.Drawing.Image)(resources.GetObject("btnSaveAllThemes.Image")));
-            this.btnSaveAllThemes.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnSaveAllThemes.Name = "btnSaveAllThemes";
-            this.btnSaveAllThemes.Size = new System.Drawing.Size(23, 20);
-            this.btnSaveAllThemes.Text = "toolStripButton3";
-            this.btnSaveAllThemes.ToolTipText = "Save all themes";
-            this.btnSaveAllThemes.Click += new System.EventHandler(this.btnSaveAllThemes_Click);
-            // 
-            // btnLoadAllThemes
-            // 
-            this.btnLoadAllThemes.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnLoadAllThemes.Image = ((System.Drawing.Image)(resources.GetObject("btnLoadAllThemes.Image")));
-            this.btnLoadAllThemes.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnLoadAllThemes.Name = "btnLoadAllThemes";
-            this.btnLoadAllThemes.Size = new System.Drawing.Size(23, 20);
-            this.btnLoadAllThemes.Text = "toolStripButton5";
-            this.btnLoadAllThemes.ToolTipText = "Throw away all changes and \r\nload all saved themes again.";
-            this.btnLoadAllThemes.Click += new System.EventHandler(this.btnLoadAllThemes_Click);
-            // 
-            // btnResetAllThemes
-            // 
-            this.btnResetAllThemes.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnResetAllThemes.Image = ((System.Drawing.Image)(resources.GetObject("btnResetAllThemes.Image")));
-            this.btnResetAllThemes.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnResetAllThemes.Name = "btnResetAllThemes";
-            this.btnResetAllThemes.Size = new System.Drawing.Size(23, 20);
-            this.btnResetAllThemes.Text = "toolStripButton4";
-            this.btnResetAllThemes.ToolTipText = "Reset All\r\n\r\nDeletes all saved themes and \r\ncreates the default themes again,\r\nsa" +
-    "ves and loads them.";
-            this.btnResetAllThemes.Click += new System.EventHandler(this.btnResetAllThemes_Click);
-            // 
             // dataGridView1
             // 
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(6, 218);
+            this.dataGridView1.Location = new System.Drawing.Point(6, 196);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(607, 185);
+            this.dataGridView1.Size = new System.Drawing.Size(607, 207);
             this.dataGridView1.TabIndex = 3;
             this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView1_RowsChanged);
             this.dataGridView1.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dataGridView1_RowsChanged);
@@ -853,7 +833,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 131);
+            this.label3.Location = new System.Drawing.Point(7, 112);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(40, 13);
             this.label3.TabIndex = 2;
@@ -864,7 +844,7 @@
             this.comboThemes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboThemes.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.comboThemes.FormattingEnabled = true;
-            this.comboThemes.Location = new System.Drawing.Point(6, 150);
+            this.comboThemes.Location = new System.Drawing.Point(6, 131);
             this.comboThemes.Name = "comboThemes";
             this.comboThemes.Size = new System.Drawing.Size(299, 21);
             this.comboThemes.Sorted = true;
@@ -881,7 +861,7 @@
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox2.Location = new System.Drawing.Point(312, 11);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(301, 200);
+            this.groupBox2.Size = new System.Drawing.Size(301, 179);
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Central Proscessing Unit - Load";
@@ -895,7 +875,7 @@
             this.labelCpu.Font = new System.Drawing.Font("Microsoft Sans Serif", 50F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelCpu.Location = new System.Drawing.Point(7, 20);
             this.labelCpu.Name = "labelCpu";
-            this.labelCpu.Size = new System.Drawing.Size(288, 96);
+            this.labelCpu.Size = new System.Drawing.Size(288, 72);
             this.labelCpu.TabIndex = 14;
             this.labelCpu.Text = "0";
             this.labelCpu.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -906,7 +886,7 @@
             this.groupBoxCpuTest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxCpuTest.Controls.Add(this.numericUpDownCpuTesting);
             this.groupBoxCpuTest.Controls.Add(this.trackBarCpuTesting);
-            this.groupBoxCpuTest.Location = new System.Drawing.Point(79, 119);
+            this.groupBoxCpuTest.Location = new System.Drawing.Point(79, 98);
             this.groupBoxCpuTest.Name = "groupBoxCpuTest";
             this.groupBoxCpuTest.Size = new System.Drawing.Size(216, 75);
             this.groupBoxCpuTest.TabIndex = 13;
@@ -939,7 +919,7 @@
             this.radioButtonCpuTesting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.radioButtonCpuTesting.AutoSize = true;
             this.radioButtonCpuTesting.Checked = true;
-            this.radioButtonCpuTesting.Location = new System.Drawing.Point(12, 160);
+            this.radioButtonCpuTesting.Location = new System.Drawing.Point(12, 139);
             this.radioButtonCpuTesting.Name = "radioButtonCpuTesting";
             this.radioButtonCpuTesting.Size = new System.Drawing.Size(60, 17);
             this.radioButtonCpuTesting.TabIndex = 1;
@@ -952,7 +932,7 @@
             // 
             this.radioButtonCpuLive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.radioButtonCpuLive.AutoSize = true;
-            this.radioButtonCpuLive.Location = new System.Drawing.Point(12, 136);
+            this.radioButtonCpuLive.Location = new System.Drawing.Point(12, 115);
             this.radioButtonCpuLive.Name = "radioButtonCpuLive";
             this.radioButtonCpuLive.Size = new System.Drawing.Size(45, 17);
             this.radioButtonCpuLive.TabIndex = 0;
@@ -1070,6 +1050,8 @@
             this.btnConnection.Text = "Con/Dis";
             this.btnConnection.UseVisualStyleBackColor = true;
             this.btnConnection.Click += new System.EventHandler(this.btnConnection_Click);
+            this.btnConnection.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.btnConnection.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // performanceCounter1
             // 
@@ -1103,11 +1085,12 @@
             this.menuStrip1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mainToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(461, 0);
+            this.mainToolStripMenuItem,
+            this.themesToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(521, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 13, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(191, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(131, 24);
             this.menuStrip1.TabIndex = 18;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -1125,31 +1108,86 @@
             // exportCodeToolStripMenuItem
             // 
             this.exportCodeToolStripMenuItem.Name = "exportCodeToolStripMenuItem";
-            this.exportCodeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exportCodeToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.exportCodeToolStripMenuItem.Text = "Export code";
+            this.exportCodeToolStripMenuItem.ToolTipText = "Export code for the Esp32 micro controller to a folder of your choosing";
             this.exportCodeToolStripMenuItem.Click += new System.EventHandler(this.exportCodeToolStripMenuItem_Click);
-            // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.helpToolStripMenuItem.Text = "&Help";
-            this.helpToolStripMenuItem.ToolTipText = "Visit help page for the application";
-            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            this.exportCodeToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.exportCodeToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // checkForUpdateToolStripMenuItem
             // 
             this.checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
-            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.checkForUpdateToolStripMenuItem.Text = "Check for &update";
+            this.checkForUpdateToolStripMenuItem.ToolTipText = "Check if there has been released a newer version of this application";
             this.checkForUpdateToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdateToolStripMenuItem_Click);
+            this.checkForUpdateToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.checkForUpdateToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.helpToolStripMenuItem.Text = "&Help";
+            this.helpToolStripMenuItem.ToolTipText = "Visit the online application web page";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            this.helpToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.helpToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.ToolTipText = "View the application version information";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.aboutToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.aboutToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
+            // 
+            // themesToolStripMenuItem
+            // 
+            this.themesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveAllThemesToolStripMenuItem,
+            this.reloadSavedThemesToolStripMenuItem,
+            this.resetAllThemesToolStripMenuItem});
+            this.themesToolStripMenuItem.Name = "themesToolStripMenuItem";
+            this.themesToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
+            this.themesToolStripMenuItem.Text = "Themes";
+            // 
+            // saveAllThemesToolStripMenuItem
+            // 
+            this.saveAllThemesToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveAllThemesToolStripMenuItem.Image")));
+            this.saveAllThemesToolStripMenuItem.Name = "saveAllThemesToolStripMenuItem";
+            this.saveAllThemesToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.saveAllThemesToolStripMenuItem.Text = "Save all themes";
+            this.saveAllThemesToolStripMenuItem.ToolTipText = "Save all themes";
+            this.saveAllThemesToolStripMenuItem.Click += new System.EventHandler(this.saveAllThemesToolStripMenuItem_Click);
+            this.saveAllThemesToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.saveAllThemesToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
+            // 
+            // reloadSavedThemesToolStripMenuItem
+            // 
+            this.reloadSavedThemesToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("reloadSavedThemesToolStripMenuItem.Image")));
+            this.reloadSavedThemesToolStripMenuItem.Name = "reloadSavedThemesToolStripMenuItem";
+            this.reloadSavedThemesToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.reloadSavedThemesToolStripMenuItem.Text = "Reload saved themes";
+            this.reloadSavedThemesToolStripMenuItem.ToolTipText = "Throw away all changes and load all saved themes again.";
+            this.reloadSavedThemesToolStripMenuItem.Click += new System.EventHandler(this.reloadSavedThemesToolStripMenuItem_Click);
+            this.reloadSavedThemesToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.reloadSavedThemesToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
+            // 
+            // resetAllThemesToolStripMenuItem
+            // 
+            this.resetAllThemesToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("resetAllThemesToolStripMenuItem.Image")));
+            this.resetAllThemesToolStripMenuItem.Name = "resetAllThemesToolStripMenuItem";
+            this.resetAllThemesToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.resetAllThemesToolStripMenuItem.Text = "Reset all Themes";
+            this.resetAllThemesToolStripMenuItem.ToolTipText = "Reset All - Deletes all saved themes and creates the default themes again, saves " +
+    "and loads them.";
+            this.resetAllThemesToolStripMenuItem.Click += new System.EventHandler(this.resetAllThemesToolStripMenuItem_Click);
+            this.resetAllThemesToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.resetAllThemesToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // FormMain
             // 
@@ -1198,8 +1236,6 @@
             this.toolStrip3.PerformLayout();
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -1276,10 +1312,6 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel labelStatus;
-        private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton btnSaveAllThemes;
-        private System.Windows.Forms.ToolStripButton btnResetAllThemes;
-        private System.Windows.Forms.ToolStripButton btnLoadAllThemes;
         private System.Windows.Forms.ToolStrip toolStrip2;
         private System.Windows.Forms.ToolStripButton btnNewTheme;
         private System.Windows.Forms.ToolStripButton btnReloadTheme;
@@ -1308,6 +1340,10 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem themesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAllThemesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem reloadSavedThemesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetAllThemesToolStripMenuItem;
     }
 }
 

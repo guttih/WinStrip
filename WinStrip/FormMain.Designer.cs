@@ -65,6 +65,13 @@
             this.labelDescription = new System.Windows.Forms.Label();
             this.comboPrograms = new System.Windows.Forms.ComboBox();
             this.tabCPU = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.labelCpu = new System.Windows.Forms.Label();
+            this.groupBoxCpuTest = new System.Windows.Forms.GroupBox();
+            this.numericUpDownCpuTesting = new System.Windows.Forms.NumericUpDown();
+            this.trackBarCpuTesting = new System.Windows.Forms.TrackBar();
+            this.radioButtonCpuTesting = new System.Windows.Forms.RadioButton();
+            this.radioButtonCpuLive = new System.Windows.Forms.RadioButton();
             this.linkLabelCpu = new System.Windows.Forms.LinkLabel();
             this.checkDefault = new System.Windows.Forms.CheckBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -86,13 +93,6 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label3 = new System.Windows.Forms.Label();
             this.comboThemes = new System.Windows.Forms.ComboBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.labelCpu = new System.Windows.Forms.Label();
-            this.groupBoxCpuTest = new System.Windows.Forms.GroupBox();
-            this.numericUpDownCpuTesting = new System.Windows.Forms.NumericUpDown();
-            this.trackBarCpuTesting = new System.Windows.Forms.TrackBar();
-            this.radioButtonCpuTesting = new System.Windows.Forms.RadioButton();
-            this.radioButtonCpuLive = new System.Windows.Forms.RadioButton();
             this.tabCommands = new System.Windows.Forms.TabPage();
             this.linkLabelManual = new System.Windows.Forms.LinkLabel();
             this.label8 = new System.Windows.Forms.Label();
@@ -139,13 +139,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBrightness)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.tabCPU.SuspendLayout();
-            this.toolStrip3.SuspendLayout();
-            this.toolStrip2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBoxCpuTest.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCpuTesting)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarCpuTesting)).BeginInit();
+            this.toolStrip3.SuspendLayout();
+            this.toolStrip2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabCommands.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).BeginInit();
             this.statusStrip1.SuspendLayout();
@@ -601,6 +601,7 @@
             // tabCPU
             // 
             this.tabCPU.BackColor = System.Drawing.SystemColors.Control;
+            this.tabCPU.Controls.Add(this.groupBox2);
             this.tabCPU.Controls.Add(this.linkLabelCpu);
             this.tabCPU.Controls.Add(this.checkDefault);
             this.tabCPU.Controls.Add(this.textBox1);
@@ -611,7 +612,6 @@
             this.tabCPU.Controls.Add(this.dataGridView1);
             this.tabCPU.Controls.Add(this.label3);
             this.tabCPU.Controls.Add(this.comboThemes);
-            this.tabCPU.Controls.Add(this.groupBox2);
             this.tabCPU.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.tabCPU.Location = new System.Drawing.Point(4, 22);
             this.tabCPU.Name = "tabCPU";
@@ -620,11 +620,108 @@
             this.tabCPU.TabIndex = 2;
             this.tabCPU.Text = "CPU monitoring";
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.labelCpu);
+            this.groupBox2.Controls.Add(this.groupBoxCpuTest);
+            this.groupBox2.Controls.Add(this.radioButtonCpuTesting);
+            this.groupBox2.Controls.Add(this.radioButtonCpuLive);
+            this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox2.Location = new System.Drawing.Point(322, 11);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(297, 179);
+            this.groupBox2.TabIndex = 0;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Central Proscessing Unit - Load";
+            // 
+            // labelCpu
+            // 
+            this.labelCpu.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelCpu.CausesValidation = false;
+            this.labelCpu.Font = new System.Drawing.Font("Microsoft Sans Serif", 50F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelCpu.Location = new System.Drawing.Point(7, 20);
+            this.labelCpu.Name = "labelCpu";
+            this.labelCpu.Size = new System.Drawing.Size(284, 72);
+            this.labelCpu.TabIndex = 14;
+            this.labelCpu.Text = "0";
+            this.labelCpu.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelCpu.TextChanged += new System.EventHandler(this.labelCpu_TextChanged);
+            this.labelCpu.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.labelCpu.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
+            // 
+            // groupBoxCpuTest
+            // 
+            this.groupBoxCpuTest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxCpuTest.Controls.Add(this.numericUpDownCpuTesting);
+            this.groupBoxCpuTest.Controls.Add(this.trackBarCpuTesting);
+            this.groupBoxCpuTest.Location = new System.Drawing.Point(75, 98);
+            this.groupBoxCpuTest.Name = "groupBoxCpuTest";
+            this.groupBoxCpuTest.Size = new System.Drawing.Size(216, 75);
+            this.groupBoxCpuTest.TabIndex = 13;
+            this.groupBoxCpuTest.TabStop = false;
+            this.groupBoxCpuTest.Text = "Manual set CPU load for testing";
+            // 
+            // numericUpDownCpuTesting
+            // 
+            this.numericUpDownCpuTesting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownCpuTesting.Location = new System.Drawing.Point(142, 30);
+            this.numericUpDownCpuTesting.Name = "numericUpDownCpuTesting";
+            this.numericUpDownCpuTesting.Size = new System.Drawing.Size(55, 20);
+            this.numericUpDownCpuTesting.TabIndex = 10;
+            this.numericUpDownCpuTesting.ValueChanged += new System.EventHandler(this.ValueControl_ValueChanged);
+            // 
+            // trackBarCpuTesting
+            // 
+            this.trackBarCpuTesting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackBarCpuTesting.Location = new System.Drawing.Point(6, 23);
+            this.trackBarCpuTesting.Maximum = 100;
+            this.trackBarCpuTesting.Name = "trackBarCpuTesting";
+            this.trackBarCpuTesting.Size = new System.Drawing.Size(132, 45);
+            this.trackBarCpuTesting.TabIndex = 9;
+            this.trackBarCpuTesting.Value = 1;
+            this.trackBarCpuTesting.ValueChanged += new System.EventHandler(this.ValueControl_ValueChanged);
+            this.trackBarCpuTesting.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.trackBarCpuTesting.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
+            // 
+            // radioButtonCpuTesting
+            // 
+            this.radioButtonCpuTesting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.radioButtonCpuTesting.AutoSize = true;
+            this.radioButtonCpuTesting.Checked = true;
+            this.radioButtonCpuTesting.Location = new System.Drawing.Point(8, 139);
+            this.radioButtonCpuTesting.Name = "radioButtonCpuTesting";
+            this.radioButtonCpuTesting.Size = new System.Drawing.Size(60, 17);
+            this.radioButtonCpuTesting.TabIndex = 1;
+            this.radioButtonCpuTesting.TabStop = true;
+            this.radioButtonCpuTesting.Text = "Testing";
+            this.radioButtonCpuTesting.UseVisualStyleBackColor = true;
+            this.radioButtonCpuTesting.CheckedChanged += new System.EventHandler(this.radioButtonCpuTesting_CheckedChanged);
+            this.radioButtonCpuTesting.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.radioButtonCpuTesting.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
+            // 
+            // radioButtonCpuLive
+            // 
+            this.radioButtonCpuLive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.radioButtonCpuLive.AutoSize = true;
+            this.radioButtonCpuLive.Location = new System.Drawing.Point(8, 115);
+            this.radioButtonCpuLive.Name = "radioButtonCpuLive";
+            this.radioButtonCpuLive.Size = new System.Drawing.Size(45, 17);
+            this.radioButtonCpuLive.TabIndex = 0;
+            this.radioButtonCpuLive.Text = "Live";
+            this.radioButtonCpuLive.UseVisualStyleBackColor = true;
+            this.radioButtonCpuLive.CheckedChanged += new System.EventHandler(this.radioButtonCpuLive_CheckedChanged);
+            this.radioButtonCpuLive.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.radioButtonCpuLive.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
+            // 
             // linkLabelCpu
             // 
             this.linkLabelCpu.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.linkLabelCpu.AutoSize = true;
-            this.linkLabelCpu.Location = new System.Drawing.Point(584, 424);
+            this.linkLabelCpu.Location = new System.Drawing.Point(640, 424);
             this.linkLabelCpu.Name = "linkLabelCpu";
             this.linkLabelCpu.Size = new System.Drawing.Size(29, 13);
             this.linkLabelCpu.TabIndex = 18;
@@ -835,10 +932,13 @@
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.ButtonFace;
+            this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(6, 196);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(607, 225);
+            this.dataGridView1.Size = new System.Drawing.Size(617, 225);
             this.dataGridView1.TabIndex = 3;
             this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView1_RowsChanged);
             this.dataGridView1.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dataGridView1_RowsChanged);
@@ -855,10 +955,14 @@
             // 
             // comboThemes
             // 
+            this.comboThemes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboThemes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboThemes.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.comboThemes.FormattingEnabled = true;
             this.comboThemes.Location = new System.Drawing.Point(6, 131);
+            this.comboThemes.MaximumSize = new System.Drawing.Size(299, 0);
             this.comboThemes.Name = "comboThemes";
             this.comboThemes.Size = new System.Drawing.Size(299, 21);
             this.comboThemes.Sorted = true;
@@ -866,103 +970,6 @@
             this.comboThemes.SelectedIndexChanged += new System.EventHandler(this.comboThemes_SelectedIndexChanged);
             this.comboThemes.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
             this.comboThemes.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.labelCpu);
-            this.groupBox2.Controls.Add(this.groupBoxCpuTest);
-            this.groupBox2.Controls.Add(this.radioButtonCpuTesting);
-            this.groupBox2.Controls.Add(this.radioButtonCpuLive);
-            this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(312, 11);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(301, 179);
-            this.groupBox2.TabIndex = 0;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Central Proscessing Unit - Load";
-            // 
-            // labelCpu
-            // 
-            this.labelCpu.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelCpu.CausesValidation = false;
-            this.labelCpu.Font = new System.Drawing.Font("Microsoft Sans Serif", 50F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelCpu.Location = new System.Drawing.Point(7, 20);
-            this.labelCpu.Name = "labelCpu";
-            this.labelCpu.Size = new System.Drawing.Size(288, 72);
-            this.labelCpu.TabIndex = 14;
-            this.labelCpu.Text = "0";
-            this.labelCpu.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.labelCpu.TextChanged += new System.EventHandler(this.labelCpu_TextChanged);
-            this.labelCpu.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
-            this.labelCpu.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
-            // 
-            // groupBoxCpuTest
-            // 
-            this.groupBoxCpuTest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxCpuTest.Controls.Add(this.numericUpDownCpuTesting);
-            this.groupBoxCpuTest.Controls.Add(this.trackBarCpuTesting);
-            this.groupBoxCpuTest.Location = new System.Drawing.Point(79, 98);
-            this.groupBoxCpuTest.Name = "groupBoxCpuTest";
-            this.groupBoxCpuTest.Size = new System.Drawing.Size(216, 75);
-            this.groupBoxCpuTest.TabIndex = 13;
-            this.groupBoxCpuTest.TabStop = false;
-            this.groupBoxCpuTest.Text = "Manual set CPU load for testing";
-            // 
-            // numericUpDownCpuTesting
-            // 
-            this.numericUpDownCpuTesting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownCpuTesting.Location = new System.Drawing.Point(142, 30);
-            this.numericUpDownCpuTesting.Name = "numericUpDownCpuTesting";
-            this.numericUpDownCpuTesting.Size = new System.Drawing.Size(55, 20);
-            this.numericUpDownCpuTesting.TabIndex = 10;
-            this.numericUpDownCpuTesting.ValueChanged += new System.EventHandler(this.ValueControl_ValueChanged);
-            // 
-            // trackBarCpuTesting
-            // 
-            this.trackBarCpuTesting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarCpuTesting.Location = new System.Drawing.Point(6, 23);
-            this.trackBarCpuTesting.Maximum = 100;
-            this.trackBarCpuTesting.Name = "trackBarCpuTesting";
-            this.trackBarCpuTesting.Size = new System.Drawing.Size(132, 45);
-            this.trackBarCpuTesting.TabIndex = 9;
-            this.trackBarCpuTesting.Value = 1;
-            this.trackBarCpuTesting.ValueChanged += new System.EventHandler(this.ValueControl_ValueChanged);
-            this.trackBarCpuTesting.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
-            this.trackBarCpuTesting.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
-            // 
-            // radioButtonCpuTesting
-            // 
-            this.radioButtonCpuTesting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.radioButtonCpuTesting.AutoSize = true;
-            this.radioButtonCpuTesting.Checked = true;
-            this.radioButtonCpuTesting.Location = new System.Drawing.Point(12, 139);
-            this.radioButtonCpuTesting.Name = "radioButtonCpuTesting";
-            this.radioButtonCpuTesting.Size = new System.Drawing.Size(60, 17);
-            this.radioButtonCpuTesting.TabIndex = 1;
-            this.radioButtonCpuTesting.TabStop = true;
-            this.radioButtonCpuTesting.Text = "Testing";
-            this.radioButtonCpuTesting.UseVisualStyleBackColor = true;
-            this.radioButtonCpuTesting.CheckedChanged += new System.EventHandler(this.radioButtonCpuTesting_CheckedChanged);
-            this.radioButtonCpuTesting.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
-            this.radioButtonCpuTesting.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
-            // 
-            // radioButtonCpuLive
-            // 
-            this.radioButtonCpuLive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.radioButtonCpuLive.AutoSize = true;
-            this.radioButtonCpuLive.Location = new System.Drawing.Point(12, 115);
-            this.radioButtonCpuLive.Name = "radioButtonCpuLive";
-            this.radioButtonCpuLive.Size = new System.Drawing.Size(45, 17);
-            this.radioButtonCpuLive.TabIndex = 0;
-            this.radioButtonCpuLive.Text = "Live";
-            this.radioButtonCpuLive.UseVisualStyleBackColor = true;
-            this.radioButtonCpuLive.CheckedChanged += new System.EventHandler(this.radioButtonCpuLive_CheckedChanged);
-            this.radioButtonCpuLive.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
-            this.radioButtonCpuLive.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // tabCommands
             // 
@@ -1133,10 +1140,10 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mainToolStripMenuItem,
             this.themesToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(904, -1);
+            this.menuStrip1.Location = new System.Drawing.Point(386, -1);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 13, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(131, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(251, 24);
             this.menuStrip1.TabIndex = 18;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -1278,17 +1285,17 @@
             this.groupBox1.ResumeLayout(false);
             this.tabCPU.ResumeLayout(false);
             this.tabCPU.PerformLayout();
-            this.toolStrip3.ResumeLayout(false);
-            this.toolStrip3.PerformLayout();
-            this.toolStrip2.ResumeLayout(false);
-            this.toolStrip2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBoxCpuTest.ResumeLayout(false);
             this.groupBoxCpuTest.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCpuTesting)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarCpuTesting)).EndInit();
+            this.toolStrip3.ResumeLayout(false);
+            this.toolStrip3.PerformLayout();
+            this.toolStrip2.ResumeLayout(false);
+            this.toolStrip2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabCommands.ResumeLayout(false);
             this.tabCommands.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).EndInit();

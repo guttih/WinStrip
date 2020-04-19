@@ -8,5 +8,8 @@
     <Setting Name="HelpRootUrl" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://guttih.com/public/projects/winstrip/release</Value>
     </Setting>
+    <Setting Name="RepositoryRootUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://github.com/guttih/WinStrip</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

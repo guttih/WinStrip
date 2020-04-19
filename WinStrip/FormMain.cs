@@ -1602,5 +1602,16 @@ namespace WinStrip
         {
             Close();
         }
+
+        private void featureRequestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            VisitUrl($"{RepositoryRootUrl}/issues/new?assignees=&labels=&template=feature_request.md");
+        }
+
+        private void bugReportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            VisitUrl($"{RepositoryRootUrl}/issues/new?assignees=&labels=&template=bug_report.md");
+
+        }
     }
 }

@@ -13,6 +13,14 @@ namespace WinStrip
             }
         }
 
+        public string RepositoryRootUrl
+        {
+            get
+            {
+                return Properties.Settings.Default.RepositoryRootUrl;
+            }
+        }
+
         public string MajorMinorVersion
         {
             get
@@ -33,6 +41,12 @@ namespace WinStrip
             var href = HelpRootUrl;
             if (webpageName != null)
                 href += $"/{ webpageName}";
+            System.Diagnostics.Process.Start(href);
+        }
+
+        public void VisitUrl(string fullUrlToWebPage)
+        {
+            var href = fullUrlToWebPage;
             System.Diagnostics.Process.Start(href);
         }
 

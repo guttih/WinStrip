@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("WinStrip")]
-[assembly: AssemblyDescription("Application to control a digital addressable RGB led strip")]
+[assembly: AssemblyDescription("Application to control a digital addressable RGB led strip.  Authors webpage: guttih.com")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("guttih.com")]
+[assembly: AssemblyCompany("Guðjón Hólm Sigurðsson.")]
 [assembly: AssemblyProduct("WinStrip")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]

@@ -119,14 +119,17 @@
             this.reloadSavedThemesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetAllThemesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.issuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.featureRequestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bugReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.trayIconContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.trayMenuItemShow = new System.Windows.Forms.ToolStripMenuItem();
             this.trayMenuItemHide = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPrograms.SuspendLayout();
             this.groupBoxParameters.SuspendLayout();
@@ -1165,7 +1168,7 @@
             this.launchWinStripOnStartupToolStripMenuItem});
             this.mainToolStripMenuItem.Name = "mainToolStripMenuItem";
             this.mainToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
-            this.mainToolStripMenuItem.Text = "Menu";
+            this.mainToolStripMenuItem.Text = "&Menu";
             // 
             // exportCodeToolStripMenuItem
             // 
@@ -1181,7 +1184,7 @@
             // 
             this.checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
             this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
-            this.checkForUpdateToolStripMenuItem.Text = "&Check for &update";
+            this.checkForUpdateToolStripMenuItem.Text = "&Check for &Update";
             this.checkForUpdateToolStripMenuItem.ToolTipText = "Check if there has been released a newer version of this application";
             this.checkForUpdateToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdateToolStripMenuItem_Click);
             this.checkForUpdateToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
@@ -1192,6 +1195,8 @@
             this.launchWinStripOnStartupToolStripMenuItem.Name = "launchWinStripOnStartupToolStripMenuItem";
             this.launchWinStripOnStartupToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.launchWinStripOnStartupToolStripMenuItem.Text = "Launch on Windows startup";
+            this.launchWinStripOnStartupToolStripMenuItem.ToolTipText = "When windows starts, run this application.\r\n\r\nIf this menu item is checked this a" +
+    "pplication \r\nwill be launched on windows startup";
             this.launchWinStripOnStartupToolStripMenuItem.Click += new System.EventHandler(this.launchWinStripOnStartupToolStripMenuItem_Click);
             // 
             // themesToolStripMenuItem
@@ -1202,7 +1207,7 @@
             this.resetAllThemesToolStripMenuItem});
             this.themesToolStripMenuItem.Name = "themesToolStripMenuItem";
             this.themesToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
-            this.themesToolStripMenuItem.Text = "Themes";
+            this.themesToolStripMenuItem.Text = "&Themes";
             // 
             // saveAllThemesToolStripMenuItem
             // 
@@ -1241,26 +1246,64 @@
             // helpToolStripMenuItem1
             // 
             this.helpToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.helpToolStripMenuItem2,
             this.aboutToolStripMenuItem1,
+            this.helpToolStripMenuItem2,
+            this.issuesToolStripMenuItem,
             this.exitToolStripMenuItem1});
             this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
             this.helpToolStripMenuItem1.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem1.Text = "Help";
-            // 
-            // helpToolStripMenuItem2
-            // 
-            this.helpToolStripMenuItem2.Name = "helpToolStripMenuItem2";
-            this.helpToolStripMenuItem2.Size = new System.Drawing.Size(107, 22);
-            this.helpToolStripMenuItem2.Text = "&Help";
-            this.helpToolStripMenuItem2.Click += new System.EventHandler(this.helpToolStripMenuItem2_Click);
+            this.helpToolStripMenuItem1.Text = "&Help";
             // 
             // aboutToolStripMenuItem1
             // 
             this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.aboutToolStripMenuItem1.Text = "&About";
+            this.aboutToolStripMenuItem1.ToolTipText = "About this application\r\n\r\nGet information on application version \r\nand author";
             this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
+            // 
+            // helpToolStripMenuItem2
+            // 
+            this.helpToolStripMenuItem2.Name = "helpToolStripMenuItem2";
+            this.helpToolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.helpToolStripMenuItem2.Text = "&Help";
+            this.helpToolStripMenuItem2.ToolTipText = "Visit the online documentation\r\n for this application";
+            this.helpToolStripMenuItem2.Click += new System.EventHandler(this.helpToolStripMenuItem2_Click);
+            // 
+            // issuesToolStripMenuItem
+            // 
+            this.issuesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.featureRequestToolStripMenuItem,
+            this.bugReportToolStripMenuItem});
+            this.issuesToolStripMenuItem.Name = "issuesToolStripMenuItem";
+            this.issuesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.issuesToolStripMenuItem.Text = "&Issues";
+            // 
+            // featureRequestToolStripMenuItem
+            // 
+            this.featureRequestToolStripMenuItem.Name = "featureRequestToolStripMenuItem";
+            this.featureRequestToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.featureRequestToolStripMenuItem.Text = "&Feature request";
+            this.featureRequestToolStripMenuItem.ToolTipText = "Make a feature request\r\n\r\nVisit the GitHub repository website to \r\nask for an fea" +
+    "ture which is not currently\r\nin this application.";
+            this.featureRequestToolStripMenuItem.Click += new System.EventHandler(this.featureRequestToolStripMenuItem_Click);
+            // 
+            // bugReportToolStripMenuItem
+            // 
+            this.bugReportToolStripMenuItem.Name = "bugReportToolStripMenuItem";
+            this.bugReportToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.bugReportToolStripMenuItem.Text = "Report a &Bug";
+            this.bugReportToolStripMenuItem.ToolTipText = "Report a bug\r\n\r\nVisit the GitHub Repository to report a bug\r\nto the developer of " +
+    "this application.";
+            this.bugReportToolStripMenuItem.Click += new System.EventHandler(this.bugReportToolStripMenuItem_Click);
+            // 
+            // exitToolStripMenuItem1
+            // 
+            this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
+            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem1.Text = "E&xit";
+            this.exitToolStripMenuItem1.ToolTipText = "Exit the application";
+            this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
             // 
             // notifyIcon
             // 
@@ -1299,13 +1342,6 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // exitToolStripMenuItem1
-            // 
-            this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
-            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-            this.exitToolStripMenuItem1.Text = "E&xit";
-            this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
             // 
             // FormMain
             // 
@@ -1472,6 +1508,9 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem issuesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem featureRequestToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bugReportToolStripMenuItem;
     }
 }
 

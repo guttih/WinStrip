@@ -46,5 +46,17 @@ namespace WinStrip.Properties {
                 this["HelpRootUrl"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://github.com/guttih/WinStrip")]
+        public string RepositoryRootUrl {
+            get {
+                return ((string)(this["RepositoryRootUrl"]));
+            }
+            set {
+                this["RepositoryRootUrl"] = value;
+            }
+        }
     }
 }

@@ -70,20 +70,20 @@ namespace WinStrip
         
 
         private string MakeListItem(VesionFeature item)
-        {   var str = $"\r\n";
-                str =  SplitIfLongLines( $"{tap}{tap}{item.Title}",  $"{tap}{tap}" ) + "\r\n";
-                str += SplitIfLongLines($"{tap}{tap} - {item.Description}", $"{tap}{tap}   ")  + "\r\n";
+        {   
+            string str =  SplitIfLongLines( $"{tap}{tap}{item.Title}",           $"{tap}{tap}"     ) + "\r\n";
+                   str += SplitIfLongLines($"{tap}{tap}{tap}{item.Description}", $"{tap}{tap}{tap}")  + "\r\n";
             return str;
 
         }
 
-        private string MakeFeature(List<VesionFeature> features)
+        private string MakeFeature(List<VesionFeature> features, string Heading)
         {
             if (features.Count == 0)
                 return "";
 
-            var str = MakeListHead("New features");
-                foreach (var listItem in versionInfo.NewFeatures)
+            var str = MakeListHead(Heading);
+                foreach (var listItem in features)
                 {
                     str += MakeListItem(listItem);
                 }
@@ -98,9 +98,9 @@ namespace WinStrip
 
             string text;
             text = $"\r\n{makeHeadParagraph("Description", versionInfo.Description)}\r\n\r\n";
-            text += MakeFeature(versionInfo.NewFeatures);
+            text += MakeFeature(versionInfo.NewFeatures, "New features");
             text += "\r\n\r\n";
-            text += MakeFeature(versionInfo.BugFixes);
+            text += MakeFeature(versionInfo.BugFixes, "Bugs fixed");
             text += "\r\n\r\n";
 
             if (!string.IsNullOrEmpty(versionInfo.Setup))

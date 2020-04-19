@@ -1323,7 +1323,7 @@ namespace WinStrip
             }
             
             string inoFilePath = $"{fromPath}\\{inoFiles[0].Name}";
-            var frmExport = new FormExport(inoFilePath);
+            var frmExport = new FormExportCode(inoFilePath);
             if (frmExport.ShowDialog() == DialogResult.OK) { 
             
                 FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();

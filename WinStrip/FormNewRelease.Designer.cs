@@ -30,26 +30,26 @@
         {
             this.textBox = new System.Windows.Forms.TextBox();
             this.panelTop = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.label8 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.label9 = new System.Windows.Forms.Label();
             this.panelValues = new System.Windows.Forms.Panel();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.labelVersion = new System.Windows.Forms.Label();
+            this.labelName = new System.Windows.Forms.Label();
             this.panel6 = new System.Windows.Forms.Panel();
             this.labelDate = new System.Windows.Forms.Label();
-            this.labelName = new System.Windows.Forms.Label();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.labelVersion = new System.Windows.Forms.Label();
             this.btnYes = new System.Windows.Forms.Button();
             this.btnNo = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.panelTop.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.panelValues.SuspendLayout();
-            this.panel5.SuspendLayout();
             this.panel6.SuspendLayout();
+            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBox
@@ -78,14 +78,15 @@
             this.panelTop.Size = new System.Drawing.Size(641, 32);
             this.panelTop.TabIndex = 2;
             // 
-            // panel2
+            // label8
             // 
-            this.panel2.Controls.Add(this.label9);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel2.Location = new System.Drawing.Point(0, 10);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(133, 22);
-            this.panel2.TabIndex = 0;
+            this.label8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label8.Location = new System.Drawing.Point(133, 10);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(372, 22);
+            this.label8.TabIndex = 2;
+            this.label8.Text = "Name";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel3
             // 
@@ -107,15 +108,14 @@
             this.label7.Text = "Release date";
             this.label7.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // label8
+            // panel2
             // 
-            this.label8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label8.Location = new System.Drawing.Point(133, 10);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(372, 22);
-            this.label8.TabIndex = 2;
-            this.label8.Text = "Name";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.panel2.Controls.Add(this.label9);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel2.Location = new System.Drawing.Point(0, 10);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(133, 22);
+            this.panel2.TabIndex = 0;
             // 
             // label9
             // 
@@ -137,24 +137,16 @@
             this.panelValues.Size = new System.Drawing.Size(641, 35);
             this.panelValues.TabIndex = 3;
             // 
-            // panel5
+            // labelName
             // 
-            this.panel5.Controls.Add(this.labelVersion);
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel5.Location = new System.Drawing.Point(0, 0);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(133, 35);
-            this.panel5.TabIndex = 1;
-            // 
-            // labelVersion
-            // 
-            this.labelVersion.AutoSize = true;
-            this.labelVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelVersion.Location = new System.Drawing.Point(17, 9);
-            this.labelVersion.Name = "labelVersion";
-            this.labelVersion.Size = new System.Drawing.Size(35, 24);
-            this.labelVersion.TabIndex = 2;
-            this.labelVersion.Text = "1.5";
+            this.labelName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelName.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelName.Location = new System.Drawing.Point(133, 0);
+            this.labelName.Name = "labelName";
+            this.labelName.Size = new System.Drawing.Size(372, 35);
+            this.labelName.TabIndex = 3;
+            this.labelName.Text = "XinStrip";
+            this.labelName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel6
             // 
@@ -176,16 +168,24 @@
             this.labelDate.Text = "31.12.2020";
             this.labelDate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // labelName
+            // panel5
             // 
-            this.labelName.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelName.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelName.Location = new System.Drawing.Point(133, 0);
-            this.labelName.Name = "labelName";
-            this.labelName.Size = new System.Drawing.Size(372, 35);
-            this.labelName.TabIndex = 3;
-            this.labelName.Text = "XinStrip";
-            this.labelName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.panel5.Controls.Add(this.labelVersion);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel5.Location = new System.Drawing.Point(0, 0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(133, 35);
+            this.panel5.TabIndex = 1;
+            // 
+            // labelVersion
+            // 
+            this.labelVersion.AutoSize = true;
+            this.labelVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelVersion.Location = new System.Drawing.Point(17, 9);
+            this.labelVersion.Name = "labelVersion";
+            this.labelVersion.Size = new System.Drawing.Size(35, 24);
+            this.labelVersion.TabIndex = 2;
+            this.labelVersion.Text = "1.5";
             // 
             // btnYes
             // 
@@ -237,19 +237,20 @@
             this.Controls.Add(this.panelTop);
             this.Controls.Add(this.textBox);
             this.Controls.Add(this.textBox2);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MinimumSize = new System.Drawing.Size(374, 290);
             this.Name = "FormNewRelease";
             this.Text = "New release";
             this.Load += new System.EventHandler(this.FormNewRelease_Load);
             this.panelTop.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.panelValues.ResumeLayout(false);
+            this.panel6.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
-            this.panel6.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

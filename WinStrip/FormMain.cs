@@ -1442,12 +1442,10 @@ namespace WinStrip
                 return;
             }
 
-            if (MessageBox.Show("A newer version of this application has been released,\r\n do you want to visit it's download page?",
-                                 "A newer version exits",
-                                 MessageBoxButtons.YesNo,
-                                 MessageBoxIcon.Asterisk) == DialogResult.Yes)
-            {
 
+            var frm = new FormNewRelease(versionInfo);
+            if (frm.ShowDialog() == DialogResult.Yes)
+            {
                 url = $"{RootUrl}/release.html?version={versionInfo.Version}";
                 System.Diagnostics.Process.Start(url);
             }
@@ -1594,7 +1592,7 @@ namespace WinStrip
 
         private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            var about = new AboutForm();
+            var about = new FormAbout();
             about.ShowDialog();
         }
 

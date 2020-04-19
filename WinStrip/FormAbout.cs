@@ -9,9 +9,9 @@ using System.Windows.Forms;
 
 namespace WinStrip
 {
-    partial class AboutForm : BaseForm
+    partial class FormAbout : BaseForm
     {
-        public AboutForm()
+        public FormAbout()
         {
             InitializeComponent();
             this.Text = String.Format("About {0}", ApplicationName);

@@ -8,8 +8,10 @@ In this description I am showing how to deploy version **1.1** when the older ve
         1. In Assembly version increment the Minor version number from 0 to 1
         2. In File     version increment the Minor version number from 0 to 1
 2. select Release in Solution Configurations
-3. Left-Click WinStrip project and select Rebuild
-4. Left-Click Setup project and select Rebuild
+3. Right-Click WinStrip project and select Rebuild
+4. Click Setup project and change setup Version in the Properties window from 1.0.0 to 1.1.0
+    - Click Yes when asked to generate a new UpgradeCode (GUID)
+5. Right-Click Setup project and select Rebuild
 
 ## Getting the release to the project webpage.
 This is important because older versions will check if there is a newer versions of the application 
@@ -17,7 +19,7 @@ and if you will not, for example update them file [release.json](https://guttih.
 
 5. Create a new release on the server
     1. open WinSCP and navigate to the folder "/var/www/web-guttih/public/projects/winstrip/release"
-    2. Left-Click the folder "x.x" and select "Duplicate"
+    2. Right-Click the folder "x.x" and select "Duplicate"
     3. Change the last directory name from "x.x" to "1.1" and press "OK"
     4. Edit the file "/var/www/web-guttih/public/projects/winstrip/release/1.1/release.json"
         1. Change the version form "x.x" to "1.1"

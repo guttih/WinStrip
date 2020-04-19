@@ -21,6 +21,14 @@ namespace WinStrip
             }
         }
 
+        public string ThemeFileExtendion
+        {
+            get
+            {
+                return Properties.Settings.Default.ThemeFileExtendion;
+            }
+        }
+
         public string ApplicationVersionString
         {
             get

@@ -11,6 +11,7 @@ using WinStrip.EntityTransfer;
 using WinStrip.Utilities;
 using System.IO;
 using System.Net;
+using Microsoft.Win32;
 
 namespace WinStrip
 {
@@ -27,12 +28,18 @@ namespace WinStrip
 
         ToolTip toolTip1;
         private FormSplash splash;
+        private bool visabilityAllowed;
+
         public FormMain()
         {
-            splash = new FormSplash("initializing...");
+            LoadThemes(false);
+            visabilityAllowed = OneThemeIsDefault();
+
+            splash = new FormSplash("WinStrip", "initializing...");
            
             ThemeSelectedIndex = -1;
             PortSpeed = 500000;
+            splashShow("initializing...");
             InitializeComponent();
             toolTip1 = new ToolTip();
             toolTip1.AutoPopDelay = 4000;
@@ -45,11 +52,37 @@ namespace WinStrip
                 MenuItem item = textBoxManualSend.ContextMenu.MenuItems.Add(i.ToString());
                 item.Click += new EventHandler(textBoxCustomSenditem_Click);
             }
+
+            LoadInit();
            
+        }
+
+        private void LoadInit()
+        {
+            LoadThemes();
+            SetTooltips();
+            labelStatus.Text = "";
+            splashShow("Searching for available com ports...");
+            InitComboPorts();
+            splashShow("Getting values from the micro controller...");
+            GetHardwareFromDevice();
+
+            EnableDeviceRelatedControls(serial.isConnected);
+            radioButtonCpuLive.Checked = selectedComboThemeIsDefaultTheme();
+            launchWinStripOnStartupToolStripMenuItem.Checked = CheckIfApplicationWillRunOnStartup();
+
+            splashHide();
+            timer1.Start();
+        }
+
+        private void FormMain_Load(object sender, EventArgs e)
+        {
         }
 
         private void splashShow(string message, string title = null)
         {
+            if (!visabilityAllowed)
+                return;
             if (title == null)
                 title = Text;
 
@@ -60,28 +93,19 @@ namespace WinStrip
 
         private void splashHide()
         {
+            if (!visabilityAllowed)
+                return;
+
             if (splash.Visible)
                 splash.Hide();
         }
 
-        private void FormMain_Load(object sender, EventArgs e)
+        protected override void SetVisibleCore(bool value)
         {
-            splashShow("initializing...");
-            SetTooltips();
-            splashShow("loading themes...");
-            LoadThemes();
-            labelStatus.Text = "";
-            splashShow("Searching for available com ports...");
-            InitComboPorts();
-            splashShow("Getting values from the micro controller...");
-            GetHardwareFromDevice();
-
-            EnableDeviceRelatedControls(serial.isConnected);
-            radioButtonCpuLive.Checked = selectedComboThemeIsDefaultTheme();
-
-            splashHide();
-            timer1.Start();
+            base.SetVisibleCore(visabilityAllowed ? value : false);
         }
+
+
 
         private void SetTooltips()
         {
@@ -214,7 +238,7 @@ namespace WinStrip
         }
 
         
-        void LoadThemes()
+        void LoadThemes(bool loadThemeToFrom = true)
         {
             var str = Properties.Settings.Default.Themes;
 
@@ -233,9 +257,15 @@ namespace WinStrip
             
 
             // now let's populate form
-            ThemesToForm();
+            if( loadThemeToFrom )
+                ThemesToForm();
         }
 
+        bool OneThemeIsDefault()
+        {
+            var index = Themes.FindIndex(t => t.Default == true);
+            return  !(index > -1);
+        }
         void ThemesToForm()
         {
             if (Themes == null)
@@ -459,9 +489,11 @@ namespace WinStrip
                         parameters.Add(new ProgramParameter { Name = value, Value=0 });
                     }
                     ShowAndSetParamNames();
-                    if (serial.isConnected)
+                    if (serial.isConnected) {
+                        splashShow("Sending values to micro controller...");
                         SendValuesToDevice();
-
+                        splashHide();
+                    }
                     if (name == "Reset")
                     {
                         GetValues();
@@ -601,7 +633,7 @@ namespace WinStrip
 
         private void SendValuesToDevice(StripValues values = null)
         {
-            splashShow("Sending values to micro controller...");
+            
             if (values == null) { 
                 values = new StripValues
                 {
@@ -616,7 +648,7 @@ namespace WinStrip
             var serializer = new JavaScriptSerializer();
             var str = serializer.Serialize(values);
             serial.WriteLine(str);
-            splashHide();
+            
         }
 
         private void SendColorsToDevice(StripColors colors = null)
@@ -642,8 +674,9 @@ namespace WinStrip
 
         private void btnSendAll_Click(object sender, EventArgs e)
         {
-
+            splashShow("Sending values to micro controller...");
             SendValuesToDevice();
+            splashHide();
 
         }
 
@@ -721,8 +754,9 @@ namespace WinStrip
             {
                 var control = (TrackBar)sender;
                 SetControlValue(GetControlValueFromName(control.Name), control.Value);
-                if (serial.isConnected)
+                if (serial.isConnected) {
                     SendValuesToDevice();
+                }
             }
             else if (typeName == "NumericUpDown")
             {
@@ -971,7 +1005,8 @@ namespace WinStrip
             int i = Themes.FindIndex(t => t.Name == oldName);
             if (i != -1)
             {
-                string str = enable ? "to be able set this theme as default" : "to be able to remove this theme from default";
+                string str = enable ? "to be able set this theme as default. This will cause the WinStrip to launch hidden but you will be able to access it by right-clicking on the tray icon which is near the clock on your task bar" 
+                                    : "to be able to remove this theme from default.  This will disable the CPU monitoring and cause WinStrip to launch visable";
                 if (MessageBox.Show($"You will need to save all themes {str}.\n\nDo you want to save all themes?",
                             "Set default theme",
                             MessageBoxButtons.YesNo,
@@ -1141,8 +1176,8 @@ namespace WinStrip
 
         private void SetCheckDefaultTootipMessage()
         {
-            string str = checkDefault.Checked ? "To disable Live CPU on startup, remove this check-mark"
-                                              : "Check this mark to make this theme the default theme.";
+            string str = checkDefault.Checked ? "To disable Live CPU monitoring on startup, remove this check-mark."
+                                              : "Check this mark to enable Live CPU monitoring when WinStrip is launched and use this theme to command the strip";
             toolTip1.SetToolTip(checkDefault, str);
         }
         private void SetDefaultThemeState()
@@ -1355,7 +1390,6 @@ namespace WinStrip
 
         private void helpToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            VisitHelpUrl();
         }
 
         private void exportCodeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1421,16 +1455,6 @@ namespace WinStrip
 
         }
 
-        private void exportCodeToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var about = new AboutForm();
-            about.ShowDialog();
-        }
-
         private void saveAllThemesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveAllThemes();
@@ -1494,6 +1518,89 @@ namespace WinStrip
         private void checkDefault_CheckedChanged(object sender, EventArgs e)
         {
             SetCheckDefaultTootipMessage();
+        }
+
+        private void trayIconContextMenuStrip_Opening(object sender, CancelEventArgs e)
+        {
+            trayMenuItemShow.Visible = !Visible;
+            trayMenuItemHide.Visible = Visible;
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void trayMenuItemHide_Click(object sender, EventArgs e)
+        {
+            OnShowTrayItemClicked(false);
+        }
+
+        private void OnShowTrayItemClicked(bool show)
+        {
+            visabilityAllowed = true;
+            base.SetVisibleCore(true);
+            this.Visible = show;
+            trayMenuItemShow.Visible = !show;
+            trayMenuItemHide.Visible = show;
+        }
+
+        private void trayMenuItemShow_Click(object sender, EventArgs e)
+        {
+            OnShowTrayItemClicked(true);
+        }
+
+        /// <summary>
+        /// Makes windows launch this application on startup or
+        /// stops windows launching this app on startup.
+        /// </summary>
+        /// <param name="runWhenWindowsLaunches">
+        ///     If true, this application will launch on windows startup.
+        ///     If false, this application will NOT launch on windows startup.
+        /// </param>
+        private void AddOrRemoveApplicationOnWindowsLaunch(bool runWhenWindowsLaunches)
+        {
+            RegistryKey rk = Registry.CurrentUser.OpenSubKey
+                ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
+            var appName = ApplicationName;
+            if (runWhenWindowsLaunches)
+            { 
+                rk.SetValue(appName, Application.ExecutablePath);
+            }
+            else { 
+                rk.DeleteValue(appName, false);
+            }
+
+            launchWinStripOnStartupToolStripMenuItem.Checked = CheckIfApplicationWillRunOnStartup();
+        }
+
+        private bool CheckIfApplicationWillRunOnStartup()
+        {
+            RegistryKey WinRunKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", false);
+            var names = WinRunKey.GetValueNames();
+            return names.Contains(ApplicationName);
+        }
+
+        private void launchWinStripOnStartupToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddOrRemoveApplicationOnWindowsLaunch(!CheckIfApplicationWillRunOnStartup());
+        }
+
+        private void helpToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            VisitHelpUrl();
+        }
+
+        private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var about = new AboutForm();
+            about.ShowDialog();
+        }
+
+        private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

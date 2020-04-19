@@ -29,12 +29,13 @@ namespace WinStrip
             set { labelMessage.Text = value;
             }
         }
-        private void InitForm(string Message)
+        private void InitForm(string heading, string message)
         {
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             InitializeComponent();
-            Heading = "";
-            this.Message = Message;
+            
+            Heading = heading == null? "" : heading;
+            Message = message == null? "" : message;
         }
 
         private void DrawSurroundingLines(PaintEventArgs e)
@@ -47,15 +48,18 @@ namespace WinStrip
             e.Graphics.DrawLine(pen, Width,      0,     0,      0);
         }
 
+        public FormSplash()
+        {
+            InitForm(null, null);
+        }
         public FormSplash(string Message)
         {
-            InitForm(Message);
+            InitForm(null, Message);
         }
 
         public FormSplash(string Heading, string Message)
         {
-            InitForm(Message);
-            this.Heading = Heading;
+            InitForm(Heading, Message);
         }
 
         public void Set(string Heading, string Message)

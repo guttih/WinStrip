@@ -50,6 +50,8 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entity\VersionNumbersTests.cs" />
+    <Compile Include="Entity\VersionInformationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\StepGeneratorTests.cs" />
   </ItemGroup>

@@ -5,7 +5,7 @@ using WinStrip.EntityTransfer;
 
 namespace WinStrip.Entity
 {
-    class Theme : IComparer<Theme>
+    public class Theme : IComparer<Theme>
     {
         public Theme()
         {

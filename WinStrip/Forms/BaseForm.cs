@@ -21,18 +21,26 @@ namespace WinStrip
             }
         }
 
-        public string MajorMinorVersion
+        public string ThemeFileExtendion
         {
             get
             {
-                var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-                return $"{version.Major}.{version.Minor}";
+                return Properties.Settings.Default.ThemeFileExtendion;
+            }
+        }
+
+        public string ApplicationVersionString
+        {
+            get
+            {
+                string assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                return assemblyVersion;
             }
         }
 
         public string HelpRootUrl { get {
                 var rootUrl = Properties.Settings.Default.HelpRootUrl;
-                return $"{rootUrl}/{MajorMinorVersion}";
+                return $"{rootUrl}/{ApplicationVersionString}";
             } 
         }
 

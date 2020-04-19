@@ -85,9 +85,31 @@ namespace WinStrip.Entity
             return ver;
         }
 
+        /// <summary>
+        ///  Version string
+        /// </summary>
+        /// <returns>A version string on the form #.#.#.#</returns>
         public override string ToString() 
         { 
             return $"{Major}.{Minor}.{Patch}.{Build}"; 
+        }
+
+        /// <summary>
+        ///  First three parst of a version string
+        /// </summary>
+        /// <returns>A version string on the form #.#.#</returns>
+        public string ToPatchString()
+        {
+            return $"{Major}.{Minor}.{Patch}";
+        }
+
+        /// <summary>
+        ///  First two parst of a version string
+        /// </summary>
+        /// <returns>A version string on the form  #.#</returns>
+        public string ToMinorString()
+        {
+            return $"{Major}.{Minor}";
         }
 
         /// <summary>

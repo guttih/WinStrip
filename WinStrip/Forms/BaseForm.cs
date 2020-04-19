@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Windows.Forms;
+using WinStrip.Entity;
 
 namespace WinStrip
 {
@@ -40,7 +41,7 @@ namespace WinStrip
 
         public string HelpRootUrl { get {
                 var rootUrl = Properties.Settings.Default.HelpRootUrl;
-                return $"{rootUrl}/{ApplicationVersionString}";
+                return $"{rootUrl}/{new VersionNumbers(ApplicationVersionString).ToPatchString()}";
             } 
         }
 
@@ -48,7 +49,8 @@ namespace WinStrip
         {
             var href = HelpRootUrl;
             if (webpageName != null)
-                href += $"/{ webpageName}";
+                href += $"/{webpageName}";
+
             System.Diagnostics.Process.Start(href);
         }
 

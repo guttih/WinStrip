@@ -1444,6 +1444,14 @@ namespace WinStrip
             var frm = new FormNewRelease(versionInfo);
             if (frm.ShowDialog() == DialogResult.Yes)
             {
+                if (MessageBox.Show("Before updating, it is reccomended to export your themes.\r\nDo you want to export your themes now?",
+                                 "Export your themes",
+                                 MessageBoxButtons.YesNo,
+                                 MessageBoxIcon.Warning) == DialogResult.Yes)
+                {
+                    exportThemesDialog();
+                }
+
                 url = $"{RootUrl}/release.html?version={versionInfo.Version}";
                 System.Diagnostics.Process.Start(url);
             }
@@ -1610,13 +1618,18 @@ namespace WinStrip
             Close();
         }
 
-        private void exportThemesToolStripMenuItem_Click(object sender, EventArgs e)
+        void exportThemesDialog()
         {
             var frm = new FormThemeImportExport(Themes);
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 MessageBox.Show(this, "The selected themes have been successfully exported!", "Themes exported", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void exportThemesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            exportThemesDialog();
         }
 
         private void importToolStripMenuItem_Click(object sender, EventArgs e)

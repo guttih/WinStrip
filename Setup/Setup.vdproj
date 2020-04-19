@@ -172,7 +172,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:.NET Framework 4.7.2    "
+                "FrameworkVersion" = "8:.NET Framework 4.7.2     "
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=863262"
                 }
@@ -447,15 +447,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:WinStrip"
-        "ProductCode" = "8:{45BF6FA5-5DCB-414D-BCF5-910EC7F71C15}"
-        "PackageCode" = "8:{A574CD39-DF67-410E-8944-5EC2E5C3D304}"
+        "ProductCode" = "8:{2A3501BA-9D24-4A74-936E-49CAFC2650B9}"
+        "PackageCode" = "8:{150EBF8A-DC74-4EE3-9DCD-95CDA952DB2A}"
         "UpgradeCode" = "8:{1F37B9B1-D3C5-403B-93A4-17600DF318A9}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.2.0"
         "Manufacturer" = "8:guttih"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1039,7 +1039,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_F2878DCBCBA748FF9F803C485D91AF36"
             {
-            "SourcePath" = "8:..\\WinStrip\\obj\\Debug\\WinStrip.exe"
+            "SourcePath" = "8:..\\WinStrip\\obj\\Release\\WinStrip.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_8220BC01FCB043288FAB61A9E0A6B0F7"

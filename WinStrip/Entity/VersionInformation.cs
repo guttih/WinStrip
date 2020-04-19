@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace WinStrip.Entity
 {
-    class VesionFeature
+    public class VesionFeature
     {
         public string Title { get; set; }
         public string Description { get; set; }
 
         
     }
-    class VersionInformation
+    public class VersionInformation
     {
         public string Name { get; set; }
         public string Version { get; set; }

@@ -9,12 +9,12 @@ using System.Windows.Forms;
 
 namespace WinStrip
 {
-    partial class AboutForm : BaseForm
+    partial class FormAbout : BaseForm
     {
-        public AboutForm()
+        public FormAbout()
         {
             InitializeComponent();
-            this.Text = String.Format("About {0}", AssemblyTitle);
+            this.Text = String.Format("About {0}", ApplicationName);
             this.labelProductName.Text = AssemblyProduct;
             this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
             this.labelCopyright.Text = AssemblyCopyright;
@@ -24,22 +24,7 @@ namespace WinStrip
 
         #region Assembly Attribute Accessors
 
-        public string AssemblyTitle
-        {
-            get
-            {
-                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
-                if (attributes.Length > 0)
-                {
-                    AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
-                    if (titleAttribute.Title != "")
-                    {
-                        return titleAttribute.Title;
-                    }
-                }
-                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
-            }
-        }
+        
 
         public string AssemblyVersion
         {
@@ -101,5 +86,10 @@ namespace WinStrip
             }
         }
         #endregion
+
+        private void AboutForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -113,12 +113,23 @@
             this.mainToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.launchWinStripOnStartupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.themesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllThemesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadSavedThemesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetAllThemesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.issuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.featureRequestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bugReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.trayIconContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.trayMenuItemShow = new System.Windows.Forms.ToolStripMenuItem();
+            this.trayMenuItemHide = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPrograms.SuspendLayout();
             this.groupBoxParameters.SuspendLayout();
@@ -150,6 +161,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.performanceCounter1)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.trayIconContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnManualSend
@@ -1139,11 +1151,12 @@
             this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mainToolStripMenuItem,
-            this.themesToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(386, -1);
+            this.themesToolStripMenuItem,
+            this.helpToolStripMenuItem1});
+            this.menuStrip1.Location = new System.Drawing.Point(342, -1);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 13, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(251, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(295, 24);
             this.menuStrip1.TabIndex = 18;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -1152,17 +1165,16 @@
             this.mainToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.exportCodeToolStripMenuItem,
             this.checkForUpdateToolStripMenuItem,
-            this.helpToolStripMenuItem,
-            this.aboutToolStripMenuItem});
+            this.launchWinStripOnStartupToolStripMenuItem});
             this.mainToolStripMenuItem.Name = "mainToolStripMenuItem";
             this.mainToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
-            this.mainToolStripMenuItem.Text = "Menu";
+            this.mainToolStripMenuItem.Text = "&Menu";
             // 
             // exportCodeToolStripMenuItem
             // 
             this.exportCodeToolStripMenuItem.Name = "exportCodeToolStripMenuItem";
-            this.exportCodeToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.exportCodeToolStripMenuItem.Text = "Export code";
+            this.exportCodeToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.exportCodeToolStripMenuItem.Text = "&Export code";
             this.exportCodeToolStripMenuItem.ToolTipText = "Export code for the Esp32 micro controller to a folder of your choosing";
             this.exportCodeToolStripMenuItem.Click += new System.EventHandler(this.exportCodeToolStripMenuItem_Click);
             this.exportCodeToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
@@ -1171,32 +1183,21 @@
             // checkForUpdateToolStripMenuItem
             // 
             this.checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
-            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.checkForUpdateToolStripMenuItem.Text = "Check for &update";
+            this.checkForUpdateToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.checkForUpdateToolStripMenuItem.Text = "&Check for &Update";
             this.checkForUpdateToolStripMenuItem.ToolTipText = "Check if there has been released a newer version of this application";
             this.checkForUpdateToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdateToolStripMenuItem_Click);
             this.checkForUpdateToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
             this.checkForUpdateToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
-            // helpToolStripMenuItem
+            // launchWinStripOnStartupToolStripMenuItem
             // 
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.helpToolStripMenuItem.Text = "&Help";
-            this.helpToolStripMenuItem.ToolTipText = "Visit the online application web page";
-            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
-            this.helpToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
-            this.helpToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
-            // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.ToolTipText = "View the application version information";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-            this.aboutToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
-            this.aboutToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
+            this.launchWinStripOnStartupToolStripMenuItem.Name = "launchWinStripOnStartupToolStripMenuItem";
+            this.launchWinStripOnStartupToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.launchWinStripOnStartupToolStripMenuItem.Text = "Launch on Windows startup";
+            this.launchWinStripOnStartupToolStripMenuItem.ToolTipText = "When windows starts, run this application.\r\n\r\nIf this menu item is checked this a" +
+    "pplication \r\nwill be launched on windows startup";
+            this.launchWinStripOnStartupToolStripMenuItem.Click += new System.EventHandler(this.launchWinStripOnStartupToolStripMenuItem_Click);
             // 
             // themesToolStripMenuItem
             // 
@@ -1206,14 +1207,14 @@
             this.resetAllThemesToolStripMenuItem});
             this.themesToolStripMenuItem.Name = "themesToolStripMenuItem";
             this.themesToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
-            this.themesToolStripMenuItem.Text = "Themes";
+            this.themesToolStripMenuItem.Text = "&Themes";
             // 
             // saveAllThemesToolStripMenuItem
             // 
             this.saveAllThemesToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveAllThemesToolStripMenuItem.Image")));
             this.saveAllThemesToolStripMenuItem.Name = "saveAllThemesToolStripMenuItem";
             this.saveAllThemesToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.saveAllThemesToolStripMenuItem.Text = "Save all themes";
+            this.saveAllThemesToolStripMenuItem.Text = "&Save all themes";
             this.saveAllThemesToolStripMenuItem.ToolTipText = "Save all themes";
             this.saveAllThemesToolStripMenuItem.Click += new System.EventHandler(this.saveAllThemesToolStripMenuItem_Click);
             this.saveAllThemesToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
@@ -1224,7 +1225,7 @@
             this.reloadSavedThemesToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("reloadSavedThemesToolStripMenuItem.Image")));
             this.reloadSavedThemesToolStripMenuItem.Name = "reloadSavedThemesToolStripMenuItem";
             this.reloadSavedThemesToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.reloadSavedThemesToolStripMenuItem.Text = "Reload saved themes";
+            this.reloadSavedThemesToolStripMenuItem.Text = "Re&load saved themes";
             this.reloadSavedThemesToolStripMenuItem.ToolTipText = "Throw away all changes and load all saved themes again.";
             this.reloadSavedThemesToolStripMenuItem.Click += new System.EventHandler(this.reloadSavedThemesToolStripMenuItem_Click);
             this.reloadSavedThemesToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
@@ -1241,6 +1242,106 @@
             this.resetAllThemesToolStripMenuItem.Click += new System.EventHandler(this.resetAllThemesToolStripMenuItem_Click);
             this.resetAllThemesToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
             this.resetAllThemesToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
+            // 
+            // helpToolStripMenuItem1
+            // 
+            this.helpToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem1,
+            this.helpToolStripMenuItem2,
+            this.issuesToolStripMenuItem,
+            this.exitToolStripMenuItem1});
+            this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
+            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem1.Text = "&Help";
+            // 
+            // aboutToolStripMenuItem1
+            // 
+            this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
+            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.aboutToolStripMenuItem1.Text = "&About";
+            this.aboutToolStripMenuItem1.ToolTipText = "About this application\r\n\r\nGet information on application version \r\nand author";
+            this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
+            // 
+            // helpToolStripMenuItem2
+            // 
+            this.helpToolStripMenuItem2.Name = "helpToolStripMenuItem2";
+            this.helpToolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.helpToolStripMenuItem2.Text = "&Help";
+            this.helpToolStripMenuItem2.ToolTipText = "Visit the online documentation\r\n for this application";
+            this.helpToolStripMenuItem2.Click += new System.EventHandler(this.helpToolStripMenuItem2_Click);
+            // 
+            // issuesToolStripMenuItem
+            // 
+            this.issuesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.featureRequestToolStripMenuItem,
+            this.bugReportToolStripMenuItem});
+            this.issuesToolStripMenuItem.Name = "issuesToolStripMenuItem";
+            this.issuesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.issuesToolStripMenuItem.Text = "&Issues";
+            // 
+            // featureRequestToolStripMenuItem
+            // 
+            this.featureRequestToolStripMenuItem.Name = "featureRequestToolStripMenuItem";
+            this.featureRequestToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.featureRequestToolStripMenuItem.Text = "&Feature request";
+            this.featureRequestToolStripMenuItem.ToolTipText = "Make a feature request\r\n\r\nVisit the GitHub repository website to \r\nask for an fea" +
+    "ture which is not currently\r\nin this application.";
+            this.featureRequestToolStripMenuItem.Click += new System.EventHandler(this.featureRequestToolStripMenuItem_Click);
+            // 
+            // bugReportToolStripMenuItem
+            // 
+            this.bugReportToolStripMenuItem.Name = "bugReportToolStripMenuItem";
+            this.bugReportToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.bugReportToolStripMenuItem.Text = "Report a &Bug";
+            this.bugReportToolStripMenuItem.ToolTipText = "Report a bug\r\n\r\nVisit the GitHub Repository to report a bug\r\nto the developer of " +
+    "this application.";
+            this.bugReportToolStripMenuItem.Click += new System.EventHandler(this.bugReportToolStripMenuItem_Click);
+            // 
+            // exitToolStripMenuItem1
+            // 
+            this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
+            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem1.Text = "E&xit";
+            this.exitToolStripMenuItem1.ToolTipText = "Exit the application";
+            this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
+            // 
+            // notifyIcon
+            // 
+            this.notifyIcon.ContextMenuStrip = this.trayIconContextMenuStrip;
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "WinStrip";
+            this.notifyIcon.Visible = true;
+            // 
+            // trayIconContextMenuStrip
+            // 
+            this.trayIconContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.trayMenuItemShow,
+            this.trayMenuItemHide,
+            this.exitToolStripMenuItem});
+            this.trayIconContextMenuStrip.Name = "trayIconContextMenuStrip";
+            this.trayIconContextMenuStrip.Size = new System.Drawing.Size(104, 70);
+            this.trayIconContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.trayIconContextMenuStrip_Opening);
+            // 
+            // trayMenuItemShow
+            // 
+            this.trayMenuItemShow.Name = "trayMenuItemShow";
+            this.trayMenuItemShow.Size = new System.Drawing.Size(103, 22);
+            this.trayMenuItemShow.Text = "Show";
+            this.trayMenuItemShow.Click += new System.EventHandler(this.trayMenuItemShow_Click);
+            // 
+            // trayMenuItemHide
+            // 
+            this.trayMenuItemHide.Name = "trayMenuItemHide";
+            this.trayMenuItemHide.Size = new System.Drawing.Size(103, 22);
+            this.trayMenuItemHide.Text = "Hide";
+            this.trayMenuItemHide.Click += new System.EventHandler(this.trayMenuItemHide_Click);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // FormMain
             // 
@@ -1303,6 +1404,7 @@
             this.statusStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.trayIconContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1384,11 +1486,9 @@
         private System.Windows.Forms.CheckBox checkDefault;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem mainToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportCodeToolStripMenuItem;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem themesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAllThemesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reloadSavedThemesToolStripMenuItem;
@@ -1398,6 +1498,19 @@
         private System.Windows.Forms.LinkLabel linkLabelManual;
         private System.Windows.Forms.LinkLabel linkLabelPrograms;
         private System.Windows.Forms.LinkLabel linkLabelCpu;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
+        private System.Windows.Forms.ContextMenuStrip trayIconContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem trayMenuItemShow;
+        private System.Windows.Forms.ToolStripMenuItem trayMenuItemHide;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem launchWinStripOnStartupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem issuesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem featureRequestToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bugReportToolStripMenuItem;
     }
 }
 

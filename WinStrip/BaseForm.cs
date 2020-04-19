@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Reflection;
+using System.Windows.Forms;
 
 namespace WinStrip
 {
@@ -9,6 +10,14 @@ namespace WinStrip
             get
             {
                 return Properties.Settings.Default.HelpRootUrl;
+            }
+        }
+
+        public string RepositoryRootUrl
+        {
+            get
+            {
+                return Properties.Settings.Default.RepositoryRootUrl;
             }
         }
 
@@ -34,5 +43,30 @@ namespace WinStrip
                 href += $"/{ webpageName}";
             System.Diagnostics.Process.Start(href);
         }
+
+        public void VisitUrl(string fullUrlToWebPage)
+        {
+            var href = fullUrlToWebPage;
+            System.Diagnostics.Process.Start(href);
+        }
+
+        //Also refferred to as AssemblyTitle
+        public string ApplicationName
+        {
+            get
+            {
+                object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+                if (attributes.Length > 0)
+                {
+                    AssemblyTitleAttribute titleAttribute = (AssemblyTitleAttribute)attributes[0];
+                    if (titleAttribute.Title != "")
+                    {
+                        return titleAttribute.Title;
+                    }
+                }
+                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
+            }
+        }
+
     }
 }

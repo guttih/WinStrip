@@ -1434,11 +1434,9 @@ namespace WinStrip
                 return;
             }
 
-            int compareServerVersion = versionInfo.CompareMajorMinorVersionStrings(MajorMinorVersion);
-
-            if(compareServerVersion <= 0)
+            if(!versionInfo.IsVersionLarger(ApplicationVersionString))
             {
-                MessageBox.Show(this, $"Your version \"{MajorMinorVersion}\" is the newest release", "Version up to date", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(this, $"Your version \"{ApplicationVersionString}\" is the newest release", "Version up to date", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 

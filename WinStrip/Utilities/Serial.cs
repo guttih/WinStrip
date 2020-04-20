@@ -175,6 +175,5 @@ namespace WinStrip.Utilities
         public string[] getPortNames() {
             return SerialPort.GetPortNames();
         }
-
     }
 }

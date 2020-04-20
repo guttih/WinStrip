@@ -92,7 +92,6 @@ namespace WinStrip.Utilities
         public override string ToString()
         {
             return "0x" + string.Join("", (new byte[] { Red, Green, Blue }).Select(b => b.ToString("X2")).ToArray());
-            
         }
     }
 }

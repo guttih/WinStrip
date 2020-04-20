@@ -7,9 +7,6 @@ using WinStrip.EntityTransfer;
 
 namespace WinStrip.Utilities
 {
-    
-
-
     public static class StepGenerator
     {
         /// <summary>
@@ -75,8 +72,6 @@ namespace WinStrip.Utilities
             return list;
         }
 
-        
-
         public static List<Step> StripDimToBright(Step baseStep, ulong startColor, ulong endColor, UInt16 startIndex, UInt16 endIndex, UInt16 interval = 1 )
         {
             var colorFrom    = new SColor(startColor);
@@ -98,7 +93,6 @@ namespace WinStrip.Utilities
             float red =   colorFrom.Red;
             float green = colorFrom.Green;
             float blue =  colorFrom.Blue;
-
 
             for (UInt16 ui = startIndex; ui<endIndex+1; ui+=interval)
             {

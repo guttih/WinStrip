@@ -44,11 +44,6 @@ namespace WinStrip.Utilities
                 confirmation.Enabled = textBox.Text.Length > 0;
             }
 
-
-
-
-
-
             return prompt.ShowDialog() == DialogResult.OK ? textBox.Text : "";
         }
     }

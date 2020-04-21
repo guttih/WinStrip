@@ -22,8 +22,9 @@ namespace WinStrip
         List<StripProgram> programs;
         List<ProgramParameter> parameters;
         public int PortSpeed { get; set; }
-        List<Theme> Themes { get; set; }
-        public int ThemeSelectedIndex { get; private set; }
+
+        private readonly ThemeManager themeManager;
+        
         public string LabelStatusSaveText { get; private set; }
 
         ToolTip toolTip1;
@@ -32,12 +33,12 @@ namespace WinStrip
 
         public FormMain()
         {
+            themeManager = new ThemeManager();
             LoadThemes(false);
-            visabilityAllowed = OneThemeIsDefault();
+            visabilityAllowed = themeManager.IsThereADefaultTheme();
 
             splash = new FormSplash("WinStrip", "initializing...");
            
-            ThemeSelectedIndex = -1;
             PortSpeed = 500000;
             splashShow("initializing...");
             InitializeComponent();
@@ -173,67 +174,16 @@ namespace WinStrip
 
         }
 
-        private Theme CreateDefaultTheme()
-        {
-            var theme = new Theme
-            {
-                Name = "Default",
-                Steps = new List<Step> {
-                    new Step { From = 0,  ValuesAndColors = new StripValuesAndColors { delay=0, com=2, brightness =   1, values = new List<int> { 0, 0,0}, colors = new List<ulong> {      255, 16711680, 32768, 255, 16777215, 10824234 } } },
-                    new Step { From = 10, ValuesAndColors = new StripValuesAndColors { delay=0, com=2, brightness = 255, values = new List<int> { 0, 0,0}, colors = new List<ulong> {      255, 16711680, 32768, 255, 16777215, 10824234 } } },
-                    new Step { From = 30, ValuesAndColors = new StripValuesAndColors { delay=0, com=2, brightness = 177, values = new List<int> { 0, 0,0}, colors = new List<ulong> {    65535, 16711680, 32768, 255, 16777215, 10824234 } } },
-                    new Step { From = 50, ValuesAndColors = new StripValuesAndColors { delay=0, com=2, brightness = 240, values = new List<int> { 0, 0,0}, colors = new List<ulong> {    65280, 16711680, 32768, 255, 16777215, 10824234 } } },
-                    new Step { From = 60, ValuesAndColors = new StripValuesAndColors { delay=0, com=2, brightness = 180, values = new List<int> { 0, 0,0}, colors = new List<ulong> { 16711808, 16711680, 32768, 255, 16777215, 10824234 } } },
-                    new Step { From = 70, ValuesAndColors = new StripValuesAndColors { delay=0, com=2, brightness = 255, values = new List<int> { 0, 0,0}, colors = new List<ulong> { 16711680, 16711680, 32768, 255, 16777215, 10824234 } } },
-                    new Step { From = 90, ValuesAndColors = new StripValuesAndColors { delay=2, com=7, brightness = 102, values = new List<int> {32,50,0}, colors = new List<ulong> { 16711680,        0, 32768, 255, 16777215, 10824234 } } },
-                    new Step { From = 95, ValuesAndColors = new StripValuesAndColors { delay=2, com=7, brightness = 255, values = new List<int> {32,20,0}, colors = new List<ulong> { 16711680,        0, 32768, 255, 16777215, 10824234 } } },
-                    new Step { From = 99, ValuesAndColors = new StripValuesAndColors { delay=1, com=7, brightness = 255, values = new List<int> {32,20,0}, colors = new List<ulong> { 16711680,        0, 32768, 255, 16777215, 10824234 } } }
-                }
-            };
-
-
-            return theme;
-        }
-
-        private Theme CreateStepUpTheme()
-        {
-            var theme = new Theme
-            {
-                Name = "Default StepUp",
-                Steps = new List<Step>()
-            };
-
-            var step = new Step(0, "{\"delay\":500,\"com\":4,\"brightness\":10,\"values\":[1,0,0],\"colors\":[255,0,32768,255,16777215,10824234]}");
-            //step 100 skal ver 1 í delay
-            
-            var stepDown = 6;
-            step.ValuesAndColors.delay += stepDown;
-            for (int i = 0; i < 81; i++)
-            {
-                step.From = i;  step.ValuesAndColors.delay -= stepDown;
-                theme.Steps.Add(new Step(step));
-            }
-             stepDown = 1;
-            step.ValuesAndColors.delay += stepDown;
-            for (int i = 80; i < 101; i++)
-            {
-                step.From = i; step.ValuesAndColors.delay -= stepDown;
-                theme.Steps.Add(new Step(step));
-            }
-
-            return theme;
-        }
-
-        private void SaveThemes(List<Theme> themes, int selectedThemeIndex)
+        
+        private void SaveThemes(List<Theme> themes)
         {
             //Sort all themes
             themes.Sort(new Theme());
+
             //Sort all steps in all themes so that highest From value will be first.
             themes.ForEach(theme => theme.SortStepsAndFix());
-            
             var str = (new JavaScriptSerializer()).Serialize(themes);
             Properties.Settings.Default.Themes = str;
-            //Properties.Settings.Default.ThemeSelectedIndex = selectedThemeIndex;
             Properties.Settings.Default.Save();
         }
 
@@ -245,43 +195,39 @@ namespace WinStrip
             if (string.IsNullOrEmpty(str))
             {
 
-                SaveThemes(new List<Theme> { CreateDefaultTheme(), CreateStepUpTheme()}, 0);
+                SaveThemes(themeManager.CreateDefaultThemeList());
                 str = Properties.Settings.Default.Themes;
             }
 
-            var ser = new JavaScriptSerializer();
-            var themeList = ser.Deserialize<List<Theme>>(str);
-            ThemeSelectedIndex = 0;
+            themeManager.SetThemes(str);
+            if (themeManager.SelectedThemeIndex < 0 && themeManager.Count > 0)
+                themeManager.SelectedThemeIndex = 0;
 
-            Themes = themeList;
-            
 
             // now let's populate form
-            if( loadThemeToFrom )
+            if ( loadThemeToFrom )
                 ThemesToForm();
         }
 
-        bool OneThemeIsDefault()
-        {
-            var index = Themes.FindIndex(t => t.Default == true);
-            return  !(index > -1);
-        }
         void ThemesToForm()
         {
-            if (Themes == null)
-                return;
             comboThemes.Items.Clear();
-            if (Themes.Count > 0) 
+            if (themeManager.Count > 0) 
             { 
-                Themes.ForEach(t => comboThemes.Items.Add(t.Name));
-                int defaultIndex = Themes.FindIndex(t => t.Default == true);
-                if (defaultIndex > -1)
+                
+                themeManager.AddNames(comboThemes.Items);
+                var defaultThemeName = themeManager.GetDefaultThemeName();
+                if (defaultThemeName != null)
                 {
-                    comboThemes.SelectedIndex = comboThemes.FindStringExact(Themes[defaultIndex].Name);
+                    comboThemes.SelectedIndex = comboThemes.FindStringExact(defaultThemeName);
                 }
-                else if (ThemeSelectedIndex > -1 && ThemeSelectedIndex < Themes.Count)
+                else 
                 {
-                    comboThemes.SelectedIndex = comboThemes.FindStringExact(Themes[ThemeSelectedIndex].Name);
+                    var selectedThemeName =  themeManager.GetSelectedThemeName();
+                    if (selectedThemeName != null) { 
+                        var i = comboThemes.FindStringExact(selectedThemeName);
+                        comboThemes.SelectedIndex = i;
+                    }
                 }
             }
             SetThemeButtonsState();
@@ -825,50 +771,63 @@ namespace WinStrip
             StepsToGrid(theme.Steps);
         }
 
+
+        private DataGridViewRow MakeDatagridStepRow(Step step)
+        {
+            DataGridViewRow dgRow = new DataGridViewRow();
+            dgRow.Cells.Add(new DataGridViewTextBoxCell { Value = step.From });
+            dgRow.Cells.Add(new DataGridViewTextBoxCell { Value = step.ValuesAndColorsToJson() });
+
+            dgRow.Cells[0].Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dgRow.Cells[0].Style.Padding = new Padding(0, 0, 10, 0);
+            dgRow.Cells[1].Style.Padding = new Padding(10, 0, 0, 0);
+
+            return dgRow;
+        }
+
         void StepsToGrid(List<Step> steps)
         {
+            
             dataGridView1.Rows.Clear();
-
-
+            
             dataGridView1.ColumnCount = 2;
             dataGridView1.Columns[0].Name = "From";
-            dataGridView1.Columns[0].Width = 35;
-            dataGridView1.Columns[1].Name = "Values and colors";
-            dataGridView1.Columns[1].Width = 600;
+            dataGridView1.Columns[0].Width = 40;
+            
+            dataGridView1.Columns[1].Name = "Delay, command, brightness, values and colors";
+            dataGridView1.Columns[1].HeaderCell.Style.Padding = new Padding { Left = 10 };
+            dataGridView1.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
-            steps.ForEach(s => dataGridView1.Rows.Add(new string[] { s.From.ToString(), s.ValuesAndColorsToJson() }));
+
+            steps.ForEach(s => dataGridView1.Rows.Add(MakeDatagridStepRow(s)));
             SetThemeButtonsState();
         }
 
         private void comboThemes_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboThemes.SelectedIndex == -1) {
-                ThemeSelectedIndex = -1;
+                themeManager.SelectedThemeIndex = -1;
                 dataGridView1.Rows.Clear();
                 SetThemeButtonsState();
                 return;
             }
-            var index = Themes.FindIndex(a => a.Name == comboThemes.Text);
-            if (index == -1) 
+            
+            if (!themeManager.SetSelectedThemeByName(comboThemes.Text))
             {
                 SetThemeButtonsState();
                 return;
             }
-            ThemeSelectedIndex = index;
-            ThemeToGrid(Themes[ThemeSelectedIndex]);
-
+            ThemeToGrid(themeManager.GetSelectedTheme());
 
         }
         private void labelCpu_TextChanged(object sender, EventArgs e)
         {
-            if (ThemeSelectedIndex > -1 )
+            var theme = themeManager.GetSelectedTheme();
+            if (theme != null)
             {
                 try {
                     int cpuValue = Convert.ToInt32(labelCpu.Text);
-                    var theme = Themes[ThemeSelectedIndex];
                     Step step = theme.GetAppropriateStep(cpuValue);
-                    /*SendValuesToDevice(step.Values);
-                    SendColorsToDevice(step.Colors);*/
                     if (step != null)
                         SendStepToDevice(step);
                 } catch (Exception)
@@ -879,28 +838,25 @@ namespace WinStrip
             
         }
 
-
-
         private void btnReloadTheme_Click(object sender, EventArgs e)
         {
-            if (ThemeSelectedIndex < 0)
+            var theme = themeManager.GetSelectedTheme();
+            if (theme == null)
                 return;
-            ThemeToGrid(Themes[ThemeSelectedIndex]);
-            var text = Themes[ThemeSelectedIndex].Name;
-            
-            ThemeToGrid(Themes[ThemeSelectedIndex]);
+            ThemeToGrid(theme);
         }
 
         private void SaveAllThemes()
         {
-            int index = Themes.FindIndex(t => t.Name == comboThemes.Text);
+            Theme   theme, 
+                    selectedTheme = themeManager.GetThemeByName(comboThemes.Text);
 
-            Theme theme;
-            if (index > -1)
-                theme = new Theme(Themes[index].Name, Themes[index].Default);
+            if (selectedTheme != null)
+                theme = new Theme(selectedTheme.Name, selectedTheme.Default);
             else
                 theme = new Theme(comboThemes.Text);
-            bool error = false;
+            
+            bool error;
 
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
@@ -928,10 +884,10 @@ namespace WinStrip
                 }
 
             }
+            
             //we got valid steps
-            if (ThemeSelectedIndex > -1 && Themes.Count > 0)
-                Themes[ThemeSelectedIndex] = theme;
-            SaveThemes(Themes, ThemeSelectedIndex);
+            themeManager.ReplaceSelectedTheme(theme);
+            SaveThemes(themeManager.GetThemeList());
         }
 
         private void btnSaveAllThemes_Click(object sender, EventArgs e)
@@ -959,11 +915,11 @@ namespace WinStrip
             var str = PromptDialog.ShowDialog("Please provide a new name for this theme", "Adding a new theme", "", 400);
             if (str.Length > 0)
             {
-                var newTheme = new Theme(str);
-                int i = Themes.FindIndex(t => t.Name == str);
+                int i = themeManager.IndexOfThemeByName(str);
                 if (i == -1)
                 {
-                    Themes.Add(new Theme(str));
+                    themeManager.AddTheme(new Theme(str));
+                    
                     int index = comboThemes.Items.Add(str);
                     comboThemes.SelectedIndex = index;
                 } else
@@ -979,15 +935,13 @@ namespace WinStrip
         private void btnRenameTheme_Click(object sender, EventArgs e)
         {
             var oldName = comboThemes.Text;
-            var str = PromptDialog.ShowDialog("Please provide a new name for this theme", "Adding a new theme", oldName, 400);
-            if (str.Length > 0)
+            var newName = PromptDialog.ShowDialog("Please provide a new name for this theme", "Adding a new theme", oldName, 400);
+            if (newName.Length > 0 && oldName != newName)
             {
-                int i = Themes.FindIndex(t => t.Name == oldName);
-                if (i != -1)
+                if (themeManager.ReplaceThemeName(oldName, newName))
                 {
-                    Themes[i].Name = str;
                     comboThemes.Items.RemoveAt(comboThemes.SelectedIndex);
-                    int index = comboThemes.Items.Add(str);
+                    int index = comboThemes.Items.Add(newName);
                     comboThemes.SelectedIndex = index;
                 }
                 else
@@ -1002,7 +956,7 @@ namespace WinStrip
         private bool SetDefaultTheme(bool enable)
         {
             var oldName = comboThemes.Text;
-            int i = Themes.FindIndex(t => t.Name == oldName);
+            int i = themeManager.IndexOfThemeByName(oldName);
             if (i != -1)
             {
                 string str = enable ? "to be able set this theme as default. This will cause the WinStrip to launch hidden but you will be able to access it by right-clicking on the tray icon which is near the clock on your task bar" 
@@ -1012,9 +966,10 @@ namespace WinStrip
                             MessageBoxButtons.YesNo,
                             MessageBoxIcon.Warning) == DialogResult.Yes) 
                 { 
-                    //remove older default themes
-                    Themes.ForEach(theme => theme.Default = false);
-                    Themes[i].Default = enable;
+                    
+                    themeManager.MakeNoThemeDefault();
+                    if (enable)
+                        themeManager.SetDefaultThemeAt(i);
                     SaveAllThemes();
                     return true;
                 }
@@ -1115,14 +1070,15 @@ namespace WinStrip
             var comboIndex = comboThemes.SelectedIndex;
             if (comboIndex < 0)
             {
-                ThemeSelectedIndex = -1;
+                themeManager.SelectedThemeIndex = -1;
                 SetThemeButtonsState();
                 return;
             }
+
             var name = comboThemes.Items[comboIndex].ToString();
 
 
-            int i = Themes.FindIndex(t => t.Name == name);
+            int i = themeManager.IndexOfThemeByName(name);
             if (i == -1)
             {
                 dataGridView1.Rows.Clear();
@@ -1131,12 +1087,12 @@ namespace WinStrip
                 return;
             }
 
-            Themes.RemoveAt(i);
+            themeManager.RemoveThemeAt(i);
             comboThemes.Items.RemoveAt(comboIndex);
             int count = comboThemes.Items.Count;
             if (count < 1)
             {
-                ThemeSelectedIndex = -1;
+                themeManager.SelectedThemeIndex = -1;
                 dataGridView1.Rows.Clear();
                 SetThemeButtonsState();
                 return;
@@ -1167,11 +1123,11 @@ namespace WinStrip
 
         private bool selectedComboThemeIsDefaultTheme()
         {
-            int defaultIndex = Themes.FindIndex(t => t.Default == true);
-            if (defaultIndex < 0)
+            var defaultName = themeManager.GetDefaultThemeName();
+            if (string.IsNullOrEmpty(defaultName))
                 return false;
 
-            return comboThemes.Text == Themes[defaultIndex].Name;
+            return comboThemes.Text == defaultName;
         }
 
         private void SetCheckDefaultTootipMessage()

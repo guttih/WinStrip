@@ -126,6 +126,7 @@
     <Compile Include="Utilities\DiffStep.cs" />
     <Compile Include="Utilities\PromtDialog.cs" />
     <Compile Include="Utilities\StepGenerator.cs" />
+    <Compile Include="Utilities\ThemeManager.cs" />
     <Compile Include="Utilities\ValueControls.cs" />
     <Compile Include="Utilities\SColor.cs" />
     <Compile Include="Utilities\Serial.cs" />

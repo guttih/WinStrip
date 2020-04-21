@@ -68,7 +68,7 @@
             this.tabCPU = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.labelCpu = new System.Windows.Forms.Label();
-            this.groupBoxCpuTest = new System.Windows.Forms.GroupBox();
+            this.groupBoxCpu = new System.Windows.Forms.GroupBox();
             this.numericUpDownCpuTesting = new System.Windows.Forms.NumericUpDown();
             this.trackBarCpuTesting = new System.Windows.Forms.TrackBar();
             this.radioButtonCpuTesting = new System.Windows.Forms.RadioButton();
@@ -89,6 +89,7 @@
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.btnNewTheme = new System.Windows.Forms.ToolStripButton();
             this.btnRenameTheme = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
             this.btnReloadTheme = new System.Windows.Forms.ToolStripButton();
             this.btnDeleteTheme = new System.Windows.Forms.ToolStripButton();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
@@ -131,6 +132,9 @@
             this.trayMenuItemShow = new System.Windows.Forms.ToolStripMenuItem();
             this.trayMenuItemHide = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripButtonClearDataGrid = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnDeleteRow = new System.Windows.Forms.ToolStripButton();
             this.tabControl1.SuspendLayout();
             this.tabPrograms.SuspendLayout();
             this.groupBoxParameters.SuspendLayout();
@@ -152,7 +156,7 @@
             this.groupBox1.SuspendLayout();
             this.tabCPU.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.groupBoxCpuTest.SuspendLayout();
+            this.groupBoxCpu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCpuTesting)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarCpuTesting)).BeginInit();
             this.toolStrip3.SuspendLayout();
@@ -614,17 +618,17 @@
             // tabCPU
             // 
             this.tabCPU.BackColor = System.Drawing.SystemColors.Control;
+            this.tabCPU.Controls.Add(this.comboThemes);
             this.tabCPU.Controls.Add(this.groupBox2);
             this.tabCPU.Controls.Add(this.linkLabelCpu);
             this.tabCPU.Controls.Add(this.checkDefault);
             this.tabCPU.Controls.Add(this.textBox1);
             this.tabCPU.Controls.Add(this.label7);
             this.tabCPU.Controls.Add(this.label6);
-            this.tabCPU.Controls.Add(this.toolStrip3);
             this.tabCPU.Controls.Add(this.toolStrip2);
             this.tabCPU.Controls.Add(this.dataGridView1);
             this.tabCPU.Controls.Add(this.label3);
-            this.tabCPU.Controls.Add(this.comboThemes);
+            this.tabCPU.Controls.Add(this.toolStrip3);
             this.tabCPU.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.tabCPU.Location = new System.Drawing.Point(4, 22);
             this.tabCPU.Name = "tabCPU";
@@ -637,7 +641,7 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.labelCpu);
-            this.groupBox2.Controls.Add(this.groupBoxCpuTest);
+            this.groupBox2.Controls.Add(this.groupBoxCpu);
             this.groupBox2.Controls.Add(this.radioButtonCpuTesting);
             this.groupBox2.Controls.Add(this.radioButtonCpuLive);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -665,17 +669,17 @@
             this.labelCpu.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
             this.labelCpu.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
-            // groupBoxCpuTest
+            // groupBoxCpu
             // 
-            this.groupBoxCpuTest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxCpuTest.Controls.Add(this.numericUpDownCpuTesting);
-            this.groupBoxCpuTest.Controls.Add(this.trackBarCpuTesting);
-            this.groupBoxCpuTest.Location = new System.Drawing.Point(75, 98);
-            this.groupBoxCpuTest.Name = "groupBoxCpuTest";
-            this.groupBoxCpuTest.Size = new System.Drawing.Size(216, 75);
-            this.groupBoxCpuTest.TabIndex = 13;
-            this.groupBoxCpuTest.TabStop = false;
-            this.groupBoxCpuTest.Text = "Manual set CPU load for testing";
+            this.groupBoxCpu.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxCpu.Controls.Add(this.numericUpDownCpuTesting);
+            this.groupBoxCpu.Controls.Add(this.trackBarCpuTesting);
+            this.groupBoxCpu.Location = new System.Drawing.Point(75, 98);
+            this.groupBoxCpu.Name = "groupBoxCpu";
+            this.groupBoxCpu.Size = new System.Drawing.Size(216, 75);
+            this.groupBoxCpu.TabIndex = 13;
+            this.groupBoxCpu.TabStop = false;
+            this.groupBoxCpu.Text = "Manual set CPU load for testing";
             // 
             // numericUpDownCpuTesting
             // 
@@ -768,9 +772,9 @@
             this.textBox1.Size = new System.Drawing.Size(298, 59);
             this.textBox1.TabIndex = 12;
             this.textBox1.TabStop = false;
-            this.textBox1.Text = "You can also add, edit or delete steps in a theme.\r\nFrom property in a step is th" +
-    "e value that the cpu load must be equal or higher to run the associated Values a" +
-    "nd Corors \r\ncommand.";
+            this.textBox1.Text = "You can also add, edit or delete steps in a theme.\r\nThe From property in a step i" +
+    "s the value that the cpu load must be equal or higher to run the associated Valu" +
+    "es and Corors \r\ncommand.";
             // 
             // label7
             // 
@@ -797,11 +801,14 @@
             this.toolStrip3.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnAddRow,
             this.btnChangeSteps,
-            this.btnWizard});
+            this.btnWizard,
+            this.toolStripSeparator1,
+            this.toolStripButtonClearDataGrid,
+            this.btnDeleteRow});
             this.toolStrip3.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.toolStrip3.Location = new System.Drawing.Point(226, 170);
+            this.toolStrip3.Location = new System.Drawing.Point(137, 169);
             this.toolStrip3.Name = "toolStrip3";
-            this.toolStrip3.Size = new System.Drawing.Size(76, 23);
+            this.toolStrip3.Size = new System.Drawing.Size(159, 23);
             this.toolStrip3.TabIndex = 9;
             this.toolStrip3.Text = "toolStrip3";
             // 
@@ -816,6 +823,8 @@
             this.btnAddRow.ToolTipText = "Add a new step to this theme\r\n\r\nThe step will be added to the table\r\nbut to save " +
     "it, you will need to press\r\nthe save button";
             this.btnAddRow.Click += new System.EventHandler(this.btnAddRow_Click);
+            this.btnAddRow.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.btnAddRow.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // btnChangeSteps
             // 
@@ -829,6 +838,8 @@
     " to change a row\r\nyou must first select the entire row\r\nby clicking in the area " +
     "on the left of it";
             this.btnChangeSteps.Click += new System.EventHandler(this.btnChangeSteps_Click);
+            this.btnChangeSteps.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.btnChangeSteps.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // btnWizard
             // 
@@ -844,11 +855,13 @@
             this.btnWizard.Size = new System.Drawing.Size(29, 20);
             this.btnWizard.Text = "toolStripDropDownButton1";
             this.btnWizard.ToolTipText = "Generate series of steps";
+            this.btnWizard.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.btnWizard.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // DimToBrightBlueToolStripMenuItem
             // 
             this.DimToBrightBlueToolStripMenuItem.Name = "DimToBrightBlueToolStripMenuItem";
-            this.DimToBrightBlueToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.DimToBrightBlueToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
             this.DimToBrightBlueToolStripMenuItem.Text = "Dim to Bright blue";
             this.DimToBrightBlueToolStripMenuItem.ToolTipText = "Creates series of steps where light goes from \r\none value to a nother";
             this.DimToBrightBlueToolStripMenuItem.Click += new System.EventHandler(this.DimToBrightBlueToolStripMenuItem_Click);
@@ -856,22 +869,22 @@
             // DimToBrightGreenToolStripMenuItem
             // 
             this.DimToBrightGreenToolStripMenuItem.Name = "DimToBrightGreenToolStripMenuItem";
-            this.DimToBrightGreenToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.DimToBrightGreenToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
             this.DimToBrightGreenToolStripMenuItem.Text = "Dim to Bright green";
             this.DimToBrightGreenToolStripMenuItem.Click += new System.EventHandler(this.dimToBrightGreenToolStripMenuItem_Click);
             // 
             // DimToBrightRedToolStripMenuItem
             // 
             this.DimToBrightRedToolStripMenuItem.Name = "DimToBrightRedToolStripMenuItem";
-            this.DimToBrightRedToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.DimToBrightRedToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
             this.DimToBrightRedToolStripMenuItem.Text = "Dim to Bright Red";
             this.DimToBrightRedToolStripMenuItem.Click += new System.EventHandler(this.dimToBrightRedToolStripMenuItem_Click);
             // 
             // GenerateStepsToolStripMenuItem
             // 
             this.GenerateStepsToolStripMenuItem.Name = "GenerateStepsToolStripMenuItem";
-            this.GenerateStepsToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
-            this.GenerateStepsToolStripMenuItem.Text = "Generate steps from two steps";
+            this.GenerateStepsToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
+            this.GenerateStepsToolStripMenuItem.Text = "Generate steps from two selected steps";
             this.GenerateStepsToolStripMenuItem.ToolTipText = "Generates steps between two steps\r\n\r\nThe wizard will calculate the difference bet" +
     "weeen\r\nthe two steps an inserts missing steps between them\r\n";
             this.GenerateStepsToolStripMenuItem.Click += new System.EventHandler(this.GenerateStepsToolStripMenuItem_Click);
@@ -882,12 +895,13 @@
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnNewTheme,
             this.btnRenameTheme,
+            this.toolStripButtonSave,
             this.btnReloadTheme,
             this.btnDeleteTheme});
             this.toolStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
-            this.toolStrip2.Location = new System.Drawing.Point(210, 12);
+            this.toolStrip2.Location = new System.Drawing.Point(189, 109);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(93, 23);
+            this.toolStrip2.Size = new System.Drawing.Size(116, 23);
             this.toolStrip2.TabIndex = 8;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -903,6 +917,8 @@
             this.btnNewTheme.ToolTipText = "Add a new theme\r\n\r\nThe theme will be added but not saved.\r\n\r\nTo save the theme yo" +
     "u will need to press\r\nthe save button.";
             this.btnNewTheme.Click += new System.EventHandler(this.btnNewTheme_Click);
+            this.btnNewTheme.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.btnNewTheme.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // btnRenameTheme
             // 
@@ -915,6 +931,21 @@
             this.btnRenameTheme.ToolTipText = "Rename theme\r\n\r\nRename the selected theme\r\n\r\nNote, you will have to press save to" +
     " make the \r\nchange permanent";
             this.btnRenameTheme.Click += new System.EventHandler(this.btnRenameTheme_Click);
+            this.btnRenameTheme.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.btnRenameTheme.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
+            // 
+            // toolStripButtonSave
+            // 
+            this.toolStripButtonSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonSave.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSave.Image")));
+            this.toolStripButtonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonSave.Name = "toolStripButtonSave";
+            this.toolStripButtonSave.Size = new System.Drawing.Size(23, 20);
+            this.toolStripButtonSave.Text = "toolStripButton1";
+            this.toolStripButtonSave.ToolTipText = "Save all themes";
+            this.toolStripButtonSave.Click += new System.EventHandler(this.saveAllThemesToolStripMenuItem_Click);
+            this.toolStripButtonSave.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.toolStripButtonSave.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // btnReloadTheme
             // 
@@ -927,6 +958,8 @@
             this.btnReloadTheme.ToolTipText = "Reload selected theme\r\n\r\nThat is, throw away any changes made \r\nto this theme and" +
     " load the saved theme\r\nto owerwrite changes.";
             this.btnReloadTheme.Click += new System.EventHandler(this.btnReloadTheme_Click);
+            this.btnReloadTheme.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.btnReloadTheme.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // btnDeleteTheme
             // 
@@ -939,6 +972,8 @@
             this.btnDeleteTheme.ToolTipText = "Remove selected theme\r\n\r\nIf you want to delete the theme permanently\r\nyou will ne" +
     "ed to press the save all themes button";
             this.btnDeleteTheme.Click += new System.EventHandler(this.btnDeleteTheme_Click);
+            this.btnDeleteTheme.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.btnDeleteTheme.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // dataGridView1
             // 
@@ -950,7 +985,7 @@
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -961,6 +996,7 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(617, 225);
             this.dataGridView1.TabIndex = 3;
+            this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             this.dataGridView1.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView1_RowsChanged);
             this.dataGridView1.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dataGridView1_RowsChanged);
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
@@ -1352,6 +1388,36 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // toolStripButtonClearDataGrid
+            // 
+            this.toolStripButtonClearDataGrid.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonClearDataGrid.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonClearDataGrid.Image")));
+            this.toolStripButtonClearDataGrid.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonClearDataGrid.Name = "toolStripButtonClearDataGrid";
+            this.toolStripButtonClearDataGrid.Size = new System.Drawing.Size(23, 20);
+            this.toolStripButtonClearDataGrid.Text = "toolStripButton1";
+            this.toolStripButtonClearDataGrid.ToolTipText = "Remove all steps in grid";
+            this.toolStripButtonClearDataGrid.Click += new System.EventHandler(this.toolStripButtonClearDataGrid_Click);
+            this.toolStripButtonClearDataGrid.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.toolStripButtonClearDataGrid.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 23);
+            // 
+            // btnDeleteRow
+            // 
+            this.btnDeleteRow.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnDeleteRow.Image = ((System.Drawing.Image)(resources.GetObject("btnDeleteRow.Image")));
+            this.btnDeleteRow.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDeleteRow.Name = "btnDeleteRow";
+            this.btnDeleteRow.Size = new System.Drawing.Size(23, 20);
+            this.btnDeleteRow.Text = "toolStripButton1";
+            this.btnDeleteRow.ToolTipText = "Deletes selected step from the table\r\n\r\nNote First select the whole row by \r\nclic" +
+    "king on the column in front of the\r\n\"From\" column.";
+            this.btnDeleteRow.Click += new System.EventHandler(this.btnDeleteRow_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1397,8 +1463,8 @@
             this.tabCPU.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.groupBoxCpuTest.ResumeLayout(false);
-            this.groupBoxCpuTest.PerformLayout();
+            this.groupBoxCpu.ResumeLayout(false);
+            this.groupBoxCpu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCpuTesting)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarCpuTesting)).EndInit();
             this.toolStrip3.ResumeLayout(false);
@@ -1464,7 +1530,7 @@
         private System.Windows.Forms.Button btnConnection;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label labelCpu;
-        private System.Windows.Forms.GroupBox groupBoxCpuTest;
+        private System.Windows.Forms.GroupBox groupBoxCpu;
         private System.Windows.Forms.NumericUpDown numericUpDownCpuTesting;
         private System.Windows.Forms.TrackBar trackBarCpuTesting;
         private System.Windows.Forms.RadioButton radioButtonCpuTesting;
@@ -1520,6 +1586,10 @@
         private System.Windows.Forms.ToolStripMenuItem issuesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem featureRequestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bugReportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton toolStripButtonSave;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton toolStripButtonClearDataGrid;
+        private System.Windows.Forms.ToolStripButton btnDeleteRow;
     }
 }
 

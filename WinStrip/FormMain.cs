@@ -26,6 +26,8 @@ namespace WinStrip
         private readonly ThemeManager themeManager;
         
         public string LabelStatusSaveText { get; private set; }
+        private bool ProgrammingGridUpdate { get; set; }
+        private bool IsGridDirty { get; set; }
 
         ToolTip toolTip1;
         private FormSplash splash;
@@ -175,34 +177,12 @@ namespace WinStrip
         }
 
         
-        private void SaveThemes(List<Theme> themes)
-        {
-            //Sort all themes
-            themes.Sort(new Theme());
-
-            //Sort all steps in all themes so that highest From value will be first.
-            themes.ForEach(theme => theme.SortStepsAndFix());
-            var str = (new JavaScriptSerializer()).Serialize(themes);
-            Properties.Settings.Default.Themes = str;
-            Properties.Settings.Default.Save();
-        }
+        
 
         
         void LoadThemes(bool loadThemeToFrom = true)
         {
-            var str = Properties.Settings.Default.Themes;
-
-            if (string.IsNullOrEmpty(str))
-            {
-
-                SaveThemes(themeManager.CreateDefaultThemeList());
-                str = Properties.Settings.Default.Themes;
-            }
-
-            themeManager.SetThemes(str);
-            if (themeManager.SelectedThemeIndex < 0 && themeManager.Count > 0)
-                themeManager.SelectedThemeIndex = 0;
-
+            themeManager.Load();
 
             // now let's populate form
             if ( loadThemeToFrom )
@@ -215,7 +195,7 @@ namespace WinStrip
             if (themeManager.Count > 0) 
             { 
                 
-                themeManager.AddNames(comboThemes.Items);
+                themeManager.AddNamesToComboBoxCollection(comboThemes.Items);
                 var defaultThemeName = themeManager.GetDefaultThemeName();
                 if (defaultThemeName != null)
                 {
@@ -763,7 +743,7 @@ namespace WinStrip
         private void radioButtonCpuLive_CheckedChanged(object sender, EventArgs e)
         {
             RadioButton radioButton = (RadioButton)sender;
-            groupBoxCpuTest.Enabled = !radioButton.Checked;
+            groupBoxCpu.Enabled = !radioButton.Checked;
         }
 
         void ThemeToGrid(Theme theme) 
@@ -805,19 +785,25 @@ namespace WinStrip
 
         private void comboThemes_SelectedIndexChanged(object sender, EventArgs e)
         {
+            IsGridDirty = false;
+            ProgrammingGridUpdate = true;
             if (comboThemes.SelectedIndex == -1) {
-                themeManager.SelectedThemeIndex = -1;
+                themeManager.SelectedIndex = -1;
                 dataGridView1.Rows.Clear();
                 SetThemeButtonsState();
+                ProgrammingGridUpdate = false;
                 return;
             }
             
             if (!themeManager.SetSelectedThemeByName(comboThemes.Text))
             {
                 SetThemeButtonsState();
+                ProgrammingGridUpdate = false;
                 return;
             }
+
             ThemeToGrid(themeManager.GetSelectedTheme());
+            ProgrammingGridUpdate = false;
 
         }
         private void labelCpu_TextChanged(object sender, EventArgs e)
@@ -846,16 +832,16 @@ namespace WinStrip
             ThemeToGrid(theme);
         }
 
-        private void SaveAllThemes()
+        Theme GridToTheme()
         {
-            Theme   theme, 
+            Theme theme,
                     selectedTheme = themeManager.GetThemeByName(comboThemes.Text);
 
             if (selectedTheme != null)
                 theme = new Theme(selectedTheme.Name, selectedTheme.Default);
             else
                 theme = new Theme(comboThemes.Text);
-            
+
             bool error;
 
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
@@ -879,15 +865,28 @@ namespace WinStrip
                 }
                 if (error)
                 {
-                    MessageBox.Show(this, $"Cannot save\n\n There are invalid values in step {strFrom}", "Error adding step", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    throw new Exception ($"Cannot save\n\n There are invalid values in step {strFrom}");
                 }
-
             }
+
+            return theme;
+        }
+
+        private void SaveAllThemes()
+        {
             
-            //we got valid steps
-            themeManager.ReplaceSelectedTheme(theme);
-            SaveThemes(themeManager.GetThemeList());
+            try
+            {
+                var theme = GridToTheme();
+                themeManager.ReplaceSelectedTheme(theme);
+                themeManager.Save();
+                IsGridDirty = false;
+                SetThemeButtonsState();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(this, $"Cannot save\n\n There are invalid values in step {e.Message}", "Error adding step", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnSaveAllThemes_Click(object sender, EventArgs e)
@@ -943,6 +942,7 @@ namespace WinStrip
                     comboThemes.Items.RemoveAt(comboThemes.SelectedIndex);
                     int index = comboThemes.Items.Add(newName);
                     comboThemes.SelectedIndex = index;
+                    IsGridDirty = false;
                 }
                 else
                 {
@@ -1070,7 +1070,7 @@ namespace WinStrip
             var comboIndex = comboThemes.SelectedIndex;
             if (comboIndex < 0)
             {
-                themeManager.SelectedThemeIndex = -1;
+                themeManager.SelectedIndex = -1;
                 SetThemeButtonsState();
                 return;
             }
@@ -1092,7 +1092,7 @@ namespace WinStrip
             int count = comboThemes.Items.Count;
             if (count < 1)
             {
-                themeManager.SelectedThemeIndex = -1;
+                themeManager.SelectedIndex = -1;
                 dataGridView1.Rows.Clear();
                 SetThemeButtonsState();
                 return;
@@ -1119,6 +1119,8 @@ namespace WinStrip
             btnDeleteTheme.Enabled = atLeastOneTheme;
             SetDataGridButtonsState();
             SetDefaultThemeState();
+
+
         }
 
         private bool selectedComboThemeIsDefaultTheme()
@@ -1158,23 +1160,41 @@ namespace WinStrip
             bool atLeastOneLineInGrid = dataGridView1.Rows.Count > 1;
             bool testMode = radioButtonCpuTesting.Checked;
             btnAddRow.Enabled = testMode && programs?.Count > 0;
-            btnWizard.Enabled = testMode && atLeastOneTheme;
             btnAddRow.Enabled = testMode && atLeastOneTheme;
-            int selCount = dataGridView1.SelectedRows.Count;
+            bool onlyLastRowIsSelected = (dataGridView1.SelectedRows.Count == 1 &&
+                                            dataGridView1.SelectedRows[0].Index == dataGridView1.Rows.Count - 1);
+
+            btnDeleteRow.Enabled = dataGridView1.SelectedRows.Count > 0 && 
+                                  !onlyLastRowIsSelected;
             bool IsRowReadyForEditing = testMode &&
                                         atLeastOneTheme &&
                                         atLeastOneLineInGrid &&
                                         dataGridView1.SelectedRows.Count == 1 &&
                                         IsDatagridRowValid(dataGridView1.SelectedRows[0]);
-            
+
+            bool SaveAllowed = (testMode &&
+                            atLeastOneTheme &&
+                            atLeastOneLineInGrid &&
+                            IsGridDirty) || themeManager.IsDirty;
+
+            groupBoxCpu.Enabled = !SaveAllowed && radioButtonCpuTesting.Checked;
+            saveAllThemesToolStripMenuItem.Enabled = SaveAllowed;
+            toolStripButtonSave.Enabled = SaveAllowed;
+
             btnChangeSteps.Enabled = IsRowReadyForEditing;
 
-            DimToBrightBlueToolStripMenuItem.Enabled = IsRowReadyForEditing;
-            DimToBrightGreenToolStripMenuItem.Enabled = IsRowReadyForEditing;
-            GenerateStepsToolStripMenuItem.Enabled =    dataGridView1.SelectedRows.Count == 2 && 
-                                                        IsDatagridRowValid(dataGridView1.SelectedRows[1]) &&
-                                                        IsDatagridRowValid(dataGridView1.SelectedRows[0]);
+            bool SingleRowWizardItems = IsRowReadyForEditing && dataGridView1.Rows.Count == 2;
+            DimToBrightRedToolStripMenuItem  .Enabled = SingleRowWizardItems;
+            DimToBrightBlueToolStripMenuItem .Enabled = SingleRowWizardItems;
+            DimToBrightGreenToolStripMenuItem.Enabled = SingleRowWizardItems;
 
+            bool DoubleRowWizardItems = dataGridView1.SelectedRows.Count == 2 &&
+                                        IsDatagridRowValid(dataGridView1.SelectedRows[0]) &&
+                                        IsDatagridRowValid(dataGridView1.SelectedRows[1]);
+
+            GenerateStepsToolStripMenuItem.Enabled = DoubleRowWizardItems;
+            btnWizard.Enabled = SingleRowWizardItems || DoubleRowWizardItems;
+            
         }
 
         private void btnChangeSteps_Click(object sender, EventArgs e)
@@ -1252,9 +1272,11 @@ namespace WinStrip
                 MessageBox.Show("Two valid rows must be selected", "Invalid number", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+            var theme = GridToTheme();
             var list = StepGenerator.StripSteps(steps[0], steps[1]);
-            list.Reverse();
-            StepsToGrid(list);
+            themeManager.ReplaceExistingOrAddNewStepsToTheme(theme, list);
+            theme.SortStepsAndFix();
+            StepsToGrid(theme.Steps);
         }
 
         private void checkDefault_Click(object sender, EventArgs e)
@@ -1448,15 +1470,39 @@ namespace WinStrip
             labelStatus.Text = LabelStatusSaveText;
         }
 
-        private void SetTooltipOnLabelStatus(object sender)
+        private string GetTooTipText(object sender)
         {
-            LabelStatusSaveText = labelStatus.Text;
             var typeName = sender.GetType().Name;
 
-            if ( typeName == "ToolStripMenuItem")
-                labelStatus.Text = ((ToolStripMenuItem)sender).ToolTipText;
-            else 
-                labelStatus.Text = toolTip1.GetToolTip((Control)sender);
+            string tip = null;
+            switch (typeName)
+            {
+                case "ToolStripMenuItem": 
+                    tip =  ((ToolStripMenuItem)sender).ToolTipText; 
+                    break;
+                case "ToolStripButton":
+                    tip = ((ToolStripButton)sender).ToolTipText;
+                    break;
+                case "ToolStripDropDownButton": 
+                    tip = ((ToolStripDropDownButton)sender).ToolTipText;
+                    break;
+            }
+
+            if (tip == null)
+                return toolTip1.GetToolTip((Control)sender);
+
+            if (!string.IsNullOrEmpty(tip))
+                return tip.Replace("\r\n", " ");
+
+            return null;
+        }
+        private void SetTooltipOnLabelStatus(object sender)
+        {
+            string text = GetTooTipText(sender);
+            if (string.IsNullOrEmpty(text))
+                return;
+            
+            labelStatus.Text = text;
         }
 
         private void onControl_MouseEnter(object sender, EventArgs e)
@@ -1566,6 +1612,29 @@ namespace WinStrip
         {
             VisitUrl($"{RepositoryRootUrl}/issues/new?assignees=&labels=&template=bug_report.md");
 
+        }
+
+        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (ProgrammingGridUpdate) return;
+            IsGridDirty = true;
+            SetDataGridButtonsState();
+        }
+
+        private void toolStripButtonClearDataGrid_Click(object sender, EventArgs e)
+        {
+            dataGridView1.Rows.Clear();
+        }
+
+        private void btnDeleteRow_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in dataGridView1.SelectedRows)
+            {
+                
+                if (row.Index != dataGridView1.Rows.Count-1)
+                    dataGridView1.Rows.RemoveAt(row.Index);
+            }
+            SetDataGridButtonsState();
         }
     }
 }

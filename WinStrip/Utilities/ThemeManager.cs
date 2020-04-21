@@ -12,37 +12,90 @@ namespace WinStrip.Utilities
 {
     public class ThemeManager
     {
-        List<Theme> Themes { get; set; }
-        public int SelectedThemeIndex { get; set; }
-        public int Count { get =>  Themes.Count;  }
+        private int selectedIndex;
 
-        
+        List<Theme> Themes { get; set; }
+        public int SelectedIndex
+        {
+            get => selectedIndex; set
+            {
+                if (value < 0 || value > Count - 1)
+                    selectedIndex = -1;
+                else
+                    selectedIndex = value;
+            }
+        }
+        public int Count { get => Themes.Count; }
+
+        /// <summary>
+        /// True if the themes in memory are different from themes on disk
+        /// </summary>
+        public bool IsDirty { get; private set; }
+
         public ThemeManager()
         {
             Themes = new List<Theme>();
-            SelectedThemeIndex = -1;
+            SelectedIndex = -1;
         }
 
+        /// <summary>
+        /// Saves list of themes
+        /// Note, current themes will not be changed.
+        /// If you want that to happen, call Load() directly after calling this method.
+        /// </summary>
+        /// <param name="themes"></param>
+        private void SaveThemes(List<Theme> themes)
+        {
+            //Sort all themes
+            themes.Sort(new Theme());
+
+            //Sort all steps in all themes so that highest From value will be first.
+            themes.ForEach(theme => theme.SortStepsAndFix());
+            var str = (new JavaScriptSerializer()).Serialize(themes);
+            Properties.Settings.Default.Themes = str;
+            Properties.Settings.Default.Save();
+        }
+
+
+        /// <summary>
+        /// Loads all themes.
+        /// Note, if any themes have been changed but not saved, you will loose all changes.
+        /// </summary>
+        public void Load()
+        {
+            var str = Properties.Settings.Default.Themes;
+
+            if (string.IsNullOrEmpty(str))
+            {
+                SaveThemes(CreateDefaultThemeList());
+                str = Properties.Settings.Default.Themes;
+            }
+
+            SetThemes(str);
+            IsDirty = false;
+            if (SelectedIndex < 0 && Count > 0)
+                SelectedIndex = 0;
+        }
 
         internal void SetThemes(string str)
         {
             var ser = new JavaScriptSerializer();
             Themes = ser.Deserialize<List<Theme>>(str);
-            SelectedThemeIndex = GetDefaultThemeIndex();
+            SelectedIndex = GetDefaultIndex();
         }
 
-        internal int GetDefaultThemeIndex()
+        internal int GetDefaultIndex()
         {
             return Themes.FindIndex(t => t.Default == true);
         }
 
         internal bool IsThereADefaultTheme()
         {
-            var index = GetDefaultThemeIndex();
+            var index = GetDefaultIndex();
             return !(index > -1);
         }
 
-        internal void AddNames(ComboBox.ObjectCollection items)
+        internal void AddNamesToComboBoxCollection(ComboBox.ObjectCollection items)
         {
             var names = Themes.Select(e => e.Name).ToArray();
             items.AddRange(names);
@@ -54,7 +107,7 @@ namespace WinStrip.Utilities
         /// <returns>Fail: null if no theme is default.  Success: string with name of the default theme</returns>
         internal string GetDefaultThemeName()
         {
-            int index = GetDefaultThemeIndex();
+            int index = GetDefaultIndex();
 
             if (index > -1)
                 return Themes[index].Name;
@@ -68,16 +121,16 @@ namespace WinStrip.Utilities
         /// <returns>Fail: null if No theme is selected. Success: string with the name</returns>
         internal string GetSelectedThemeName()
         {
-            if (SelectedThemeIndex > -1 && SelectedThemeIndex < Count)
-                return Themes[SelectedThemeIndex].Name;
+            if (SelectedIndex > -1 && SelectedIndex < Count)
+                return Themes[SelectedIndex].Name;
 
             return null;
         }
 
         internal Theme GetSelectedTheme()
         {
-            if (SelectedThemeIndex > -1 && SelectedThemeIndex < Count)
-                return Themes[SelectedThemeIndex];
+            if (SelectedIndex > -1 && SelectedIndex < Count)
+                return Themes[SelectedIndex];
 
             return null;
         }
@@ -112,8 +165,8 @@ namespace WinStrip.Utilities
         /// <param name="theme">The new theme</param>
         internal void ReplaceSelectedTheme(Theme theme)
         {
-            if (SelectedThemeIndex > -1 && SelectedThemeIndex < Count)
-                Themes[SelectedThemeIndex] = theme;
+            if (SelectedIndex > -1 && SelectedIndex < Count)
+                Themes[SelectedIndex] = theme;
         }
 
         internal List<Theme> CreateDefaultThemeList()
@@ -179,6 +232,7 @@ namespace WinStrip.Utilities
         internal void AddTheme(Theme theme)
         {
             Themes.Add(theme);
+            IsDirty = true;
         }
 
         /// <summary>
@@ -189,10 +243,15 @@ namespace WinStrip.Utilities
         /// <returns>True if a theme was found and it got a new name. False if nothing was replaced.</returns>
         internal bool ReplaceThemeName(string oldName, string newName)
         {
+            if (oldName == newName)
+                return false;
+
             int i = IndexOfThemeByName(oldName);
             if (i < 0)
                 return false;
+
             Themes[i].Name = newName;
+            IsDirty = true;
 
             return true;
         }
@@ -211,15 +270,16 @@ namespace WinStrip.Utilities
         /// <param name="index">The zero-based index of the theme to set default</param>
         internal void SetDefaultThemeAt(int index)
         {
-            if (SelectedThemeIndex > -1 && SelectedThemeIndex < Count)
+            if (SelectedIndex > -1 && SelectedIndex < Count)
                 Themes[index].Default = true;
         }
 
         internal void RemoveThemeAt(int i)
         {
-            if (i == SelectedThemeIndex)
-                SelectedThemeIndex = -1;
+            if (i == SelectedIndex)
+                SelectedIndex = -1;
             Themes.RemoveAt(i);
+            IsDirty = true;
         }
 
         internal bool SetSelectedThemeByName(string name)
@@ -228,9 +288,36 @@ namespace WinStrip.Utilities
             if (i < 0)
                 return false;
 
-            SelectedThemeIndex = i;
+            SelectedIndex = i;
             return true;
 
+        }
+
+        internal void Save()
+        {
+            SaveThemes(Themes);
+            IsDirty = false;
+        }
+
+        internal void ReplaceExistingOrAddNewStepsToTheme(Theme theme, List<Step> list)
+        {
+            var OverWrittenStepIndexes = new List<int>();
+            theme.Steps.ForEach(old => {
+                var i = list.Select(newItem => newItem.From).ToList().IndexOf(old.From);
+                if (i > -1)
+                {
+                    old.ValuesAndColors = list[i].ValuesAndColors;
+                    OverWrittenStepIndexes.Add(i);
+                }
+            });
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (!OverWrittenStepIndexes.Contains(i))
+                {
+                    theme.Steps.Add(list[i]);
+                }
+            }
         }
     }
 }

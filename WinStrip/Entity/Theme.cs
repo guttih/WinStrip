@@ -29,13 +29,21 @@ namespace WinStrip.Entity
         /// <summary>
         /// Sorts the steps in descending order and makes sure that the last step will be From 0
         /// </summary>
-        public void SortStepsAndFix()
+        public void SortStepsAndFix(bool ReverseOrder = false)
         {
-            Steps.Sort(new Step());
-            if (Steps.Count > 0 && Steps[Steps.Count-1].From != 0)
+            SortStepsAndFix(Steps, ReverseOrder);
+        }
+
+        public void SortStepsAndFix(List<Step> list, bool ReverseOrder)
+        {
+            list.Sort(new Step());
+            if (list.Count > 0 && list[list.Count - 1].From != 0)
             {
-                Steps[Steps.Count - 1].From = 0;
+                list[list.Count - 1].From = 0;
             }
+
+            if (ReverseOrder)
+                list.Reverse();
         }
 
         public int Compare(Theme x, Theme y)

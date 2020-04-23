@@ -2,7 +2,9 @@
 using System;
 using WinStrip.Entity;
 using System.Globalization;
-namespace WinStrip.Utilities.Tests
+using WinStrip.Utilities;
+
+namespace WinStrip.StepGeneratorTests
 {
     [TestClass()]
     public class StepGeneratorTests
@@ -119,6 +121,31 @@ namespace WinStrip.Utilities.Tests
             Assert.IsTrue(list[31].ValuesAndColors.delay ==    0);
             string str="";
             list.ForEach(e => str+=$"{new SColor(e.ValuesAndColors.colors[0]).ToString()}\n"   );
+        }
+
+        [TestMethod()]
+        public void VariousChangesInReverse()
+        {
+            var step1 = new Step(0, "{\"delay\":0,\"com\":4,\"brightness\":255,\"values\":[0,0,0],\"colors\":[16777215,16711680,32768,255,16777215,10824234]}", true);
+            var step2 = new Step(31, "{\"delay\":2000,\"com\":4,\"brightness\":1,\"values\":[0,0,0],\"colors\":[255,0,32768,255,16777215,10824234]}");
+            var list = StepGenerator.StripSteps(step1, step2, new StepDifferenceParameters { From = 1, Brightness = true });
+            Assert.IsTrue(list.Count == 32);
+            Assert.IsTrue(list[31].ValuesAndColors.delay == 2000);
+            Assert.IsTrue(list[0].ValuesAndColors.delay == 0);
+            string str = "";
+            list.ForEach(e => str += $"{new SColor(e.ValuesAndColors.colors[0]).ToString()}\n");
+        }
+
+        [TestMethod()]
+        public void ValueChanges()
+        {
+            var step1 = new Step(0,  "{\"delay\":  0,\"com\":4,\"brightness\":255,\"values\":[ 0, 0, 0],\"colors\":[ 0, 0, 0, 0, 0, 0]}", true);
+            var step2 = new Step(10, "{\"delay\":100,\"com\":4,\"brightness\":  1,\"values\":[10,10,10],\"colors\":[20,20,20,20,20,20]}", true);
+            var list = StepGenerator.StripSteps(step1, step2, new StepDifferenceParameters { From = 1, Brightness = true });
+            string str = list[0].ToString();
+            Assert.IsTrue(list.Count == 11);
+            Assert.IsTrue(list[10].ValuesAndColors.delay == 100);
+            Assert.IsTrue(list[0].ValuesAndColors.delay == 0);
         }
     }
 }

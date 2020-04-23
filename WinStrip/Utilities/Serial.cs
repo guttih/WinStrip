@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using WinStrip.Enums;
 
 namespace WinStrip.Utilities
 {

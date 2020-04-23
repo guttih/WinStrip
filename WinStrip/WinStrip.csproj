@@ -72,13 +72,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FormAbout.cs">
+    <Compile Include="Exceptions\ClipboardToRowsException.cs" />
+    <Compile Include="Forms\FormAbout.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormAbout.Designer.cs">
+    <Compile Include="Forms\FormAbout.Designer.cs">
       <DependentUpon>FormAbout.cs</DependentUpon>
     </Compile>
-    <Compile Include="BaseForm.cs">
+    <Compile Include="Forms\BaseForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="EntityTransfer\StripColors.cs" />
@@ -91,63 +92,64 @@
     <Compile Include="Entity\Step.cs" />
     <Compile Include="Entity\Theme.cs" />
     <Compile Include="Entity\VersionInformation.cs" />
-    <Compile Include="FormExport.cs">
+    <Compile Include="Forms\FormExport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormExport.Designer.cs">
+    <Compile Include="Forms\FormExport.Designer.cs">
       <DependentUpon>FormExport.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormMain.cs">
+    <Compile Include="Forms\FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormMain.Designer.cs">
+    <Compile Include="Forms\FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormNewRelease.cs">
+    <Compile Include="Forms\FormNewRelease.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormNewRelease.Designer.cs">
+    <Compile Include="Forms\FormNewRelease.Designer.cs">
       <DependentUpon>FormNewRelease.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormSplash.cs">
+    <Compile Include="Forms\FormSplash.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormSplash.designer.cs">
+    <Compile Include="Forms\FormSplash.designer.cs">
       <DependentUpon>FormSplash.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormStep.cs">
+    <Compile Include="Forms\FormStep.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormStep.Designer.cs">
+    <Compile Include="Forms\FormStep.Designer.cs">
       <DependentUpon>FormStep.cs</DependentUpon>
     </Compile>
+    <Compile Include="Exceptions\InvalidStepException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\DiffStep.cs" />
-    <Compile Include="Utilities\PromtDialog.cs" />
+    <Compile Include="FormUtilities\PromtDialog.cs" />
     <Compile Include="Utilities\StepGenerator.cs" />
     <Compile Include="Utilities\ThemeManager.cs" />
     <Compile Include="Utilities\ValueControls.cs" />
     <Compile Include="Utilities\SColor.cs" />
     <Compile Include="Utilities\Serial.cs" />
-    <Compile Include="Utilities\SerialCommand.cs" />
-    <EmbeddedResource Include="FormAbout.resx">
+    <Compile Include="Enums\SerialCommand.cs" />
+    <EmbeddedResource Include="Forms\FormAbout.resx">
       <DependentUpon>FormAbout.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormExport.resx">
+    <EmbeddedResource Include="Forms\FormExport.resx">
       <DependentUpon>FormExport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormMain.resx">
+    <EmbeddedResource Include="Forms\FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormNewRelease.resx">
+    <EmbeddedResource Include="Forms\FormNewRelease.resx">
       <DependentUpon>FormNewRelease.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormSplash.resx">
+    <EmbeddedResource Include="Forms\FormSplash.resx">
       <DependentUpon>FormSplash.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormStep.resx">
+    <EmbeddedResource Include="Forms\FormStep.resx">
       <DependentUpon>FormStep.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -182,6 +184,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>mkdir $(TargetDir)\Esp32Strip

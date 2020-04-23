@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using WinStrip.Entity;
 using WinStrip.EntityTransfer;
 using WinStrip.Utilities;
+using WinStrip.Enums;
+using WinStrip.FormUtilities;
 using System.IO;
 using System.Net;
 using Microsoft.Win32;
@@ -152,6 +154,13 @@ namespace WinStrip
             toolTip1.SetToolTip(textBoxManualSend, "Type or select by right clicking a command to send to the micro controller");
             toolTip1.SetToolTip(btnManualSend, "Send the selected command to the Micro controller");
             toolTip1.SetToolTip(btnClearText2, "Clear the responce box");
+
+
+            toolTip1.SetToolTip(labelGridRowCount, "Total number of steps in the table");
+            toolTip1.SetToolTip(labelRowIndex,     "Position of the selected cell");
+
+            
+                
 
 
 
@@ -746,12 +755,6 @@ namespace WinStrip
             groupBoxCpu.Enabled = !radioButton.Checked;
         }
 
-        void ThemeToGrid(Theme theme) 
-        {
-            StepsToGrid(theme.Steps);
-        }
-
-
         private DataGridViewRow MakeDatagridStepRow(Step step)
         {
             DataGridViewRow dgRow = new DataGridViewRow();
@@ -802,7 +805,7 @@ namespace WinStrip
                 return;
             }
 
-            ThemeToGrid(themeManager.GetSelectedTheme());
+            StepsToGrid(themeManager.GetSelectedTheme().Steps);
             ProgrammingGridUpdate = false;
 
         }
@@ -829,9 +832,39 @@ namespace WinStrip
             var theme = themeManager.GetSelectedTheme();
             if (theme == null)
                 return;
-            ThemeToGrid(theme);
+            StepsToGrid(theme.Steps);
         }
 
+        List<Step> GridToSteps(bool sortAndFix = false)
+        {
+            var theme = new Theme(comboThemes.Text);
+
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                string strFrom;
+                var row = dataGridView1.Rows[i];
+                if (row.Cells[0].Value == null || row.Cells[1].Value == null)
+                {
+                    if (i == dataGridView1.Rows.Count - 1)
+                    {
+                        break; //last row is null so let's stop
+                    }
+
+                    throw new InvalidStepException($"Cannot save\n\n There are invalid row {i}");
+                }
+                else
+                {
+                    strFrom = row.Cells[0].Value.ToString();
+                    if (!theme.AddStep(strFrom, row.Cells[1].Value.ToString()))
+                        throw new InvalidStepException(strFrom, $"Cannot save\n\n There are invalid values in step {strFrom}");
+                }
+                
+            }
+            if (sortAndFix)
+                theme.SortStepsAndFix(true);
+
+            return theme.Steps;
+        }
         Theme GridToTheme()
         {
             Theme theme,
@@ -841,34 +874,13 @@ namespace WinStrip
                 theme = new Theme(selectedTheme.Name, selectedTheme.Default);
             else
                 theme = new Theme(comboThemes.Text);
-
-            bool error;
-
-            for (int i = 0; i < dataGridView1.Rows.Count; i++)
-            {
-                string strFrom;
-                var row = dataGridView1.Rows[i];
-                if (row.Cells[0].Value == null || row.Cells[1].Value == null)
-                {
-                    error = true;
-                    if (i == dataGridView1.Rows.Count - 1)
-                    {
-                        break; //last row is null so let's stop
-                    }
-
-                    strFrom = $" (See line number {i + 1})";
-                }
-                else
-                {
-                    strFrom = row.Cells[0].Value.ToString();
-                    error = !theme.AddStep(strFrom, row.Cells[1].Value.ToString());
-                }
-                if (error)
-                {
-                    throw new Exception ($"Cannot save\n\n There are invalid values in step {strFrom}");
-                }
+            try { 
+                theme.Steps = GridToSteps();
             }
-
+            catch (InvalidStepException ex)
+            {
+                throw ex;
+            }
             return theme;
         }
 
@@ -882,6 +894,11 @@ namespace WinStrip
                 themeManager.Save();
                 IsGridDirty = false;
                 SetThemeButtonsState();
+            }
+            catch (ClipboardToRowsException ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error pasting", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
             catch (Exception e)
             {
@@ -1194,7 +1211,7 @@ namespace WinStrip
 
             GenerateStepsToolStripMenuItem.Enabled = DoubleRowWizardItems;
             btnWizard.Enabled = SingleRowWizardItems || DoubleRowWizardItems;
-            
+            UpdateGridLabels();
         }
 
         private void btnChangeSteps_Click(object sender, EventArgs e)
@@ -1275,8 +1292,19 @@ namespace WinStrip
             var theme = GridToTheme();
             var list = StepGenerator.StripSteps(steps[0], steps[1]);
             themeManager.ReplaceExistingOrAddNewStepsToTheme(theme, list);
-            theme.SortStepsAndFix();
-            StepsToGrid(theme.Steps);
+            theme.SortStepsAndFix(true);
+
+            try
+            {
+                StepsToGrid(theme.Steps);
+            }
+
+            catch (ClipboardToRowsException ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            
         }
 
         private void checkDefault_Click(object sender, EventArgs e)
@@ -1635,6 +1663,186 @@ namespace WinStrip
                     dataGridView1.Rows.RemoveAt(row.Index);
             }
             SetDataGridButtonsState();
+        }
+
+
+
+        /// <summary>
+        /// Gets content from the clipboard and adds it to the grid
+        /// 
+        /// If last row is selected
+        ///  - all steps on the clipboard will be added to the grid and overwriting existing steps.
+        ///
+        /// If some rows are selected and not the last one
+        ///  - only rows with the same From value will be replaced.
+        ///
+        /// </summary>
+        /// <returns>Returns number of rows pasted to the grid</returns>
+        private int PasteFromClipboardToGrid()
+        {
+            int pasteCount = 0;
+            int SelectedRowCount = dataGridView1.SelectedRows.Count;
+
+            if (SelectedRowCount < 1)
+                return pasteCount;
+
+            int rowCount = dataGridView1.Rows.Count;
+            int indexOfLastRowInGrid = rowCount - 1;
+            bool lastRowInGridIsSelected = dataGridView1.SelectedRows[SelectedRowCount-1].Index == indexOfLastRowInGrid;
+
+            bool someSelected = SelectedRowCount > 0;
+            
+            var steps = ClipboardToRows();
+            if (steps.Count < 1)
+                return pasteCount;
+
+            
+            ProgrammingGridUpdate = true;
+
+            if (someSelected)
+            {  //Only overwriting rows in grid where cell From has the same value as a From value from the clipboard.
+                for (int i = 0; i < dataGridView1.SelectedRows.Count; i++)
+                {
+                    pasteCount += ReplaceRowValuesAndColorsIfFromValuesMatch(dataGridView1.SelectedRows[i], steps, true);
+                }
+
+                if (!lastRowInGridIsSelected)
+                    return pasteCount;  //only pasting over selection
+            }
+
+
+            for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
+            {
+                pasteCount += ReplaceRowValuesAndColorsIfFromValuesMatch(dataGridView1.Rows[i], steps, true);
+            }
+
+            //adding remaining steps
+            steps.ForEach(step => {
+                dataGridView1.Rows.Add(MakeDatagridStepRow(step));
+                pasteCount++;
+            });
+
+            ProgrammingGridUpdate = false;
+            return pasteCount;
+            
+        }
+
+        private int ReplaceRowValuesAndColorsIfFromValuesMatch(DataGridViewRow dataGridViewRow, List<Step> steps, bool removeReplacedStepFromStepList)
+        {
+            var pasteCount = 0;
+
+            var row = dataGridViewRow;
+            if (row.Index != dataGridView1.Rows.Count-1) 
+            { 
+                int from;
+                if (int.TryParse(row.Cells[0].Value.ToString(), out from) && from > -1 && from < 101)
+                {
+                    var stepIndex = steps.IndexOf(new Step(from));
+                    if (stepIndex > -1)
+                    {
+                        row.Cells[1].Value = steps[stepIndex].ValuesAndColorsToJson();
+                        if (removeReplacedStepFromStepList)
+                            steps.RemoveAt(stepIndex);
+                        pasteCount++;
+                    }
+                }
+            }
+            return pasteCount;
+        }
+
+
+        /// <summary>
+        /// Converts Clipboard content to list of steps.
+        /// </summary>
+        /// <returns>Success: list of steps gotten from clipboard Fail: An empty list</returns>
+        private List<Step> ClipboardToRows()
+        {
+            var list = new List<Step>();
+            IDataObject dataInClipboard = Clipboard.GetDataObject();
+            string stringInClipboard = (string)dataInClipboard.GetData(DataFormats.Text);
+            if (string.IsNullOrEmpty(stringInClipboard))
+                return list;
+
+            char[] rowSplitter = { '\r', '\n' };
+            char[] columnSplitter = { '\t' };
+
+            string[] rowsInClipboard = stringInClipboard.Split(rowSplitter, StringSplitOptions.RemoveEmptyEntries);
+            if (rowsInClipboard.Length < 1)
+                return list;
+
+            foreach (var textRow in rowsInClipboard)
+            {
+                // tab is the first char when copy from grid
+                string row = textRow.TrimStart();
+                
+                string[] textColumns = row.Split(columnSplitter);
+                if (textColumns.Length == 2)
+                {
+                    try {
+                        list.Add(new Step(Convert.ToInt32(textColumns[0]), textColumns[1], true));
+                    }
+                    
+                    catch (Exception e)
+                    {
+                        throw new ClipboardToRowsException($"Unable to paste to row error with content {textRow}", e);
+                    }
+                    
+                }
+            }
+
+            return list;
+        }
+
+        private void dataGridView1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if ((e.Shift && e.KeyCode == Keys.Insert) || (e.Control && e.KeyCode == Keys.V))
+            {
+                if (PasteFromClipboardToGrid() > 0)
+                    IsGridDirty = true;
+
+                SetThemeButtonsState();
+            }
+        }
+
+        private void toolStripButtonCheckAndFixGrid_Click(object sender, EventArgs e)
+        {
+            List<Step> newSteps;
+            try
+            {
+                newSteps = GridToSteps(true);
+            }
+            catch (InvalidStepException ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error pasting", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Error in steps", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+
+            StepsToGrid(newSteps);
+        }
+
+        private void dataGridView1_Click(object sender, EventArgs e)
+        {
+            UpdateGridLabels();
+        }
+
+        private void UpdateGridLabels()
+        {
+            labelGridRowCount.Text = $"Steps: {dataGridView1.Rows.Count-1}";
+            bool cellIsSelected = dataGridView1.CurrentCell != null;
+            if (cellIsSelected) 
+                labelRowIndex.Text = $"Row: {dataGridView1.CurrentCell.RowIndex.ToString()}  Column: {dataGridView1.CurrentCell.ColumnIndex}";
+            labelRowIndex.Visible = cellIsSelected;
+        }
+
+        private void dataGridView1_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            UpdateGridLabels();
         }
     }
 }

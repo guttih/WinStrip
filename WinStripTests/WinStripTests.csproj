@@ -51,7 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities\StepGeneratorTests.cs" />
+    <Compile Include="StepCompareTests.cs" />
+    <Compile Include="ThemeTests.cs" />
+    <Compile Include="StepGeneratorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

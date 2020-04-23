@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace WinStrip.Utilities
+namespace WinStrip.FormUtilities
 {
     public static class PromptDialog
     {

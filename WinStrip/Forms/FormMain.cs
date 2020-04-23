@@ -114,15 +114,17 @@ namespace WinStrip
 
         private void SetTooltips()
         {
-            toolTip1.SetToolTip(linkLabelPrograms, "Visit help page for the programs tab");
-            toolTip1.SetToolTip(linkLabelCpu,      "Visit help page for the CPU tab");
+            toolTip1.SetToolTip(linkLabelPrograms,    "Visit help page for the programs tab");
+            toolTip1.SetToolTip(linkLabelCpu,         "Visit help page for the CPU tab");
+            toolTip1.SetToolTip(textBoxPleaseSaveGrid,"You can not change use unsaved values in grid");
+
             toolTip1.SetToolTip(linkLabelManual,   "Visit help page for the command tab");
             toolTip1.SetToolTip(textBoxManualSend, "Left click to select available commands");
             toolTip1.SetToolTip(btnGetValues,      "Download all values from the micro controller");
             toolTip1.SetToolTip(comboPrograms,     "Select strip program");
             toolTip1.SetToolTip(btnSendAll,        "Send all selected values to them micro contoller");
             toolTip1.SetToolTip(comboPorts,        "The COM port the application is connected to");
-            toolTip1.SetToolTip(btnConnection, "Click to connect or disconnect the COM port");
+            toolTip1.SetToolTip(btnConnection,     "Click to connect or disconnect the COM port");
 
             string format = "Slide left or right to increase or decreas the {0}.  Use spin box for more precision";
             toolTip1.SetToolTip(trackBarValue1,     string.Format(format, "value"));
@@ -145,15 +147,15 @@ namespace WinStrip
             format = "Slide left or right to increase or decreas the {0}.  Use spin box for more precision";            
             toolTip1.SetToolTip(trackBarCpuTesting, string.Format(format, "CPU load test value"));
 
-            toolTip1.SetToolTip(comboThemes, "The active theme");
+            toolTip1.SetToolTip(comboThemes,          "The active theme");
             toolTip1.SetToolTip(radioButtonCpuLive,   "Select to start monitoring the CPU and update the value automatically");
             toolTip1.SetToolTip(radioButtonCpuTesting,"Select to be able to change the CPU load value manually to test the active theme");
-            toolTip1.SetToolTip(labelCpu, "The current CPU load wich will determine which theme step is active");
+            toolTip1.SetToolTip(labelCpu,             "The current CPU load wich will determine which theme step is active");
 
             // tab Manual
             toolTip1.SetToolTip(textBoxManualSend, "Type or select by right clicking a command to send to the micro controller");
-            toolTip1.SetToolTip(btnManualSend, "Send the selected command to the Micro controller");
-            toolTip1.SetToolTip(btnClearText2, "Clear the responce box");
+            toolTip1.SetToolTip(btnManualSend,     "Send the selected command to the Micro controller");
+            toolTip1.SetToolTip(btnClearText2,     "Clear the responce box");
 
 
             toolTip1.SetToolTip(labelGridRowCount, "Total number of steps in the table");
@@ -783,6 +785,8 @@ namespace WinStrip
 
 
             steps.ForEach(s => dataGridView1.Rows.Add(MakeDatagridStepRow(s)));
+
+            IsGridDirty = false;
             SetThemeButtonsState();
         }
 
@@ -807,6 +811,7 @@ namespace WinStrip
 
             StepsToGrid(themeManager.GetSelectedTheme().Steps);
             ProgrammingGridUpdate = false;
+            SetThemeButtonsState();
 
         }
         private void labelCpu_TextChanged(object sender, EventArgs e)
@@ -833,6 +838,7 @@ namespace WinStrip
             if (theme == null)
                 return;
             StepsToGrid(theme.Steps);
+            SetThemeButtonsState();
         }
 
         List<Step> GridToSteps(bool sortAndFix = false)
@@ -998,11 +1004,6 @@ namespace WinStrip
             return false;
         }
 
-        private void btnSetDefaultTheme_Click(object sender, EventArgs e)
-        {
-           
-        }
-
         private void btnLoadAllThemes_Click(object sender, EventArgs e)
         {
             LoadThemes();
@@ -1136,7 +1137,8 @@ namespace WinStrip
             btnDeleteTheme.Enabled = atLeastOneTheme;
             SetDataGridButtonsState();
             SetDefaultThemeState();
-
+            
+            
 
         }
 
@@ -1194,9 +1196,12 @@ namespace WinStrip
                             atLeastOneLineInGrid &&
                             IsGridDirty) || themeManager.IsDirty;
 
-            groupBoxCpu.Enabled = !SaveAllowed && radioButtonCpuTesting.Checked;
+            
+
+            groupBoxCpu.Enabled                    = !SaveAllowed && radioButtonCpuTesting.Checked;
             saveAllThemesToolStripMenuItem.Enabled = SaveAllowed;
-            toolStripButtonSave.Enabled = SaveAllowed;
+            toolStripButtonSave.Enabled            = SaveAllowed;
+            textBoxPleaseSaveGrid.Visible          = SaveAllowed;
 
             btnChangeSteps.Enabled = IsRowReadyForEditing;
 
@@ -1448,15 +1453,12 @@ namespace WinStrip
                 return;
             }
 
-
             var frm = new FormNewRelease(versionInfo);
             if (frm.ShowDialog() == DialogResult.Yes)
             {
                 url = $"{RootUrl}/release.html?version={versionInfo.Version}";
                 System.Diagnostics.Process.Start(url);
             }
-
-
         }
 
         private void saveAllThemesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1626,11 +1628,6 @@ namespace WinStrip
             about.ShowDialog();
         }
 
-        private void exitToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
         private void featureRequestToolStripMenuItem_Click(object sender, EventArgs e)
         {
             VisitUrl($"{RepositoryRootUrl}/issues/new?assignees=&labels=&template=feature_request.md");
@@ -1652,6 +1649,7 @@ namespace WinStrip
         private void toolStripButtonClearDataGrid_Click(object sender, EventArgs e)
         {
             dataGridView1.Rows.Clear();
+            SetDataGridButtonsState();
         }
 
         private void btnDeleteRow_Click(object sender, EventArgs e)
@@ -1676,6 +1674,9 @@ namespace WinStrip
         /// If some rows are selected and not the last one
         ///  - only rows with the same From value will be replaced.
         ///
+        /// If only one row in grid, one step is on the clipboard and only last row is selected
+        /// - a new step will be added and it's From value added.
+        /// 
         /// </summary>
         /// <returns>Returns number of rows pasted to the grid</returns>
         private int PasteFromClipboardToGrid()
@@ -1688,28 +1689,49 @@ namespace WinStrip
 
             int rowCount = dataGridView1.Rows.Count;
             int indexOfLastRowInGrid = rowCount - 1;
-            bool lastRowInGridIsSelected = dataGridView1.SelectedRows[SelectedRowCount-1].Index == indexOfLastRowInGrid;
 
-            bool someSelected = SelectedRowCount > 0;
-            
+            int highestSelectedIndex = 0;
+            for (int i = 0; i < dataGridView1.SelectedRows.Count; i++)
+            { 
+                if (highestSelectedIndex < dataGridView1.SelectedRows[i].Index)
+                    highestSelectedIndex = dataGridView1.SelectedRows[i].Index;
+            }
+
+            bool lastRowInGridIsSelected = highestSelectedIndex == rowCount - 1;
+
+
             var steps = ClipboardToRows();
             if (steps.Count < 1)
                 return pasteCount;
 
-            
-            ProgrammingGridUpdate = true;
-
-            if (someSelected)
-            {  //Only overwriting rows in grid where cell From has the same value as a From value from the clipboard.
-                for (int i = 0; i < dataGridView1.SelectedRows.Count; i++)
+            if (lastRowInGridIsSelected && rowCount == 2 && steps.Count == 1)
+            {
+                //adding one step to grid where grid has only one step and the last row is selected
+                int from;
+                if (int.TryParse(dataGridView1.Rows[0].Cells[0].Value.ToString(), out from) && from > -1 && from < 101)
                 {
-                    pasteCount += ReplaceRowValuesAndColorsIfFromValuesMatch(dataGridView1.SelectedRows[i], steps, true);
+                    // set the from part of the new value
+                    steps[0].From = from < 50 ? 100 : 0;
+                    dataGridView1.Rows.Add(MakeDatagridStepRow(steps[0]));
+                    pasteCount++;
                 }
 
-                if (!lastRowInGridIsSelected)
-                    return pasteCount;  //only pasting over selection
+                return pasteCount;
             }
 
+
+            for (int i = 0; i < dataGridView1.SelectedRows.Count; i++)
+            {
+                pasteCount += ReplaceRowValuesAndColorsIfFromValuesMatch(dataGridView1.SelectedRows[i], steps, true);
+            }
+
+                
+            if (!lastRowInGridIsSelected) 
+            {
+                return pasteCount;  //only pasting over selection
+            }
+
+            
 
             for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
             {
@@ -1722,7 +1744,6 @@ namespace WinStrip
                 pasteCount++;
             });
 
-            ProgrammingGridUpdate = false;
             return pasteCount;
             
         }
@@ -1797,9 +1818,10 @@ namespace WinStrip
         {
             if ((e.Shift && e.KeyCode == Keys.Insert) || (e.Control && e.KeyCode == Keys.V))
             {
+                ProgrammingGridUpdate = true;
                 if (PasteFromClipboardToGrid() > 0)
                     IsGridDirty = true;
-
+                ProgrammingGridUpdate = false;
                 SetThemeButtonsState();
             }
         }
@@ -1843,6 +1865,11 @@ namespace WinStrip
         private void dataGridView1_CellEnter(object sender, DataGridViewCellEventArgs e)
         {
             UpdateGridLabels();
+        }
+
+        private void exitToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

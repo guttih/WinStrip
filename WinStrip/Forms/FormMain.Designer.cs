@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnManualSend = new System.Windows.Forms.Button();
             this.comboPorts = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -68,6 +68,7 @@
             this.tabCPU = new System.Windows.Forms.TabPage();
             this.comboThemes = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.textBoxPleaseSaveGrid = new System.Windows.Forms.TextBox();
             this.labelCpu = new System.Windows.Forms.Label();
             this.groupBoxCpu = new System.Windows.Forms.GroupBox();
             this.numericUpDownCpuTesting = new System.Windows.Forms.NumericUpDown();
@@ -130,7 +131,7 @@
             this.issuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.featureRequestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bugReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.trayIconContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.trayMenuItemShow = new System.Windows.Forms.ToolStripMenuItem();
@@ -622,7 +623,9 @@
             // 
             this.tabCPU.BackColor = System.Drawing.SystemColors.Control;
             this.tabCPU.Controls.Add(this.comboThemes);
+            this.tabCPU.Controls.Add(this.labelRowIndex);
             this.tabCPU.Controls.Add(this.groupBox2);
+            this.tabCPU.Controls.Add(this.labelGridRowCount);
             this.tabCPU.Controls.Add(this.linkLabelCpu);
             this.tabCPU.Controls.Add(this.checkDefault);
             this.tabCPU.Controls.Add(this.textBox1);
@@ -661,6 +664,7 @@
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.textBoxPleaseSaveGrid);
             this.groupBox2.Controls.Add(this.labelCpu);
             this.groupBox2.Controls.Add(this.groupBoxCpu);
             this.groupBox2.Controls.Add(this.radioButtonCpuTesting);
@@ -672,6 +676,24 @@
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Central Proscessing Unit - Load";
+            // 
+            // textBoxPleaseSaveGrid
+            // 
+            this.textBoxPleaseSaveGrid.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxPleaseSaveGrid.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.textBoxPleaseSaveGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBoxPleaseSaveGrid.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxPleaseSaveGrid.Location = new System.Drawing.Point(104, 113);
+            this.textBoxPleaseSaveGrid.Multiline = true;
+            this.textBoxPleaseSaveGrid.Name = "textBoxPleaseSaveGrid";
+            this.textBoxPleaseSaveGrid.ReadOnly = true;
+            this.textBoxPleaseSaveGrid.Size = new System.Drawing.Size(147, 50);
+            this.textBoxPleaseSaveGrid.TabIndex = 15;
+            this.textBoxPleaseSaveGrid.TabStop = false;
+            this.textBoxPleaseSaveGrid.Text = "\r\nSave theme to \r\nuse values in grid";
+            this.textBoxPleaseSaveGrid.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.textBoxPleaseSaveGrid.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.textBoxPleaseSaveGrid.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // labelCpu
             // 
@@ -910,14 +932,14 @@
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.ButtonFace;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(6, 196);
             this.dataGridView1.Name = "dataGridView1";
@@ -1011,6 +1033,8 @@
             this.DimToBrightBlueToolStripMenuItem.Text = "Dim to Bright blue";
             this.DimToBrightBlueToolStripMenuItem.ToolTipText = "Creates series of steps where light goes from \r\none value to a nother";
             this.DimToBrightBlueToolStripMenuItem.Click += new System.EventHandler(this.DimToBrightBlueToolStripMenuItem_Click);
+            this.DimToBrightBlueToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.DimToBrightBlueToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // DimToBrightGreenToolStripMenuItem
             // 
@@ -1018,6 +1042,8 @@
             this.DimToBrightGreenToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
             this.DimToBrightGreenToolStripMenuItem.Text = "Dim to Bright green";
             this.DimToBrightGreenToolStripMenuItem.Click += new System.EventHandler(this.dimToBrightGreenToolStripMenuItem_Click);
+            this.DimToBrightGreenToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.DimToBrightGreenToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // DimToBrightRedToolStripMenuItem
             // 
@@ -1025,6 +1051,8 @@
             this.DimToBrightRedToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
             this.DimToBrightRedToolStripMenuItem.Text = "Dim to Bright Red";
             this.DimToBrightRedToolStripMenuItem.Click += new System.EventHandler(this.dimToBrightRedToolStripMenuItem_Click);
+            this.DimToBrightRedToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.DimToBrightRedToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // GenerateStepsToolStripMenuItem
             // 
@@ -1034,6 +1062,8 @@
             this.GenerateStepsToolStripMenuItem.ToolTipText = "Generates steps between two steps\r\n\r\nThe wizard will calculate the difference bet" +
     "weeen\r\nthe two steps an inserts missing steps between them\r\n";
             this.GenerateStepsToolStripMenuItem.Click += new System.EventHandler(this.GenerateStepsToolStripMenuItem_Click);
+            this.GenerateStepsToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.GenerateStepsToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // toolStripSeparator1
             // 
@@ -1250,10 +1280,10 @@
             this.mainToolStripMenuItem,
             this.themesToolStripMenuItem,
             this.helpToolStripMenuItem1});
-            this.menuStrip1.Location = new System.Drawing.Point(473, -1);
+            this.menuStrip1.Location = new System.Drawing.Point(469, -1);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 13, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(175, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(179, 24);
             this.menuStrip1.TabIndex = 18;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -1264,8 +1294,8 @@
             this.checkForUpdateToolStripMenuItem,
             this.launchWinStripOnStartupToolStripMenuItem});
             this.mainToolStripMenuItem.Name = "mainToolStripMenuItem";
-            this.mainToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
-            this.mainToolStripMenuItem.Text = "&Menu";
+            this.mainToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+            this.mainToolStripMenuItem.Text = "&Action";
             // 
             // exportCodeToolStripMenuItem
             // 
@@ -1295,6 +1325,8 @@
             this.launchWinStripOnStartupToolStripMenuItem.ToolTipText = "When windows starts, run this application.\r\n\r\nIf this menu item is checked this a" +
     "pplication \r\nwill be launched on windows startup";
             this.launchWinStripOnStartupToolStripMenuItem.Click += new System.EventHandler(this.launchWinStripOnStartupToolStripMenuItem_Click);
+            this.launchWinStripOnStartupToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.launchWinStripOnStartupToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // themesToolStripMenuItem
             // 
@@ -1346,7 +1378,7 @@
             this.aboutToolStripMenuItem1,
             this.helpToolStripMenuItem2,
             this.issuesToolStripMenuItem,
-            this.exitToolStripMenuItem1});
+            this.exitToolStripMenuItem2});
             this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
             this.helpToolStripMenuItem1.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem1.Text = "&Help";
@@ -1358,6 +1390,8 @@
             this.aboutToolStripMenuItem1.Text = "&About";
             this.aboutToolStripMenuItem1.ToolTipText = "About this application\r\n\r\nGet information on application version \r\nand author";
             this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
+            this.aboutToolStripMenuItem1.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.aboutToolStripMenuItem1.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // helpToolStripMenuItem2
             // 
@@ -1366,6 +1400,8 @@
             this.helpToolStripMenuItem2.Text = "&Help";
             this.helpToolStripMenuItem2.ToolTipText = "Visit the online documentation\r\n for this application";
             this.helpToolStripMenuItem2.Click += new System.EventHandler(this.helpToolStripMenuItem2_Click);
+            this.helpToolStripMenuItem2.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.helpToolStripMenuItem2.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // issuesToolStripMenuItem
             // 
@@ -1384,6 +1420,8 @@
             this.featureRequestToolStripMenuItem.ToolTipText = "Make a feature request\r\n\r\nVisit the GitHub repository website to \r\nask for an fea" +
     "ture which is not currently\r\nin this application.";
             this.featureRequestToolStripMenuItem.Click += new System.EventHandler(this.featureRequestToolStripMenuItem_Click);
+            this.featureRequestToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.featureRequestToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // bugReportToolStripMenuItem
             // 
@@ -1393,14 +1431,18 @@
             this.bugReportToolStripMenuItem.ToolTipText = "Report a bug\r\n\r\nVisit the GitHub Repository to report a bug\r\nto the developer of " +
     "this application.";
             this.bugReportToolStripMenuItem.Click += new System.EventHandler(this.bugReportToolStripMenuItem_Click);
+            this.bugReportToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.bugReportToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
-            // exitToolStripMenuItem1
+            // exitToolStripMenuItem2
             // 
-            this.exitToolStripMenuItem1.Name = "exitToolStripMenuItem1";
-            this.exitToolStripMenuItem1.Size = new System.Drawing.Size(107, 22);
-            this.exitToolStripMenuItem1.Text = "E&xit";
-            this.exitToolStripMenuItem1.ToolTipText = "Exit the application";
-            this.exitToolStripMenuItem1.Click += new System.EventHandler(this.exitToolStripMenuItem1_Click);
+            this.exitToolStripMenuItem2.Name = "exitToolStripMenuItem2";
+            this.exitToolStripMenuItem2.Size = new System.Drawing.Size(107, 22);
+            this.exitToolStripMenuItem2.Text = "E&xit";
+            this.exitToolStripMenuItem2.ToolTipText = "Exit the application";
+            this.exitToolStripMenuItem2.Click += new System.EventHandler(this.exitToolStripMenuItem2_Click);
+            this.exitToolStripMenuItem2.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.exitToolStripMenuItem2.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // notifyIcon
             // 
@@ -1443,7 +1485,7 @@
             // labelGridRowCount
             // 
             this.labelGridRowCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelGridRowCount.Location = new System.Drawing.Point(570, 473);
+            this.labelGridRowCount.Location = new System.Drawing.Point(537, 419);
             this.labelGridRowCount.Name = "labelGridRowCount";
             this.labelGridRowCount.Size = new System.Drawing.Size(66, 18);
             this.labelGridRowCount.TabIndex = 19;
@@ -1455,7 +1497,7 @@
             // labelRowIndex
             // 
             this.labelRowIndex.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelRowIndex.Location = new System.Drawing.Point(459, 473);
+            this.labelRowIndex.Location = new System.Drawing.Point(426, 419);
             this.labelRowIndex.Name = "labelRowIndex";
             this.labelRowIndex.Size = new System.Drawing.Size(105, 18);
             this.labelRowIndex.TabIndex = 19;
@@ -1469,8 +1511,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(652, 536);
-            this.Controls.Add(this.labelRowIndex);
-            this.Controls.Add(this.labelGridRowCount);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.btnConnection);
@@ -1630,7 +1670,6 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem issuesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem featureRequestToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bugReportToolStripMenuItem;
@@ -1641,6 +1680,8 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonCheckAndFixGrid;
         private System.Windows.Forms.Label labelGridRowCount;
         private System.Windows.Forms.Label labelRowIndex;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem2;
+        private System.Windows.Forms.TextBox textBoxPleaseSaveGrid;
     }
 }
 

@@ -50,7 +50,7 @@ namespace WinStrip.Utilities
             themes.Sort(new Theme());
 
             //Sort all steps in all themes so that highest From value will be first.
-            themes.ForEach(theme => theme.SortStepsAndFix());
+            themes.ForEach(theme => theme.SortStepsAndFix(true));
             var str = (new JavaScriptSerializer()).Serialize(themes);
             Properties.Settings.Default.Themes = str;
             Properties.Settings.Default.Save();

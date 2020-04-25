@@ -58,5 +58,17 @@ namespace WinStrip.Properties {
                 this["RepositoryRootUrl"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(".winstrip")]
+        public string ThemeFileExtendion {
+            get {
+                return ((string)(this["ThemeFileExtendion"]));
+            }
+            set {
+                this["ThemeFileExtendion"] = value;
+            }
+        }
     }
 }

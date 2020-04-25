@@ -319,5 +319,26 @@ namespace WinStrip.Utilities
                 }
             }
         }
+        public void AddThemeSafely(Theme addMe)
+        {
+            AddThemeSafely(Themes, addMe);
+        }
+        private void AddThemeSafely(List<Theme> list, Theme addMe)
+        {
+            int index, nameExtender;
+            string testName;
+            index = list.FindIndex(current => current.Name == addMe.Name);
+            testName = addMe.Name;
+            nameExtender = 1;
+            while (index > -1)
+            {
+                nameExtender++;
+                testName = addMe.Name + nameExtender;
+                index = list.FindIndex(current => current.Name == testName);
+            }
+
+            addMe.Name = testName;
+            list.Add(addMe);
+        }
     }
 }

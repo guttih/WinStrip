@@ -92,11 +92,11 @@
     <Compile Include="Entity\Step.cs" />
     <Compile Include="Entity\Theme.cs" />
     <Compile Include="Entity\VersionInformation.cs" />
-    <Compile Include="Forms\FormExport.cs">
+    <Compile Include="Forms\FormExportCode.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormExport.Designer.cs">
-      <DependentUpon>FormExport.cs</DependentUpon>
+    <Compile Include="Forms\FormExportCode.Designer.cs">
+      <DependentUpon>FormExportCode.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormMain.cs">
       <SubType>Form</SubType>
@@ -124,6 +124,12 @@
     </Compile>
     <Compile Include="Exceptions\InvalidStepException.cs" />
     <Compile Include="Enums\ProgramArgument.cs" />
+    <Compile Include="Forms\FormThemeImportExport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormThemeImportExport.designer.cs">
+      <DependentUpon>FormThemeImportExport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Utilities\ProgramArgumentsHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -135,11 +141,14 @@
     <Compile Include="Utilities\SColor.cs" />
     <Compile Include="Utilities\Serial.cs" />
     <Compile Include="Enums\SerialCommand.cs" />
+    <EmbeddedResource Include="Forms\BaseForm.resx">
+      <DependentUpon>BaseForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormAbout.resx">
       <DependentUpon>FormAbout.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormExport.resx">
-      <DependentUpon>FormExport.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FormExportCode.resx">
+      <DependentUpon>FormExportCode.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
@@ -153,6 +162,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormStep.resx">
       <DependentUpon>FormStep.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormThemeImportExport.resx">
+      <DependentUpon>FormThemeImportExport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

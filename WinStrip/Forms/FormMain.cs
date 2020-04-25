@@ -1107,6 +1107,7 @@ namespace WinStrip
 
             themeManager.RemoveThemeAt(i);
             comboThemes.Items.RemoveAt(comboIndex);
+            SaveAllThemes();
             int count = comboThemes.Items.Count;
             if (count < 1)
             {
@@ -1456,6 +1457,14 @@ namespace WinStrip
             var frm = new FormNewRelease(versionInfo);
             if (frm.ShowDialog() == DialogResult.Yes)
             {
+                if (MessageBox.Show("Before updating, it is reccomended to export your themes.\r\nDo you want to export your themes now?",
+                                 "Export your themes",
+                                 MessageBoxButtons.YesNo,
+                                 MessageBoxIcon.Warning) == DialogResult.Yes)
+                {
+                    exportThemesDialog();
+                }
+
                 url = $"{RootUrl}/release.html?version={versionInfo.Version}";
                 System.Diagnostics.Process.Start(url);
             }
@@ -1871,5 +1880,58 @@ namespace WinStrip
         {
             Close();
         }
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            exportThemesDialog();
+        }
+
+        void exportThemesDialog()
+        {
+            var frm = new FormThemeImportExport(themeManager.GetThemeList());
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                MessageBox.Show(this, "The selected themes have been successfully exported!", "Themes exported", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void importToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("You must save all themes before starting the import process.\r\nDo you want to save all themes now?",
+                                 "Save all themes",
+                                 MessageBoxButtons.YesNo,
+                                 MessageBoxIcon.Warning) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            SaveAllThemes();
+            LoadThemes();
+
+            var frm = new FormThemeImportExport();
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                var list = frm.SelectedThemes();
+                ImportThemes(list);
+                ThemesToForm();
+                SaveAllThemes();
+                MessageBox.Show(this, "Successfully imported themes", "Importing themes", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+        private void ImportThemes(List<Theme> importingThemes)
+        {
+            
+            if (themeManager.IsThereADefaultTheme())
+            {
+                //then none of the imported can be default too
+                importingThemes.ForEach(e => e.Default = false);
+            }
+
+            //no themes can have the same name, so let's rename the imported ones if needed
+            importingThemes.ForEach(e => themeManager.AddThemeSafely(e));
+
+        }
+
+        
     }
 }

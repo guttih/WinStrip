@@ -11,5 +11,8 @@
     <Setting Name="RepositoryRootUrl" Type="System.String" Scope="User">
       <Value Profile="(Default)">https://github.com/guttih/WinStrip</Value>
     </Setting>
+    <Setting Name="ThemeFileExtendion" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.winstrip</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

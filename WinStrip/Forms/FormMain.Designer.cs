@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnManualSend = new System.Windows.Forms.Button();
             this.comboPorts = new System.Windows.Forms.ComboBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -67,6 +67,7 @@
             this.comboPrograms = new System.Windows.Forms.ComboBox();
             this.tabCPU = new System.Windows.Forms.TabPage();
             this.comboThemes = new System.Windows.Forms.ComboBox();
+            this.labelRowIndex = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.textBoxPleaseSaveGrid = new System.Windows.Forms.TextBox();
             this.labelCpu = new System.Windows.Forms.Label();
@@ -75,6 +76,7 @@
             this.trackBarCpuTesting = new System.Windows.Forms.TrackBar();
             this.radioButtonCpuTesting = new System.Windows.Forms.RadioButton();
             this.radioButtonCpuLive = new System.Windows.Forms.RadioButton();
+            this.labelGridRowCount = new System.Windows.Forms.Label();
             this.linkLabelCpu = new System.Windows.Forms.LinkLabel();
             this.checkDefault = new System.Windows.Forms.CheckBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -137,8 +139,8 @@
             this.trayMenuItemShow = new System.Windows.Forms.ToolStripMenuItem();
             this.trayMenuItemHide = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.labelGridRowCount = new System.Windows.Forms.Label();
-            this.labelRowIndex = new System.Windows.Forms.Label();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPrograms.SuspendLayout();
             this.groupBoxParameters.SuspendLayout();
@@ -661,6 +663,18 @@
             this.comboThemes.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
             this.comboThemes.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
+            // labelRowIndex
+            // 
+            this.labelRowIndex.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelRowIndex.Location = new System.Drawing.Point(426, 419);
+            this.labelRowIndex.Name = "labelRowIndex";
+            this.labelRowIndex.Size = new System.Drawing.Size(105, 18);
+            this.labelRowIndex.TabIndex = 19;
+            this.labelRowIndex.Text = "label10";
+            this.labelRowIndex.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.labelRowIndex.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.labelRowIndex.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
+            // 
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -776,6 +790,18 @@
             this.radioButtonCpuLive.CheckedChanged += new System.EventHandler(this.radioButtonCpuLive_CheckedChanged);
             this.radioButtonCpuLive.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
             this.radioButtonCpuLive.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
+            // 
+            // labelGridRowCount
+            // 
+            this.labelGridRowCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelGridRowCount.Location = new System.Drawing.Point(537, 419);
+            this.labelGridRowCount.Name = "labelGridRowCount";
+            this.labelGridRowCount.Size = new System.Drawing.Size(66, 18);
+            this.labelGridRowCount.TabIndex = 19;
+            this.labelGridRowCount.Text = "label10";
+            this.labelGridRowCount.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.labelGridRowCount.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.labelGridRowCount.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // linkLabelCpu
             // 
@@ -932,14 +958,14 @@
             this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.ButtonFace;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(6, 196);
             this.dataGridView1.Name = "dataGridView1";
@@ -1280,10 +1306,10 @@
             this.mainToolStripMenuItem,
             this.themesToolStripMenuItem,
             this.helpToolStripMenuItem1});
-            this.menuStrip1.Location = new System.Drawing.Point(469, -1);
+            this.menuStrip1.Location = new System.Drawing.Point(349, -1);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 13, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(179, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(299, 24);
             this.menuStrip1.TabIndex = 18;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -1333,7 +1359,9 @@
             this.themesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveAllThemesToolStripMenuItem,
             this.reloadSavedThemesToolStripMenuItem,
-            this.resetAllThemesToolStripMenuItem});
+            this.resetAllThemesToolStripMenuItem,
+            this.exportToolStripMenuItem,
+            this.importToolStripMenuItem});
             this.themesToolStripMenuItem.Name = "themesToolStripMenuItem";
             this.themesToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.themesToolStripMenuItem.Text = "&Themes";
@@ -1482,29 +1510,25 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // labelGridRowCount
+            // exportToolStripMenuItem
             // 
-            this.labelGridRowCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelGridRowCount.Location = new System.Drawing.Point(537, 419);
-            this.labelGridRowCount.Name = "labelGridRowCount";
-            this.labelGridRowCount.Size = new System.Drawing.Size(66, 18);
-            this.labelGridRowCount.TabIndex = 19;
-            this.labelGridRowCount.Text = "label10";
-            this.labelGridRowCount.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.labelGridRowCount.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
-            this.labelGridRowCount.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.exportToolStripMenuItem.Text = "&Export";
+            this.exportToolStripMenuItem.ToolTipText = "Select and Export themes to a file";
+            this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
+            this.exportToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.exportToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
-            // labelRowIndex
+            // importToolStripMenuItem
             // 
-            this.labelRowIndex.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelRowIndex.Location = new System.Drawing.Point(426, 419);
-            this.labelRowIndex.Name = "labelRowIndex";
-            this.labelRowIndex.Size = new System.Drawing.Size(105, 18);
-            this.labelRowIndex.TabIndex = 19;
-            this.labelRowIndex.Text = "label10";
-            this.labelRowIndex.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            this.labelRowIndex.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
-            this.labelRowIndex.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
+            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.importToolStripMenuItem.Text = "&Import";
+            this.importToolStripMenuItem.ToolTipText = "select and Import themes";
+            this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
+            this.importToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.importToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // FormMain
             // 
@@ -1682,6 +1706,8 @@
         private System.Windows.Forms.Label labelRowIndex;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem2;
         private System.Windows.Forms.TextBox textBoxPleaseSaveGrid;
+        private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
     }
 }
 

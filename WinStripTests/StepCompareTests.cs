@@ -5,7 +5,7 @@ using WinStrip.Entity;
 using System.Linq;
 using WinStrip.Utilities;
 
-namespace WinStrip.StepCompareTests
+namespace WinStrip.Entity.StepCompareTests
 {
     [TestClass]
     public class StepCompareTests

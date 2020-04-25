@@ -4,7 +4,7 @@ using WinStrip.Entity;
 using System.Globalization;
 using WinStrip.Utilities;
 
-namespace WinStrip.StepGeneratorTests
+namespace WinStrip.Utilities.StepGeneratorTests
 {
     [TestClass()]
     public class StepGeneratorTests

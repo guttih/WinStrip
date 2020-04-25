@@ -54,6 +54,7 @@
     <Compile Include="StepCompareTests.cs" />
     <Compile Include="ThemeTests.cs" />
     <Compile Include="StepGeneratorTests.cs" />
+    <Compile Include="ProgramArgumentTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

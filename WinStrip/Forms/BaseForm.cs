@@ -29,7 +29,13 @@ namespace WinStrip
                 return $"{version.Major}.{version.Minor}";
             }
         }
-
+        public System.Version Version
+        {
+            get
+            {
+                return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            }
+        }
         public string HelpRootUrl { get {
                 var rootUrl = Properties.Settings.Default.HelpRootUrl;
                 return $"{rootUrl}/{MajorMinorVersion}";

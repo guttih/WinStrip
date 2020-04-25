@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WinStrip.Entity;
 using System.Linq;
 
-namespace WinStrip.ThemeTests
+namespace WinStrip.Entity.ThemeTests
 {
     [TestClass]
     public class ThemeTests

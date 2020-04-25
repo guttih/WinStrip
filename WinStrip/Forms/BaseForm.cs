@@ -44,24 +44,34 @@ namespace WinStrip
                 return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             }
         }
-        public string HelpRootUrl { get {
-                var rootUrl = Properties.Settings.Default.HelpRootUrl;
-                return $"{rootUrl}/{MajorMinorVersion}";
-            } 
+
+        /// <summary>
+        /// Gets the first three parts of the application version as a string.
+        /// </summary>
+        public string VersionString
+        {
+            get
+            {
+                var ver = Assembly.GetExecutingAssembly().GetName().Version;
+                return $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            }
         }
+        public string HelpRootUrl => Properties.Settings.Default.HelpRootUrl;
 
         public void VisitHelpUrl(string webpageName = null)
         {
             var href = HelpRootUrl;
+
             if (webpageName != null)
-                href += $"/{ webpageName}";
+                href += $"/{webpageName}";
+            
+            href += $"?v={VersionString}"; 
             System.Diagnostics.Process.Start(href);
         }
 
         public void VisitUrl(string fullUrlToWebPage)
         {
-            var href = fullUrlToWebPage;
-            System.Diagnostics.Process.Start(href);
+            System.Diagnostics.Process.Start(fullUrlToWebPage);
         }
 
         //Also refferred to as AssemblyTitle

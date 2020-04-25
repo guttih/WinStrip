@@ -54,7 +54,7 @@ namespace WinStrip.Utilities
 
             var frm = new BaseForm();
             var ver = frm.Version;
-            versionInfo.Version = $"{ver.Major}.{ver.Minor}.{ver.Build}";
+            versionInfo.Version = frm.VersionString;
             content = serializer.Serialize(versionInfo);
             System.IO.File.WriteAllText(@"..\..\release.json",content);
             

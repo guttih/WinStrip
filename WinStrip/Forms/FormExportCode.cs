@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace WinStrip
 {
-    public partial class FormExportCode : BaseForm
+    public partial class FormExport : BaseForm
     {
         public List<string> FileContent;
         public string CodeFilePath { get; set; }
@@ -20,7 +20,7 @@ namespace WinStrip
         const string CONST_CHAR_STRIPTYPE = "const char* stripType = ";
         const string PINMODE_CLOCK_PIN    = "pinMode(CLOCK_PIN";
         const string FASTLED_ADDLEDS      = "FastLED.addLeds<STRIP_TYPE, DATA_PIN, ";
-        public FormExportCode(string codeFilePath)
+        public FormExport(string codeFilePath)
         {
             CodeFilePath = codeFilePath;
             InitializeComponent();

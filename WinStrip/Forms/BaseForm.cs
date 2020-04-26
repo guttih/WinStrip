@@ -29,33 +29,41 @@ namespace WinStrip
             }
         }
 
-        public string ApplicationVersionString
+        /// <summary>
+        /// Gets the first three parts of the application version as a string.
+        /// </summary>
+        public string CurrentVersionString
         {
             get
             {
-                string assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-                return assemblyVersion;
+                var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+                return $"{version.Major}.{version.Minor}.{version.Build}";
+            }
+        }
+        public System.Version Version
+        {
+            get
+            {
+                return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             }
         }
 
-        public string HelpRootUrl { get {
-                var rootUrl = Properties.Settings.Default.HelpRootUrl;
-                return $"{rootUrl}/{ApplicationVersionString}";
-            } 
-        }
+        public string HelpRootUrl => Properties.Settings.Default.HelpRootUrl;
 
         public void VisitHelpUrl(string webpageName = null)
         {
             var href = HelpRootUrl;
+
             if (webpageName != null)
-                href += $"/{ webpageName}";
+                href += $"/{webpageName}";
+            
+            href += $"?v={CurrentVersionString}"; 
             System.Diagnostics.Process.Start(href);
         }
 
         public void VisitUrl(string fullUrlToWebPage)
         {
-            var href = fullUrlToWebPage;
-            System.Diagnostics.Process.Start(href);
+            System.Diagnostics.Process.Start(fullUrlToWebPage);
         }
 
         //Also refferred to as AssemblyTitle
@@ -76,5 +84,22 @@ namespace WinStrip
             }
         }
 
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // BaseForm
+            // 
+            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.Name = "BaseForm";
+            this.Load += new System.EventHandler(this.BaseForm_Load);
+            this.ResumeLayout(false);
+
+        }
+
+        private void BaseForm_Load(object sender, System.EventArgs e)
+        {
+
+        }
     }
 }

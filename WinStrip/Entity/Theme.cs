@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using WinStrip.EntityTransfer;
+using System.Linq;
 
 namespace WinStrip.Entity
 {
@@ -29,13 +30,35 @@ namespace WinStrip.Entity
         /// <summary>
         /// Sorts the steps in descending order and makes sure that the last step will be From 0
         /// </summary>
-        public void SortStepsAndFix()
+        public void SortStepsAndFix(bool ReverseOrder = false)
         {
-            Steps.Sort(new Step());
-            if (Steps.Count > 0 && Steps[Steps.Count-1].From != 0)
-            {
-                Steps[Steps.Count - 1].From = 0;
-            }
+            Steps = SortStepsAndFix(Steps, ReverseOrder);
+        }
+
+        public List<Step> SortStepsAndFix(List<Step> list, bool ReverseOrder)
+        {
+            list.Sort(new Step());
+            list = RemoveDublicatesFromASortedList(list);
+            if (list.Count > 0 && list[0].From !=0)
+                list[0].From = 0;//there must be a zero from step
+
+            if (ReverseOrder)
+                list.Reverse();
+
+            return list;
+        }
+
+        /// <summary>
+        /// Removes dublicated steps.
+        /// Note, the List must be sorted before calling this method;
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public List<Step> RemoveDublicatesFromASortedList(List<Step> list)
+        {
+            //Here list must be sorted in order for this to work
+            return list.GroupBy(a => a.From).Select(b => b.First()).ToList();
+
         }
 
         public int Compare(Theme x, Theme y)

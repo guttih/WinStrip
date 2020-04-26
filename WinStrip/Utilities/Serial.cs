@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using WinStrip.Enums;
 
 namespace WinStrip.Utilities
 {
@@ -175,6 +176,5 @@ namespace WinStrip.Utilities
         public string[] getPortNames() {
             return SerialPort.GetPortNames();
         }
-
     }
 }

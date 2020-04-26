@@ -5,23 +5,22 @@ namespace WinStrip.Utilities
 {
     class DiffStep 
     {
-        public Decimal     From { get; set; }
+        public decimal From { get; set; }
 
-        public Decimal[]       Values = new Decimal[3];
+        public decimal[]   Values = new decimal[3];
         public DiffColor[] Colors = new DiffColor[] {   new DiffColor(), new DiffColor(), new DiffColor(),
                                                         new DiffColor(), new DiffColor(), new DiffColor()   };
-        
-        public Decimal Delay { get; set; }
-        public Decimal Com { get; set; }
-        public Decimal Brightness { get; set; }
+        public decimal Delay { get; set; }
+        public decimal Com { get; set; }
+        public decimal Brightness { get; set; }
         public uint Count { get; private set; }
 
-        private static Decimal getStepIncrement(int fromValue, int toValue, uint count, bool doCalculation)
+        private static decimal getStepIncrement(int fromValue, int toValue, uint count, bool doCalculation)
         {
             if (!doCalculation)
                 return 0;
 
-            return (Decimal)(toValue - fromValue) / ((Decimal)count - 1) ;
+            return (decimal)(toValue - fromValue) / ((decimal)count - 1) ;
         }
 
         public DiffStep(Step step1, Step step2, StepDifferenceParameters diffInterval)
@@ -77,12 +76,10 @@ namespace WinStrip.Utilities
         public bool Delay { get; set; }
         public bool Brightness { get; set; }
 
-        
         public StepDifferenceParameters(uint fromInterval, StepDifferenceParametersTypes parameterType = StepDifferenceParametersTypes.ALL)
         {
             From = fromInterval;
         }
-
 
         public StepDifferenceParameters(StepDifferenceParametersTypes parameterType = StepDifferenceParametersTypes.ALL)
         {
@@ -128,9 +125,9 @@ namespace WinStrip.Utilities
 
     public class DiffColor
     {
-        public Decimal Red { get; set; }
-        public Decimal Green { get; set; }
-        public Decimal Blue { get; set; }
+        public decimal Red { get; set; }
+        public decimal Green { get; set; }
+        public decimal Blue { get; set; }
 
         internal ulong AddToValues(ulong ulColor, uint multiplier)
         {

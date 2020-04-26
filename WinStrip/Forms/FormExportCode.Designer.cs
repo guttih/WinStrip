@@ -1,6 +1,6 @@
 ﻿namespace WinStrip
 {
-    partial class FormExportCode
+    partial class FormExport
     {
         /// <summary>
         /// Required designer variable.

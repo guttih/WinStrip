@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
-namespace WinStrip.Utilities
+namespace WinStrip.Enums
 {
     public enum SerialCommand
     {
@@ -19,8 +15,6 @@ namespace WinStrip.Utilities
         [Description("PIXELCOUNT")   ] PIXELCOUNT,
         [Description("HARDWARE")     ] HARDWARE,
         [Description("VALUES_COLORS")] VALUES_COLORS,
-        
-
 
         //ADD NEW ITEMS BEFORE THIS LINE
         [Description("COUNT OF SERIAL COMMANDS")] COUNT

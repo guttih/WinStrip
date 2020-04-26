@@ -2,7 +2,7 @@
 using System;
 using WinStrip.Entity;
 using System.Globalization;
-namespace WinStrip.Utilities.Tests
+namespace WinStrip.Entity.Tests
 {
     [TestClass()]
 
@@ -40,11 +40,12 @@ namespace WinStrip.Utilities.Tests
         public void RandomTestsTest()
         {
             var verInfo = CreateCersionInformationWithValues("1.2.3.4");
-            var verNum = new VersionNumbers(verInfo.Version);
 
-            Assert.IsTrue(verNum.Major == 1 && verNum.Minor == 2 && verNum.Patch == 2 && verNum.Build == 4);
-            Assert.IsTrue(verInfo.IsVersionEqual("1.2.3.4"));
-            Assert.IsTrue(verInfo.VersionCompare("1.2.3.4") == 0);
+            Assert.IsTrue(verInfo.VersionIsEqual("1.2.3.4"));
+            Assert.IsTrue(verInfo.VersionCompareTo("1.2.3.4") ==  0);
+            Assert.IsTrue(verInfo.VersionCompareTo("1.2.3.3") ==  1);
+            Assert.IsTrue(verInfo.VersionCompareTo("1.2.3.5") == -1);
+
 
         }
     }

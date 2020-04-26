@@ -92,7 +92,11 @@ namespace WinStrip.Utilities
         public override string ToString()
         {
             return "0x" + string.Join("", (new byte[] { Red, Green, Blue }).Select(b => b.ToString("X2")).ToArray());
-            
+        }
+
+        public static implicit operator Color(SColor v)
+        {
+            return Color.FromArgb(v.Red, v.Green, v.Blue);
         }
     }
 }

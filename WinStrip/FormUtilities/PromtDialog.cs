@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace WinStrip.Utilities
+namespace WinStrip.FormUtilities
 {
     public static class PromptDialog
     {
@@ -43,11 +43,6 @@ namespace WinStrip.Utilities
             {
                 confirmation.Enabled = textBox.Text.Length > 0;
             }
-
-
-
-
-
 
             return prompt.ShowDialog() == DialogResult.OK ? textBox.Text : "";
         }

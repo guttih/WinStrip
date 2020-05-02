@@ -113,13 +113,50 @@ namespace WinStrip.Utilities
             port.Close();
         }
 
+        private void delay(int milliSeconds)
+        {
+            var now = DateTime.Now;
+            var end = now.AddMilliseconds(milliSeconds);
+            while (now < end)
+            {
+                now = DateTime.Now;
+            }
+        }
+
+        private bool GetEssentialsFromDevice()
+        {
+            var cmd = SerialCommand.STATUS.ToString();
+            port.WriteLine(cmd);
+            if (ValidateSerialCommandResponse.Validate(SerialCommand.STATUS, ReadLine()))
+            {
+                cmd = SerialCommand.BUFFERSIZE.ToString();
+                port.WriteLine(cmd);
+                var strBuffer = ReadLine();
+                if (!ValidateSerialCommandResponse.Validate(SerialCommand.BUFFERSIZE, strBuffer))
+                    return false;
+                MaxBufferLength = Convert.ToInt32(strBuffer);
+
+                cmd = SerialCommand.SEPARATOR.ToString();
+                port.WriteLine(cmd);
+                strBuffer = ReadLine();
+                if (!ValidateSerialCommandResponse.Validate(SerialCommand.SEPARATOR, strBuffer))
+                    return false;
+                Separator = strBuffer[0];
+                return true;
+            }
+            return false;
+        }
         public bool OpenSerialPort(string portName, int baudRate)
         {
+            if (port != null && port.PortName == portName && isConnected)
+            {
+                return true; //already connected to this port
+            }
             if (isConnected)
                 port.Close();
 
             port = new SerialPort(portName, baudRate, Parity.None, 8, StopBits.One);
-
+           
             try
             {
                 port.ReadTimeout = 1200;
@@ -129,26 +166,7 @@ namespace WinStrip.Utilities
                 if (!port.IsOpen)
                     return false;
 
-                port.WriteLine(cmd);
-
-                if (ValidateSerialCommandResponse.Validate(SerialCommand.STATUS, ReadLine()))
-                {
-                    cmd = SerialCommand.BUFFERSIZE.ToString();
-                    port.WriteLine(cmd); 
-                    var strBuffer = ReadLine();
-                    if (!ValidateSerialCommandResponse.Validate(SerialCommand.BUFFERSIZE, strBuffer))
-                        return false;
-                    MaxBufferLength = Convert.ToInt32(strBuffer);
-
-                    cmd = SerialCommand.SEPARATOR.ToString();
-                    port.WriteLine(cmd);
-                    strBuffer = ReadLine();
-                    if (!ValidateSerialCommandResponse.Validate(SerialCommand.SEPARATOR, strBuffer))
-                        return false;
-                    Separator = strBuffer[0];
-                    return true;
-                }
-                return false;
+                return GetEssentialsFromDevice();
             }
             catch (UnauthorizedAccessException)
             {
@@ -163,7 +181,11 @@ namespace WinStrip.Utilities
                     port.Close();
                     return false;
                 }*/
-                Console.WriteLine("Error opening port: " + ex);
+
+                //Try ones more
+                if (GetEssentialsFromDevice())
+                    return true;
+
                 port.Close();
                 
                 return false;

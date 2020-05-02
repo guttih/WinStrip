@@ -723,8 +723,6 @@
             this.labelCpu.Text = "0";
             this.labelCpu.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.labelCpu.TextChanged += new System.EventHandler(this.labelCpu_TextChanged);
-            this.labelCpu.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
-            this.labelCpu.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // groupBoxCpu
             // 
@@ -876,7 +874,7 @@
             this.toolStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.toolStrip2.Location = new System.Drawing.Point(189, 109);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(147, 23);
+            this.toolStrip2.Size = new System.Drawing.Size(116, 23);
             this.toolStrip2.TabIndex = 8;
             this.toolStrip2.Text = "toolStrip2";
             // 

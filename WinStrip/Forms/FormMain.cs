@@ -1197,7 +1197,6 @@ namespace WinStrip
             bool atLeastOneTheme = comboThemes.SelectedIndex > -1;
             bool atLeastOneLineInGrid = dataGridView1.Rows.Count > 1;
             bool testMode = radioButtonCpuTesting.Checked;
-            btnAddRow.Enabled = testMode && programs?.Count > 0;
             btnAddRow.Enabled = testMode && atLeastOneTheme;
             bool onlyLastRowIsSelected = (dataGridView1.SelectedRows.Count == 1 &&
                                             dataGridView1.SelectedRows[0].Index == dataGridView1.Rows.Count - 1);
@@ -1864,6 +1863,7 @@ namespace WinStrip
             try
             {
                 newSteps = GridToSteps(true);
+                IsGridDirty = true; //todo: now not sure if it's dirty, you should make sure if the grid di change
             }
             catch (InvalidStepException ex)
             {

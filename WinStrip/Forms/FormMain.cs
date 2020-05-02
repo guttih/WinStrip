@@ -790,18 +790,19 @@ namespace WinStrip
             SetThemeButtonsState();
         }
 
-        private void comboThemes_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboThemes_SelectedIndexChanged()
         {
             IsGridDirty = false;
             ProgrammingGridUpdate = true;
-            if (comboThemes.SelectedIndex == -1) {
+            if (comboThemes.SelectedIndex == -1)
+            {
                 themeManager.SelectedIndex = -1;
                 dataGridView1.Rows.Clear();
                 SetThemeButtonsState();
                 ProgrammingGridUpdate = false;
                 return;
             }
-            
+
             if (!themeManager.SetSelectedThemeByName(comboThemes.Text))
             {
                 SetThemeButtonsState();
@@ -812,6 +813,10 @@ namespace WinStrip
             StepsToGrid(themeManager.GetSelectedTheme().Steps);
             ProgrammingGridUpdate = false;
             SetThemeButtonsState();
+        }
+        private void comboThemes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            comboThemes_SelectedIndexChanged();
 
         }
         private void labelCpu_TextChanged(object sender, EventArgs e)
@@ -898,8 +903,7 @@ namespace WinStrip
                 var theme = GridToTheme();
                 themeManager.ReplaceSelectedTheme(theme);
                 themeManager.Save();
-                IsGridDirty = false;
-                SetThemeButtonsState();
+                comboThemes_SelectedIndexChanged();
             }
             catch (ClipboardToRowsException ex)
             {
@@ -1237,11 +1241,16 @@ namespace WinStrip
 
         private void dataGridView1_RowsChanged(object sender, DataGridViewRowsAddedEventArgs e)
         {
+            if (ProgrammingGridUpdate != true)
+                IsGridDirty = true;
             SetDataGridButtonsState();
         }
 
         private void dataGridView1_RowsChanged(object sender, DataGridViewRowsRemovedEventArgs e)
         {
+            if(ProgrammingGridUpdate != true)
+                IsGridDirty = true;
+
             SetDataGridButtonsState();
         }
 
@@ -1260,15 +1269,6 @@ namespace WinStrip
             }
         }
 
-        private void LightDimToBrightStepsToGrid(ulong ulColor)
-        {
-            var step = ExtractSelectedStepFromStrip(false);
-
-            if (step == null)
-                return;
-
-            StepsToGrid(StepGenerator.StripDimToBright(step, 0, ulColor, 0, 31));
-        }
         private void DimToBrightBlueToolStripMenuItem_Click(object sender, EventArgs e)
         {
             LightDimToBrightStepsToGrid(0x0000ff);
@@ -1282,6 +1282,18 @@ namespace WinStrip
         private void dimToBrightRedToolStripMenuItem_Click(object sender, EventArgs e)
         {
             LightDimToBrightStepsToGrid(0xff0000);
+        }
+
+        private void LightDimToBrightStepsToGrid(ulong ulColor)
+        {
+            var step = ExtractSelectedStepFromStrip(false);
+
+            if (step == null)
+                return;
+
+            StepsToGrid(StepGenerator.StripDimToBright(step, 0, ulColor, 0, 100, 3));
+            IsGridDirty = true;
+            SetThemeButtonsState();
         }
 
         private void GenerateStepsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1648,7 +1660,7 @@ namespace WinStrip
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (ProgrammingGridUpdate) return;
-            IsGridDirty = true;
+                IsGridDirty = true;
             SetDataGridButtonsState();
         }
 

@@ -127,6 +127,8 @@
             this.saveAllThemesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadSavedThemesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetAllThemesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -139,8 +141,6 @@
             this.trayMenuItemShow = new System.Windows.Forms.ToolStripMenuItem();
             this.trayMenuItemHide = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPrograms.SuspendLayout();
             this.groupBoxParameters.SuspendLayout();
@@ -876,7 +876,7 @@
             this.toolStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.toolStrip2.Location = new System.Drawing.Point(189, 109);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(116, 23);
+            this.toolStrip2.Size = new System.Drawing.Size(147, 23);
             this.toolStrip2.TabIndex = 8;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -944,8 +944,7 @@
             this.btnDeleteTheme.Name = "btnDeleteTheme";
             this.btnDeleteTheme.Size = new System.Drawing.Size(23, 20);
             this.btnDeleteTheme.Text = "toolStripButton1";
-            this.btnDeleteTheme.ToolTipText = "Remove selected theme\r\n\r\nIf you want to delete the theme permanently\r\nyou will ne" +
-    "ed to press the save all themes button";
+            this.btnDeleteTheme.ToolTipText = "Delete selected theme";
             this.btnDeleteTheme.Click += new System.EventHandler(this.btnDeleteTheme_Click);
             this.btnDeleteTheme.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
             this.btnDeleteTheme.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
@@ -1057,7 +1056,7 @@
             this.DimToBrightBlueToolStripMenuItem.Name = "DimToBrightBlueToolStripMenuItem";
             this.DimToBrightBlueToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
             this.DimToBrightBlueToolStripMenuItem.Text = "Dim to Bright blue";
-            this.DimToBrightBlueToolStripMenuItem.ToolTipText = "Creates series of steps where light goes from \r\none value to a nother";
+            this.DimToBrightBlueToolStripMenuItem.ToolTipText = "Creates series of steps where light goes from \r\ndim blue to bright blue";
             this.DimToBrightBlueToolStripMenuItem.Click += new System.EventHandler(this.DimToBrightBlueToolStripMenuItem_Click);
             this.DimToBrightBlueToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
             this.DimToBrightBlueToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
@@ -1067,6 +1066,7 @@
             this.DimToBrightGreenToolStripMenuItem.Name = "DimToBrightGreenToolStripMenuItem";
             this.DimToBrightGreenToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
             this.DimToBrightGreenToolStripMenuItem.Text = "Dim to Bright green";
+            this.DimToBrightGreenToolStripMenuItem.ToolTipText = "Creates series of steps where light goes from \r\ndim green to bright green";
             this.DimToBrightGreenToolStripMenuItem.Click += new System.EventHandler(this.dimToBrightGreenToolStripMenuItem_Click);
             this.DimToBrightGreenToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
             this.DimToBrightGreenToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
@@ -1076,6 +1076,7 @@
             this.DimToBrightRedToolStripMenuItem.Name = "DimToBrightRedToolStripMenuItem";
             this.DimToBrightRedToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
             this.DimToBrightRedToolStripMenuItem.Text = "Dim to Bright Red";
+            this.DimToBrightRedToolStripMenuItem.ToolTipText = "Creates series of steps where light goes from \r\ndim red to bright red";
             this.DimToBrightRedToolStripMenuItem.Click += new System.EventHandler(this.dimToBrightRedToolStripMenuItem_Click);
             this.DimToBrightRedToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
             this.DimToBrightRedToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
@@ -1085,8 +1086,8 @@
             this.GenerateStepsToolStripMenuItem.Name = "GenerateStepsToolStripMenuItem";
             this.GenerateStepsToolStripMenuItem.Size = new System.Drawing.Size(279, 22);
             this.GenerateStepsToolStripMenuItem.Text = "Generate steps from two selected steps";
-            this.GenerateStepsToolStripMenuItem.ToolTipText = "Generates steps between two steps\r\n\r\nThe wizard will calculate the difference bet" +
-    "weeen\r\nthe two steps an inserts missing steps between them\r\n";
+            this.GenerateStepsToolStripMenuItem.ToolTipText = "Generates steps between two steps\r\nThe wizard will calculate the difference betwe" +
+    "een\r\nthe two steps an inserts missing steps between them\r\n";
             this.GenerateStepsToolStripMenuItem.Click += new System.EventHandler(this.GenerateStepsToolStripMenuItem_Click);
             this.GenerateStepsToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
             this.GenerateStepsToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
@@ -1306,10 +1307,10 @@
             this.mainToolStripMenuItem,
             this.themesToolStripMenuItem,
             this.helpToolStripMenuItem1});
-            this.menuStrip1.Location = new System.Drawing.Point(349, -1);
+            this.menuStrip1.Location = new System.Drawing.Point(469, -1);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(6, 2, 13, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(299, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(179, 24);
             this.menuStrip1.TabIndex = 18;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -1399,6 +1400,26 @@
             this.resetAllThemesToolStripMenuItem.Click += new System.EventHandler(this.resetAllThemesToolStripMenuItem_Click);
             this.resetAllThemesToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
             this.resetAllThemesToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.exportToolStripMenuItem.Text = "&Export";
+            this.exportToolStripMenuItem.ToolTipText = "Select and Export themes to a file";
+            this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
+            this.exportToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.exportToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
+            // 
+            // importToolStripMenuItem
+            // 
+            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+            this.importToolStripMenuItem.Text = "&Import";
+            this.importToolStripMenuItem.ToolTipText = "select and Import themes";
+            this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
+            this.importToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
+            this.importToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // helpToolStripMenuItem1
             // 
@@ -1509,26 +1530,6 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // exportToolStripMenuItem
-            // 
-            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.exportToolStripMenuItem.Text = "&Export";
-            this.exportToolStripMenuItem.ToolTipText = "Select and Export themes to a file";
-            this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
-            this.exportToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
-            this.exportToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
-            // 
-            // importToolStripMenuItem
-            // 
-            this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
-            this.importToolStripMenuItem.Text = "&Import";
-            this.importToolStripMenuItem.ToolTipText = "select and Import themes";
-            this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
-            this.importToolStripMenuItem.MouseEnter += new System.EventHandler(this.onControl_MouseEnter);
-            this.importToolStripMenuItem.MouseLeave += new System.EventHandler(this.onControl_MouseLeave);
             // 
             // FormMain
             // 

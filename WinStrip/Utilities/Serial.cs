@@ -170,7 +170,7 @@ namespace WinStrip.Utilities
             }
             catch (UnauthorizedAccessException)
             {
-                Console.WriteLine($"Error: Port {portName} is in use!");
+                throw new UnauthorizedAccessException($"Error: Port {portName} is in use!");
             }
             catch (Exception ex)
             {
@@ -187,12 +187,8 @@ namespace WinStrip.Utilities
                     return true;
 
                 port.Close();
-                
                 return false;
             }
-
-            return false;
-
         }
 
         public string[] getPortNames() {

@@ -77,6 +77,10 @@ namespace WinStrip
             launchWinStripOnStartupToolStripMenuItem.Checked = CheckIfApplicationWillRunOnStartup();
 
             splashHide();
+            if (!visabilityAllowed)
+            {
+                tabControl1.SelectedIndex = 1;
+            }
             timer1.Start();
         }
 
@@ -310,12 +314,20 @@ namespace WinStrip
         {
             var nextPortName = comboPorts.Items[comboPortsItemIndex].ToString();
             labelStatus.Text = $"{nextPortName}";
-            if (serial.OpenSerialPort(nextPortName, PortSpeed))
+            try { 
+                if (serial.OpenSerialPort(nextPortName, PortSpeed))
+                {
+                    comboPorts.SelectedIndex = comboPortsItemIndex;
+                    SetPortConnectionStatus(true);
+                    GetAllFromDevice(hideSplashWhenFinished);
+                    return true;
+                }
+            }
+            catch (UnauthorizedAccessException ex)
             {
-                comboPorts.SelectedIndex = comboPortsItemIndex;
-                SetPortConnectionStatus(true);
-                GetAllFromDevice(hideSplashWhenFinished);
-                return true;
+                splashHide();
+                MessageBox.Show(this, ex.Message, "Error connecting to port", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             }
             return false;
         }
@@ -755,6 +767,7 @@ namespace WinStrip
         {
             RadioButton radioButton = (RadioButton)sender;
             groupBoxCpu.Enabled = !radioButton.Checked;
+            EnableDeviceRelatedControls(!radioButton.Checked);  //disable all
         }
 
         private DataGridViewRow MakeDatagridStepRow(Step step)
@@ -1026,6 +1039,7 @@ namespace WinStrip
             if (radioButtonCpuTesting.Checked)
             {
                 numericUpDownCpuTesting.Value = trackBarCpuTesting.Value;
+                EnableDeviceRelatedControls(true && serial.isConnected);
             }
 
             SetDataGridButtonsState();

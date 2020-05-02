@@ -803,9 +803,9 @@
             // 
             // linkLabelCpu
             // 
-            this.linkLabelCpu.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelCpu.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabelCpu.AutoSize = true;
-            this.linkLabelCpu.Location = new System.Drawing.Point(640, 424);
+            this.linkLabelCpu.Location = new System.Drawing.Point(4, 424);
             this.linkLabelCpu.Name = "linkLabelCpu";
             this.linkLabelCpu.Size = new System.Drawing.Size(29, 13);
             this.linkLabelCpu.TabIndex = 18;

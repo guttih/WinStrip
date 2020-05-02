@@ -156,7 +156,7 @@ namespace WinStrip.Utilities
                 port.Close();
 
             port = new SerialPort(portName, baudRate, Parity.None, 8, StopBits.One);
-           
+
             try
             {
                 port.ReadTimeout = 1200;
@@ -172,19 +172,21 @@ namespace WinStrip.Utilities
             {
                 throw new UnauthorizedAccessException($"Error: Port {portName} is in use!");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
-                /*if (ex.HResult == -2146233083 || ex.HResult == -2146233083)
-                {   //{"The read timed out."} or {"The write timed out."}
-                    Console.WriteLine($"Port operation on {portName} took too long, {ex.Message}");
-                    port.Close();
-                    return false;
-                }*/
+               //{"The read timed out."} or {"The write timed out."}
 
-                //Try ones more
+                //Try ones more because for the first time the device starts, this needs to be done twise.
+                try { 
                 if (GetEssentialsFromDevice())
                     return true;
+                } 
+                catch(Exception)
+                {
+                    port.Close();
+                    return false;
+                }
 
                 port.Close();
                 return false;

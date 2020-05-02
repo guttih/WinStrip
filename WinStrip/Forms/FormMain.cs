@@ -392,6 +392,8 @@ namespace WinStrip
 
             labelStatus.Text = serial.isConnected ? $"Connected to {comboPorts.Text}" : "";
 
+            btnConnection.Enabled = comboPorts.SelectedIndex != -1;
+
             SetManualControlState();
         }
 
@@ -746,17 +748,39 @@ namespace WinStrip
             if (index > -1)
             {
                 splashShow("Connecting...");
-                ConnectToPort(index);
+                var success = ConnectToPort(index);
+
+                splashHide();
+
+                if (!success)
+                {
+                    MessageBox.Show(this, $"Could not connect to {comboPorts.Text}", "Error connecting", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
+
+            btnConnection.Enabled = comboPorts.SelectedIndex != -1;
         }
 
         private void btnConnection_Click(object sender, EventArgs e)
         {
-            splashShow("Disconnecting...");
+
             if (serial.isConnected)
-                serial.Close(); 
+            {
+                splashShow("Disconnecting...");
+                serial.Close();
+            }
             else
-                ConnectToPort(comboPorts.SelectedIndex);
+            {
+                splashShow("Connecting...");
+                if (comboPorts.SelectedIndex == -1)
+                {
+                    MessageBox.Show(this, "No COM port selected", "Error connecting", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if (!ConnectToPort(comboPorts.SelectedIndex))
+                {
+                    MessageBox.Show(this, $"Could not connect to {comboPorts.Text}", "Error connecting", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
 
             SetPortConnectionStatus(serial.isConnected);
             splashHide();
@@ -1487,7 +1511,7 @@ namespace WinStrip
                     exportThemesDialog();
                 }
 
-                url = $"{RootUrl}/release.html?version={serverVersion.Version}";
+                url = $"{RootUrl}/release.html?v={serverVersion.Version}";
                 System.Diagnostics.Process.Start(url);
             }
         }

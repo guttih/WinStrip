@@ -6,13 +6,15 @@
  Created:	3/14/2020 11:24:27 AM
  Author:	gutti
 
- If you need to send longer strings than 255 split them up by adding ";" at then end of the string
+ If you need to send longer strings than 255 split them up by adding "@" at then end of the string
      
      For example, if you want to send the string "This is a long string.\n" in three shipments,
      you could send it like this:
-        1) "This is;\n"
-        2) " a long;\n"
+        1) "This is@\n"
+        2) " a long@\n"
         3) " string.\n"
+
+    See command SerialPrintLine for more information
 */
 
 SerialReader reader;

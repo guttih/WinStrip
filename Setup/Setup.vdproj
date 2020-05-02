@@ -172,7 +172,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:.NET Framework 4.7.2      "
+                "FrameworkVersion" = "8:.NET Framework 4.7.2       "
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=863262"
                 }
@@ -448,7 +448,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:WinStrip"
         "ProductCode" = "8:{2A3501BA-9D24-4A74-936E-49CAFC2650B9}"
-        "PackageCode" = "8:{150EBF8A-DC74-4EE3-9DCD-95CDA952DB2A}"
+        "PackageCode" = "8:{30A33F18-A63B-4FC1-9D06-C3E46CD58AAF}"
         "UpgradeCode" = "8:{1F37B9B1-D3C5-403B-93A4-17600DF318A9}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -568,6 +568,20 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_435BC91D5C5F4DF9AB8C439CFE27D041"
+            {
+            "Name" = "8:WinStrip"
+            "Arguments" = "8:"
+            "Description" = "8:Application to control a Digital Addressable Rgb Led Strip"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_F2878DCBCBA748FF9F803C485D91AF36"
+            "Folder" = "8:_FC545BD2BE194EAA84822985D0361AAF"
+            "WorkingFolder" = "8:_8220BC01FCB043288FAB61A9E0A6B0F7"
+            "Icon" = "8:_65E0702CE5E043FDBAF66EDBB8B6B07C"
+            "Feature" = "8:"
+            }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_C974B1B0BDC542978183C443D2C5D28D"
             {
             "Name" = "8:WinStrip"
@@ -1039,7 +1053,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_F2878DCBCBA748FF9F803C485D91AF36"
             {
-            "SourcePath" = "8:..\\WinStrip\\obj\\Debug\\WinStrip.exe"
+            "SourcePath" = "8:..\\WinStrip\\obj\\Release\\WinStrip.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_8220BC01FCB043288FAB61A9E0A6B0F7"

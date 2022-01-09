@@ -44,6 +44,7 @@ namespace WinStrip
         private void InitValues()
         {
             comboType.Items.Add("WS2801");
+            comboType.Items.Add("WS2813");
             comboType.Items.Add("APA102");
             comboColorScheme.Items.Add("RGB");
             comboColorScheme.Items.Add("RBG");

@@ -49,6 +49,11 @@
             // numericUpDownLedCount
             // 
             this.numericUpDownLedCount.Location = new System.Drawing.Point(36, 97);
+            this.numericUpDownLedCount.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
             this.numericUpDownLedCount.Name = "numericUpDownLedCount";
             this.numericUpDownLedCount.Size = new System.Drawing.Size(75, 20);
             this.numericUpDownLedCount.TabIndex = 0;

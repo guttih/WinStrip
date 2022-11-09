@@ -1,0 +1,48 @@
+#include <Arduino.h>
+
+void Print(String str)
+{
+    Serial.print(str);
+}
+void PrintLn(String str)
+{
+    Print(str);
+    Serial.println();
+}
+void Print(String str, int number)
+{
+    Serial.print(str + String(number));
+}
+void PrintLn(String str, int number)
+{
+    Print(str, number);
+    Serial.println();
+}
+void setup()
+{
+    Serial.begin(115200);
+    PrintLn("Doing stuff first");
+}
+
+int i = 0;
+
+void loop()
+{
+    PrintLn("Doing stuff ", ++i);
+    while (Serial.available() != 0)
+    {
+        String teststr = Serial.readString(); // read until timeout
+        teststr.trim();                       // remove any \r \n whitespace at the end of the String
+        if (teststr == "red")
+        {
+            Serial.println("A primary color");
+        }
+        else
+        {
+            Serial.print("got string \"");
+            Serial.print(teststr);
+            Serial.println("\"");
+        }
+    } // wait for data available
+    delay(1000);
+}

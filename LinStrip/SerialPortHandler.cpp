@@ -13,6 +13,16 @@ SerialPortHandler::SerialPortHandler( QSerialPort *serialPort, QObject *parent )
     m_timer.start( 1000 );
 }
 
+void SerialPortHandler::stopTimer()
+{
+    disconnect( m_serialPort, &QSerialPort::readyRead, this, &SerialPortHandler::handleReadyRead );
+    disconnect( m_serialPort, &QSerialPort::errorOccurred, this, &SerialPortHandler::handleError );
+    disconnect( &m_timer, &QTimer::timeout, this, &SerialPortHandler::handleTimeout );
+
+    m_timer.stop();
+}
+
+
 qint64 SerialPortHandler::write( const QByteArray &writeData )
 {
     m_writeData = writeData;
@@ -61,7 +71,6 @@ void SerialPortHandler::send( const char *strToSend )
 
 }
 
-
 void SerialPortHandler::handleReadyRead()
 {
     m_readData.append( m_serialPort->readAll() );
@@ -73,6 +82,11 @@ void SerialPortHandler::handleReadyRead()
         m_timer.start( 1000 );
 
     }
+}
+
+void SerialPortHandler::setEdit( QTextEdit *pTextEdit )
+{
+    m_pTextEdit=pTextEdit;
 }
 
 int ix = 0;
@@ -99,7 +113,8 @@ void SerialPortHandler::handleTimeout()
         }
         m_readData.clear();
         m_standardOutput << str << Qt::endl;
-        //m_pTextEdit->append(str);
+        if( m_pTextEdit )
+            m_pTextEdit->append( str );
 
         m_serialPort->clear();
     }
@@ -118,6 +133,7 @@ void SerialPortHandler::handleError( QSerialPort::SerialPortError serialPortErro
         QCoreApplication::exit( 1 );
     }
 }
+
 
 
 

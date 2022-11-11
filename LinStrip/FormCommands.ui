@@ -116,28 +116,11 @@ The responce from the micro controller will appear in the Responce box below.</s
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Responce:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QTextEdit" name="textEdit">
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QComboBox" name="comboDevices"/>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btnConnect">
+        <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>Connect</string>
+          <string>Responce:</string>
          </property>
         </widget>
        </item>
@@ -154,7 +137,21 @@ The responce from the micro controller will appear in the Responce box below.</s
          </property>
         </spacer>
        </item>
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>Clear</string>
+         </property>
+        </widget>
+       </item>
       </layout>
+     </item>
+     <item>
+      <widget class="QTextEdit" name="textEditResponse">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

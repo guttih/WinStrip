@@ -23,8 +23,8 @@ Q_OBJECT
 
 public:
     explicit SerialPortHandler( QSerialPort *serialPort, QObject *parent = nullptr );
-    //void sendCommand(SERIAL_COMMAND command);
     void send( const char *strToSend );
+    void stopTimer();
     qint64 write( const QByteArray &writeData );
     static QStringList getAvailablePorts()
     {
@@ -36,6 +36,7 @@ public:
 
         return portsNames;
     }
+    void setEdit( QTextEdit *pTextEdit );
 
 private slots:
     void handleReadyRead();
@@ -43,11 +44,14 @@ private slots:
     void handleError( QSerialPort::SerialPortError error );
 
 private:
-    QSerialPort *m_serialPort = nullptr;
+    //QSerialPort *m_serialPort = nullptr;
+    QSerialPort *m_serialPort;
     QByteArray m_writeData;
     QByteArray m_readData;
     QTextStream m_standardOutput;
     QTimer m_timer;
+    QTextEdit *m_pTextEdit = nullptr;
+
 };
 
 #endif

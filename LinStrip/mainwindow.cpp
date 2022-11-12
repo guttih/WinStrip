@@ -2,18 +2,33 @@
 #include "./ui_mainwindow.h"
 #include <QMessageBox>
 #include <QFile>
+
 MainWindow::MainWindow( QWidget *parent )
     : QMainWindow( parent )
     , ui( new Ui::MainWindow )
 {
     ui->setupUi( this );
+
+    m_pApplication = LinuxStripApp::instance();
+
     m_formCommmands = new FormCommands( this );
-    m_formCommmands->setMainForm( this );
+    // m_formCommmands->setMainForm( this );
     ui->tabWidget->addTab( m_formCommmands, QString( "Manual" ) );
     ui->tabWidget->setCurrentIndex( 2 );
 
     for( const auto &deviceName : SerialPortHandler::getAvailablePorts() )
         ui->comboDevices->addItem( deviceName );
+
+}
+
+QSerialPort *MainWindow::getSerialPort()
+{
+    return m_pApplication->getSerialPort();
+
+}
+SerialPortHandler *MainWindow::getSerialHandler()
+{
+    return m_pApplication->getSerialHandler();
 }
 
 MainWindow::~MainWindow()
@@ -53,8 +68,8 @@ void MainWindow::on_btnConnect_clicked()
 
     if( isConnected )
     {
-        m_SerialHandler->stopTimer();
-        m_serialPort.close();
+        getSerialHandler()->stopTimer();
+        getSerialPort()->close();
         isConnected=false;
     }
     else
@@ -71,35 +86,34 @@ void MainWindow::on_btnConnect_clicked()
 bool MainWindow::connectToPort( const QString &name, int baudRate )
 {
 
-
-    if( m_serialPort.isOpen() )
+    auto serialPort = getSerialPort();
+    auto serialHandler = getSerialHandler();
+    if( serialPort->isOpen() )
     {
-        m_SerialHandler->stopTimer();
-        m_serialPort.close();
+        serialHandler->stopTimer();
+        serialPort->close();
     }
 
-    m_serialPort.setPortName( name );
-    m_serialPort.setBaudRate( baudRate );
-    bool success = m_serialPort.open( QIODevice::ReadWrite );
+    serialPort->setPortName( name );
+    serialPort->setBaudRate( baudRate );
+    bool success = serialPort->open( QIODevice::ReadWrite );
     if( !success )
     {
         //ui->textEdit->append(("Unable to connect to " + name + " with baud rate " + QString::number(baudRate)));
         QMessageBox msgBox;
-        msgBox.critical( this, "Error connecting", QString( "error %1, %2" ).arg( name, m_serialPort.errorString() ) );
+        msgBox.critical( this, "Error connecting", QString( "error %1, %2" ).arg( name, serialPort->errorString() ) );
         return false;
     }
 
-    if( m_SerialHandler )
+    if( serialHandler )
     {
-        delete m_SerialHandler;
-        m_SerialHandler = nullptr;
+        delete serialHandler;
+        serialHandler = nullptr;
     }
-
-    m_SerialHandler = new SerialPortHandler( &m_serialPort, this );
+    serialHandler = m_pApplication->setSerialHandler( new SerialPortHandler( serialPort, this ) );
     if( ui->tabWidget->currentIndex() == 2 )
-        m_SerialHandler->setEdit( m_formCommmands->GetTextEditResponce() );
+        serialHandler->setEdit( m_formCommmands->GetTextEditResponce() );
     //todo: hér ætti að tengja við eitthvað update stuff
-    //m_SerialHandler->setEdit(ui->textEdit);
     return success;
 
 

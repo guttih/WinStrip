@@ -4,8 +4,7 @@
 #include <QWidget>
 #include "./serialcommands.h"
 #include "./SerialPortHandler.h"
-
-
+#include "LinuxStripApp.h"
 
 namespace Ui
 {
@@ -19,9 +18,7 @@ Q_OBJECT
 public:
     explicit FormCommands( QWidget *parent = nullptr );
     ~FormCommands();
-    SerialPortHandler *m_SerialPortHandler = nullptr;
     QTextEdit *GetTextEditResponce();
-    void setMainForm( QWidget *mainWindow );
 
 private slots:
     void showEvent( QShowEvent* event );
@@ -33,7 +30,8 @@ private slots:
 
 private:
     Ui::FormCommands *ui;
-    QWidget  *m_mainWindow = nullptr;
+    LinuxStripApp *m_pApplication = nullptr;
+
 };
 
 #endif // FORMCOMMANDS_H

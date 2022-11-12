@@ -8,6 +8,9 @@ FormCommands::FormCommands( QWidget *parent ) :
     ui( new Ui::FormCommands )
 {
     ui->setupUi( this );
+
+    m_pApplication = LinuxStripApp::instance();
+
     for( auto command : SERIAL_COMMAND_STRING )
         ui->comboCommands->addItem( QString::fromUtf8( command ) );
 
@@ -43,26 +46,16 @@ QTextEdit *FormCommands::GetTextEditResponce()
 void FormCommands::on_btnSendCommand_clicked()
 {
 
-    MainWindow* mainWindow = ( MainWindow* ) this->m_mainWindow;
-    SerialPortHandler *ph = mainWindow->getSerialHandler();
-    if( mainWindow && ph )
+    auto serialHandler = m_pApplication->getSerialHandler();
+    if( serialHandler )
     {
         QString str = ui->comboCommands->currentText();
         if( str.length() > 0 )
-            /*QWidget *pw = this->parentWidget();
-            QObject *po = this->parent();
-            po = po->parent();*/
-            ph->send( str.toStdString().c_str() );
+            serialHandler->send( str.toStdString().c_str() );
     }
 
 
 }
-
-void FormCommands::setMainForm( QWidget *mainWindow )
-{
-    this->m_mainWindow = mainWindow;
-}
-
 
 void FormCommands::on_pushButton_clicked()
 {

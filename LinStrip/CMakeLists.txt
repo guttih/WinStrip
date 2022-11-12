@@ -19,6 +19,8 @@ set(PROJECT_SOURCES
         main.cpp
         serialcommands.h
         mainwindow.cpp
+        LinuxStripApp.h
+        LinuxStripApp.cpp
         mainwindow.h
         mainwindow.ui
         FormCommands.cpp

@@ -3,7 +3,7 @@
 
 #include "SerialPortHandler.h"
 #include <QApplication>
-#include <QtSerialPort/QSerialPort>
+#include "SerialTransport.h"
 
 struct AppInfo {
     QString workingDirectory;
@@ -13,18 +13,12 @@ struct AppInfo {
 class LinuxStripApp : public QApplication
 {
 public:
-    static LinuxStripApp *instance();
-    QSerialPort *getSerialPort();
-    SerialPortHandler *getSerialHandler();
-    SerialPortHandler *setSerialHandler( SerialPortHandler *pSerialPortHandler );
-
     LinuxStripApp( int &argc, char ** argv );
     ~LinuxStripApp();
+    static LinuxStripApp *instance();
+    SerialTransport m_Transport;
 
 private:
-    int m_number = 0;
-    QSerialPort m_serialPort;
-    SerialPortHandler *m_SerialHandler = nullptr;
 
 };
 

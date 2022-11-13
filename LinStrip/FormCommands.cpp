@@ -42,19 +42,16 @@ QTextEdit *FormCommands::GetTextEditResponce()
     return ui->textEditResponse;
 }
 
-
 void FormCommands::on_btnSendCommand_clicked()
 {
 
-    auto serialHandler = m_pApplication->getSerialHandler();
+    auto serialHandler = m_pApplication->m_Transport.getSerialHandler();
     if( serialHandler )
     {
         QString str = ui->comboCommands->currentText();
         if( str.length() > 0 )
             serialHandler->send( str.toStdString().c_str() );
     }
-
-
 }
 
 void FormCommands::on_pushButton_clicked()

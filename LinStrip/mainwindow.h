@@ -17,17 +17,11 @@ Q_OBJECT
 public:
     MainWindow( QWidget *parent = nullptr );
     ~MainWindow();
-    SerialPortHandler *getSerialHandler();
-    QSerialPort *getSerialPort();
-
 
 private slots:
     void on_action_About_2_triggered();
-
     void on_MainWindow_iconSizeChanged( const QSize &iconSize );
-
     void on_tabWidget_tabBarClicked( int index );
-
     void on_btnConnect_clicked();
 
 private:

@@ -21,16 +21,6 @@ MainWindow::MainWindow( QWidget *parent )
 
 }
 
-QSerialPort *MainWindow::getSerialPort()
-{
-    return m_pApplication->getSerialPort();
-
-}
-SerialPortHandler *MainWindow::getSerialHandler()
-{
-    return m_pApplication->getSerialHandler();
-}
-
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -48,7 +38,6 @@ void MainWindow::on_MainWindow_iconSizeChanged( const QSize &iconSize )
 
 }
 
-
 void MainWindow::on_tabWidget_tabBarClicked( int index )
 {
     int oldIndex =  ui->tabWidget->currentIndex();
@@ -60,16 +49,14 @@ void MainWindow::on_tabWidget_tabBarClicked( int index )
     // Switching tabs
 }
 
-
-
 void MainWindow::on_btnConnect_clicked()
 {
     bool isConnected = ui->btnConnect->text() != "Connect";
 
     if( isConnected )
     {
-        getSerialHandler()->stopTimer();
-        getSerialPort()->close();
+        m_pApplication->m_Transport.getSerialHandler()->stopTimer();
+        m_pApplication->m_Transport.getSerialPort()->close();
         isConnected=false;
     }
     else
@@ -85,37 +72,17 @@ void MainWindow::on_btnConnect_clicked()
 
 bool MainWindow::connectToPort( const QString &name, int baudRate )
 {
-
-    auto serialPort = getSerialPort();
-    auto serialHandler = getSerialHandler();
-    if( serialPort->isOpen() )
+    bool success = m_pApplication->m_Transport.connectToPort( name,  baudRate, this );
+    if( success )
     {
-        serialHandler->stopTimer();
-        serialPort->close();
+        if( ui->tabWidget->currentIndex() == 2 )
+            m_pApplication->m_Transport.getSerialHandler()->setEdit( m_formCommmands->GetTextEditResponce() );
     }
-
-    serialPort->setPortName( name );
-    serialPort->setBaudRate( baudRate );
-    bool success = serialPort->open( QIODevice::ReadWrite );
-    if( !success )
+    else
     {
-        //ui->textEdit->append(("Unable to connect to " + name + " with baud rate " + QString::number(baudRate)));
         QMessageBox msgBox;
-        msgBox.critical( this, "Error connecting", QString( "error %1, %2" ).arg( name, serialPort->errorString() ) );
-        return false;
+        msgBox.critical( this, "Error connecting", QString( "error %1, %2" ).arg( name, m_pApplication->m_Transport.getSerialPort()->errorString() ) );
     }
-
-    if( serialHandler )
-    {
-        delete serialHandler;
-        serialHandler = nullptr;
-    }
-    serialHandler = m_pApplication->setSerialHandler( new SerialPortHandler( serialPort, this ) );
-    if( ui->tabWidget->currentIndex() == 2 )
-        serialHandler->setEdit( m_formCommmands->GetTextEditResponce() );
-    //todo: hér ætti að tengja við eitthvað update stuff
     return success;
-
-
 }
 

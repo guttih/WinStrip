@@ -73,5 +73,3 @@ bool Json::isValid() const
 {
     return mData->isValid();
 }
-
-

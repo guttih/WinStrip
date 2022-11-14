@@ -1,3 +1,5 @@
+#ifndef _SERIAL_READER_H
+#define _SERIAL_READER_H
 
 #include <Arduino.h>
 
@@ -27,3 +29,4 @@ public:
     void resetBuffer();
 };
 
+#endif //_SERIAL_READER_H

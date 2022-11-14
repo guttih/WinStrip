@@ -215,7 +215,7 @@ char JsonData::getClosingToken( const char openingToken )
         case '7':
         case '8':
         case '9':
-        //todo hvað með
+        //todo hva' meÃ°
         case '0': /*Fyrir floating point*/
         case 'f': /*Fyrir bool*/
         case 't':
@@ -486,7 +486,7 @@ JsonData* JsonData::members( String* pairs, JsonData* parent )
     JsonData* pLast;
 
 
-    //hér þarf að finna út hvort object fari í child eða next
+    //hÃ©r Ã¾arf aÃ° finna Ãºt hvort object fari Ã­ child eÃ°a next
 
     int keyIndexOfFirstChar, keyLength, valueIndexOfFirstChar,
         valueLength, pairLength;
@@ -600,7 +600,7 @@ bool JsonData::getPairIndexes( String* pairs, bool& thereIsAnotherPair,
         if( iComma > -1 )
             endOfValue = iComma - 1;
         else
-            endOfValue = strValue.length() - 1; //-1 hér er munur á parse
+            endOfValue = strValue.length() - 1; //-1 hÃ©r er munur Ã¡ parse
         JSONTYPE type = getType( strValue.substring( 0, endOfValue + 1 ) );
         if( type == JSONTYPE_INVALID )
         {
@@ -1338,7 +1338,7 @@ String JsonData::getValueAsString()
 /// Converts the value of an object from string to a float.
 /// If the object is a JSONTYPE_KEY_VALUE then the child object value is returned as a number
 /// </summary>
-/// <returns>Success: If no valid conversion could be performed because the String doesn’t start with a digit,
+/// <returns>Success: If no valid conversion could be performed because the String doesnÂ’t start with a digit,
 /// a zero is returned. Data type: float.  Fail: the number 999999999</returns>
 float JsonData::getValueAsFloat()
 {

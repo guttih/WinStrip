@@ -5,7 +5,6 @@
  Name:		Esp32Strip.ino
  Created:	3/14/2020 11:24:27 AM
  Author:	gutti
-
  If you need to send longer strings than 255 split them up by adding "@" at then end of the string
 
      For example, if you want to send the string "This is a long string.\n" in three shipments,
@@ -13,7 +12,6 @@
         1) "This is@\n"
         2) " a long@\n"
         3) " string.\n"
-
     See command SerialPrintLine for more information
 */
 
@@ -165,7 +163,7 @@ void processJson( String str )
     Json parser( str.c_str() );
     if( !parser.isValid() )
     {
-        //Serial.println("Invalid json string");
+        Serial.println( "Invalid json string" );
         return;
     }
 
@@ -248,7 +246,9 @@ void processJson( String str )
 
     stripper.setNewValues( ( STRIP_PROGRAMS ) ulCom, ulDelay, values[ 0 ], values[ 1 ], values[ 2 ] );
     stripper.setBrightness( ulBrightness );
-    stripper.initProgram( stripper.getProgram() );
+    // Serial.println( stripper.getValuesAsJson() );
+    // stripper.initProgram( stripper.getProgram() );
+    // Serial.println( stripper.getValuesAsJson() );
 
 }
 
@@ -295,7 +295,6 @@ void setup()
 {
     // initialize serial:
     Serial.begin( 115200 );
-
     while( !Serial )
     {
         ; // wait for serial port to connect. Needed for native USB port only
@@ -324,10 +323,11 @@ void loop()
 
     if( reader.stringComplete )
     {
+        Serial.println( "processNewString" );
         processNewString();
+        Serial.println( "done" );
     }
 
     stripper.run();
 
 }
-

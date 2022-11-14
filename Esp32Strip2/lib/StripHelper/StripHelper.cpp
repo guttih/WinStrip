@@ -164,26 +164,26 @@ bool StripHelper::setColorBank( uint8_t index, CRGB newColor )
 
 int StripHelper::getLast()
 {
-    return ledCount - 1;
+    return this->ledCount - 1;
 }
 
 int StripHelper::getStep()
 {
-    return step;
+    return this->step;
 }
 
 int StripHelper::getTurns()
 {
-    return turns;
+    return this->turns;
 }
 
 unsigned long StripHelper::getStepDelay()
 {
-    return stepDelay;
+    return this->stepDelay;
 }
 STRIP_PROGRAMS StripHelper::getProgram()
 {
-    return program;
+    return this->program;
 }
 
 //if step was set the return is true
@@ -862,6 +862,7 @@ void StripHelper::run()
 //steps one pixel at a time and changes the the pixels aftier
 void StripHelper::initProgram( STRIP_PROGRAMS programToSet )
 {
+    Serial.print( "initProgram:" ); Serial.println( programToSet );
     switch( programToSet )
     {
 

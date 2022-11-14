@@ -24,6 +24,10 @@ QSerialPort *SerialTransport::getSerialPort()
     return pD;
 }
 
+bool SerialTransport::isConnected()
+{
+    return m_serialPort.isOpen();
+}
 bool SerialTransport::connectToPort( const QString &name, int baudRate, QObject *parent )
 {
 
@@ -56,4 +60,15 @@ bool SerialTransport::connectToPort( const QString &name, int baudRate, QObject 
     //todo: hér ætti að tengja við eitthvað update stuff
     return success;
 
+}
+bool SerialTransport::send( const char *strToSend )
+{
+    auto serialHandler = this->getSerialHandler();
+    if( serialHandler )
+    {
+        QString str( strToSend );
+        if( str.length() > 0 )
+            return serialHandler->send( str.toStdString().c_str() );
+    }
+    return false;
 }

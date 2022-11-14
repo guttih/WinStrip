@@ -23,10 +23,9 @@ private slots:
     void on_MainWindow_iconSizeChanged( const QSize &iconSize );
     void on_tabWidget_tabBarClicked( int index );
     void on_btnConnect_clicked();
-
 private:
     Ui::MainWindow *ui;
-    //QSerialPort m_serialPort;
+
 
     bool connectToPort( const QString &name, int baudRate );
     FormCommands *m_formCommmands = nullptr;

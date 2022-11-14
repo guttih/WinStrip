@@ -23,7 +23,7 @@ Q_OBJECT
 
 public:
     explicit SerialPortHandler( QSerialPort *serialPort, QObject *parent = nullptr );
-    void send( const char *strToSend );
+    bool send( const char *strToSend );
     void stopTimer();
     qint64 write( const QByteArray &writeData );
     static QStringList getAvailablePorts()
@@ -52,7 +52,6 @@ private:
     QTextStream m_standardOutput;
     QTimer m_timer;
     QTextEdit *m_pTextEdit = nullptr;
-
 };
 
 #endif

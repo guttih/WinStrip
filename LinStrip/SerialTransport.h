@@ -13,6 +13,8 @@ public:
     SerialPortHandler *setSerialHandler( SerialPortHandler *pSerialPortHandler );
     SerialPortHandler *getSerialHandler();
     bool connectToPort( const QString &name, int baudRate, QObject *parent );
+    bool isConnected();
+    bool send( const char *strToSend );
 
 private:
     QSerialPort m_serialPort;

@@ -48,26 +48,15 @@ qint64 SerialPortHandler::write( const QByteArray &writeData )
 
     m_timer.start( 1000 );
     return bytesWritten;
+
 }
-/*void SerialPortHandler::sendCommand(SERIAL_COMMAND command){
-    //m_status.activeCommand=command;
 
-    //QByteArray ba(SERIAL_COMMAND_STRING[m_status.activeCommand]);
-    //m_serialPort->write(str.toStdString().c_str());
-    m_pTextEdit->append("Sending command " + ba);
-    auto ret = this->write(ba+"\n");
-    m_standardOutput << QObject::tr("Sent command \"%1\", %2 bytes").arg(ba).arg(ret)<<Qt::endl;
-
-}*/
-void SerialPortHandler::send( const char *strToSend )
+bool SerialPortHandler::send( const char *strToSend )
 {
-    //m_status.activeCommand=command;
-
     QByteArray ba( strToSend );
-    //m_serialPort->write(str.toStdString().c_str());
-    //todo: add sent command to command stack
     auto ret = this->write( ba + "\n" );
     m_standardOutput << QObject::tr( "Sent command \"%1\", %2 bytes" ).arg( ba ).arg( ret ) << Qt::endl;
+    return ret > 0;
 
 }
 

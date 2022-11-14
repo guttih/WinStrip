@@ -44,14 +44,9 @@ QTextEdit *FormCommands::GetTextEditResponce()
 
 void FormCommands::on_btnSendCommand_clicked()
 {
-
-    auto serialHandler = m_pApplication->m_Transport.getSerialHandler();
-    if( serialHandler )
-    {
-        QString str = ui->comboCommands->currentText();
-        if( str.length() > 0 )
-            serialHandler->send( str.toStdString().c_str() );
-    }
+    QString str = ui->comboCommands->currentText();
+    if( str.length() > 0 )
+        m_pApplication->m_Transport.send( str.toStdString().c_str() );
 }
 
 void FormCommands::on_pushButton_clicked()

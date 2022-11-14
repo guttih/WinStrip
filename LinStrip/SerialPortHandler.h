@@ -37,6 +37,7 @@ public:
         return portsNames;
     }
     void setEdit( QTextEdit *pTextEdit );
+    bool m_debugging = false;
 
 private slots:
     void handleReadyRead();

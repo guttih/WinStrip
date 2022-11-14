@@ -323,9 +323,7 @@ void loop()
 
     if( reader.stringComplete )
     {
-        Serial.println( "processNewString" );
         processNewString();
-        Serial.println( "done" );
     }
 
     stripper.run();

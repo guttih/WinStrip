@@ -94,10 +94,13 @@ void SerialPortHandler::handleTimeout()
 {
     if( m_readData.isEmpty() )
     {
-        m_standardOutput << QObject::tr( "No data was currently available "
-                                         "for reading from port %1" )
-        .arg( m_serialPort->portName() )
-        << Qt::endl;
+        if( m_debugging )
+        {
+            m_standardOutput << QObject::tr( "No data was currently available "
+                                             "for reading from port %1" )
+            .arg( m_serialPort->portName() )
+            << Qt::endl;
+        }
     }
     else
     {

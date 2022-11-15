@@ -1,11 +1,13 @@
 #include "SerialPortHandler.h"
 #include <QCoreApplication>
+#include "Json.h"
 
 SerialPortHandler::SerialPortHandler( QSerialPort *serialPort, QObject *parent ) :
     QObject( parent ),
     m_serialPort( serialPort ),
     m_standardOutput( stdout )
 {
+
     connect( m_serialPort, &QSerialPort::readyRead, this, &SerialPortHandler::handleReadyRead );
     connect( m_serialPort, &QSerialPort::errorOccurred, this, &SerialPortHandler::handleError );
     connect( &m_timer, &QTimer::timeout, this, &SerialPortHandler::handleTimeout );
@@ -78,7 +80,6 @@ void SerialPortHandler::setEdit( QTextEdit *pTextEdit )
     m_pTextEdit=pTextEdit;
 }
 
-int ix = 0;
 void SerialPortHandler::handleTimeout()
 {
     if( m_readData.isEmpty() )
@@ -97,7 +98,6 @@ void SerialPortHandler::handleTimeout()
         .arg( m_serialPort->portName() )
         << Qt::endl;
         QString str = QString::fromStdString( m_readData.toStdString() );
-
         int i;
         while( ( i=str.indexOf( "@\r\n" ) ) > -1 )
         {
@@ -105,11 +105,71 @@ void SerialPortHandler::handleTimeout()
         }
         m_readData.clear();
         m_standardOutput << str << Qt::endl;
+
+        if( this->m_LastCommand != SERIAL_COMMAND::INVALID )
+            processCommandResponse( str );
+
+
         if( m_pTextEdit )
             m_pTextEdit->append( str );
 
         m_serialPort->clear();
     }
+
+}
+
+QList< SerialProgramInformation * > SerialPortHandler::parseJsonProgramInformation( QString str )
+{
+    QList< SerialProgramInformation * > list;
+
+    JsonG::Json json( str.toStdString().c_str() );
+
+    if( !json.isValid() )
+        return list;
+
+    JsonData *root=json.getRootObject();
+    if( !root || root->getType() != JSONTYPE::JSONTYPE_ARRAY )
+        return list;
+
+    JsonData *child=root->getChildAt( 0 );
+    SerialProgramInformation spi;
+    while( child )
+    {
+        spi.parseJsonProgramInformation( child );
+        if( spi.isValid() )
+        {
+            list.append( new SerialProgramInformation( spi ) );
+        }
+        child=child->getNext();
+    }
+
+
+
+
+
+    return list;
+
+}
+
+bool SerialPortHandler::processCommandResponse( QString response )
+{
+    SERIAL_COMMAND command = this->m_LastCommand;
+    if( command == SERIAL_COMMAND::INVALID )
+        return false;
+
+    //resetting last command
+    this->m_LastCommand = SERIAL_COMMAND::INVALID;
+
+    switch( command )
+    {
+        case PROGRAMINFO:
+            QList< SerialProgramInformation * > list = parseJsonProgramInformation( response.toStdString().c_str() );
+            //todo: save the program Information
+            return list.count() > 0;
+    }
+    return false;
+
+
 
 }
 
@@ -125,8 +185,5 @@ void SerialPortHandler::handleError( QSerialPort::SerialPortError serialPortErro
         QCoreApplication::exit( 1 );
     }
 }
-
-
-
 
 

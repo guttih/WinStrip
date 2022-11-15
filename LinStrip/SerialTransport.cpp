@@ -72,3 +72,12 @@ bool SerialTransport::send( const char *strToSend )
     }
     return false;
 }
+
+bool SerialTransport::sendCommand( SERIAL_COMMAND serialCommand )
+{
+    SerialPortHandler *handler = this->getSerialHandler();
+    if( !handler || handler->m_LastCommand != SERIAL_COMMAND::INVALID )
+        return false; //you need to process value from last command
+    handler->m_LastCommand = serialCommand;
+    return send( SERIAL_COMMAND_STRING[ serialCommand ] );
+}

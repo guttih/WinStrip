@@ -28,6 +28,15 @@ set(PROJECT_SOURCES
         FormCommands.ui
         SerialPortHandler.h
         SerialPortHandler.cpp
+        String.h
+        String.cpp
+        Json.h
+        Json.cpp
+        JsonData.h
+        JsonData.cpp
+        SerialProgramInformation.cpp
+        SerialProgramInformation.h
+        
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

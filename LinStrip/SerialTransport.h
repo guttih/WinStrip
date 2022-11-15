@@ -15,6 +15,7 @@ public:
     bool connectToPort( const QString &name, int baudRate, QObject *parent );
     bool isConnected();
     bool send( const char *strToSend );
+    bool sendCommand( SERIAL_COMMAND serialCommand );
 
 private:
     QSerialPort m_serialPort;

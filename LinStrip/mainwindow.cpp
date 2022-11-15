@@ -64,7 +64,9 @@ void MainWindow::on_btnConnect_clicked()
         QString portName = ui->comboDevices->currentText();
         if( portName.length() < 1 )
             return;
-        isConnected = connectToPort( portName, 115200 );
+        if( connectToPort( portName, 115200 ) )
+            m_pApplication->m_Transport.sendCommand( SERIAL_COMMAND::PROGRAMINFO );
+
     }
     ui->btnConnect->setText( isConnected ? "Disconnect" : "Connect" );
 }

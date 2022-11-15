@@ -12,9 +12,13 @@ MainWindow::MainWindow( QWidget *parent )
     m_pApplication = LinuxStripApp::instance();
 
     m_formCommmands = new FormCommands( this );
+    m_formPrograms = new FormPrograms( this );
+
     // m_formCommmands->setMainForm( this );
+    ui->tabWidget->addTab( m_formPrograms, QString( "Programs" ) );
     ui->tabWidget->addTab( m_formCommmands, QString( "Manual" ) );
-    ui->tabWidget->setCurrentIndex( 2 );
+
+    ui->tabWidget->setCurrentIndex( 1 );
 
     for( const auto &deviceName : SerialPortHandler::getAvailablePorts() )
         ui->comboDevices->addItem( deviceName );

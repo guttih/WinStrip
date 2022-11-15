@@ -26,6 +26,9 @@ set(PROJECT_SOURCES
         FormCommands.cpp
         FormCommands.h
         FormCommands.ui
+        FormPrograms.cpp
+        FormPrograms.h
+        FormPrograms.ui
         SerialPortHandler.cpp
         SerialPortHandler.h
         SerialTransport.cpp

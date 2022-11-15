@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "SerialPortHandler.h"
 #include "FormCommands.h"
+#include "FormPrograms.h"
 #include "LinuxStripApp.h"
 
 QT_BEGIN_NAMESPACE
@@ -30,6 +31,7 @@ private:
 
     bool connectToPort( const QString &name, int baudRate );
     FormCommands *m_formCommmands = nullptr;
+    FormPrograms *m_formPrograms = nullptr;
     LinuxStripApp *m_pApplication = nullptr;
 };
 #endif // MAINWINDOW_H

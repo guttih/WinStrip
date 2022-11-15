@@ -2,8 +2,8 @@
 #define FORMCOMMANDS_H
 
 #include <QWidget>
-#include "./serialcommands.h"
-#include "./SerialPortHandler.h"
+#include "serialcommands.h"
+#include "SerialPortHandler.h"
 #include "LinuxStripApp.h"
 
 namespace Ui

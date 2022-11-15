@@ -1,10 +1,9 @@
 #ifndef LINUXSTRIPAPP_H
 #define LINUXSTRIPAPP_H
 
-#include "SerialPortHandler.h"
 #include <QApplication>
-#include "SerialTransport.h"
 #include <QTimer>
+#include "SerialTransport.h"
 
 struct AppInfo {
     QString workingDirectory;

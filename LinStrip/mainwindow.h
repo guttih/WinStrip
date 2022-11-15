@@ -2,8 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "./SerialPortHandler.h"
-#include "./FormCommands.h"
+#include "SerialPortHandler.h"
+#include "FormCommands.h"
 #include "LinuxStripApp.h"
 
 QT_BEGIN_NAMESPACE
@@ -23,6 +23,7 @@ private slots:
     void on_MainWindow_iconSizeChanged( const QSize &iconSize );
     void on_tabWidget_tabBarClicked( int index );
     void on_btnConnect_clicked();
+    void on_newData( QString str );
 private:
     Ui::MainWindow *ui;
 

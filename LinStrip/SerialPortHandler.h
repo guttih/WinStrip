@@ -2,14 +2,14 @@
 #define SERIALPORTHANDLER_H
 
 
-#include "serialcommands.h"
 #include <QtSerialPort/QSerialPort>
 #include <QSerialPortInfo>
 #include <QByteArray>
-#include <QTextStream>/*  */
+#include <QTextStream>
 #include <QTextEdit>
 #include <QTimer>
 #include <QList>
+#include "serialcommands.h"
 #include "SerialProgramInformation.h"
 
 
@@ -44,6 +44,9 @@ public:
     QList< SerialProgramInformation * >  parseJsonProgramInformation( QString str );
     void setEdit( QTextEdit *pTextEdit );
     bool m_debugging = false;
+
+signals:
+    void dataHasCome( QString str );
 
 private slots:
     void handleReadyRead();

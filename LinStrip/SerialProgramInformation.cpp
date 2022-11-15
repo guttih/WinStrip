@@ -85,4 +85,5 @@ SerialProgramInformation &SerialProgramInformation::operator=( const SerialProgr
     this->m_description=rhs.m_description;
     this->m_values = rhs.m_values;
     this->m_isValid = rhs.m_isValid;
+    return *this;
 }

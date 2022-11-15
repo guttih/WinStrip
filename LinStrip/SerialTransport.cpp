@@ -9,6 +9,18 @@ SerialTransport::~SerialTransport()
 {
 
 }
+
+void SerialTransport::registerOnNewData( onnewdata_t func )
+{
+    funcs.push_back( func );
+}
+void SerialTransport::dataFromHandler( QString str )
+{
+    QTextStream output( stdout );
+    output << "SerialTransport::dataFromHandler got: ";
+    output << QObject::tr( "%0" ).arg( str ) << Qt::endl;
+}
+
 SerialPortHandler *SerialTransport::getSerialHandler()
 {
     return this->m_SerialHandler;
@@ -16,6 +28,7 @@ SerialPortHandler *SerialTransport::getSerialHandler()
 SerialPortHandler *SerialTransport::setSerialHandler( SerialPortHandler *pSerialPortHandler )
 {
     m_SerialHandler = pSerialPortHandler;
+    connect( m_SerialHandler, SIGNAL( dataHasCome( QString ) ), this, SLOT( dataFromHandler( QString ) ) );
     return this->getSerialHandler();
 }
 QSerialPort *SerialTransport::getSerialPort()

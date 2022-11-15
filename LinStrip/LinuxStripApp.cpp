@@ -1,7 +1,6 @@
-#include "LinuxStripApp.h"
-#include "SerialTransport.cpp"
 #include <QTimer>
 #include <QFile>
+#include "LinuxStripApp.h"
 
 LinuxStripApp::LinuxStripApp( int &argc, char ** argv ) : QApplication( argc, argv )
 {

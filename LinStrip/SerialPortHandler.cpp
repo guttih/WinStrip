@@ -113,6 +113,8 @@ void SerialPortHandler::handleTimeout()
         if( m_pTextEdit )
             m_pTextEdit->append( str );
 
+        emit dataHasCome( str );
+
         m_serialPort->clear();
     }
 

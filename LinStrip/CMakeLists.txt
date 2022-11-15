@@ -19,24 +19,25 @@ set(PROJECT_SOURCES
         main.cpp
         serialcommands.h
         mainwindow.cpp
-        LinuxStripApp.h
-        LinuxStripApp.cpp
         mainwindow.h
         mainwindow.ui
+        LinuxStripApp.cpp
+        LinuxStripApp.h
         FormCommands.cpp
         FormCommands.h
         FormCommands.ui
-        SerialPortHandler.h
         SerialPortHandler.cpp
-        String.h
+        SerialPortHandler.h
+        SerialTransport.cpp
+        SerialTransport.h
         String.cpp
-        Json.h
+        String.h
         Json.cpp
-        JsonData.h
+        Json.h
         JsonData.cpp
+        JsonData.h
         SerialProgramInformation.cpp
         SerialProgramInformation.h
-        
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

@@ -1,7 +1,7 @@
-#include "mainwindow.h"
-#include "./ui_mainwindow.h"
 #include <QMessageBox>
 #include <QFile>
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
 
 MainWindow::MainWindow( QWidget *parent )
     : QMainWindow( parent )
@@ -67,9 +67,17 @@ void MainWindow::on_btnConnect_clicked()
         if( connectToPort( portName, 115200 ) )
             m_pApplication->m_Transport.sendCommand( SERIAL_COMMAND::PROGRAMINFO );
 
+
     }
     ui->btnConnect->setText( isConnected ? "Disconnect" : "Connect" );
 }
+void MainWindow::on_newData( QString str )
+{
+    int i = 0;
+    i++;
+
+}
+
 
 
 bool MainWindow::connectToPort( const QString &name, int baudRate )

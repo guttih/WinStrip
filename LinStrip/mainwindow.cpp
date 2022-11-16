@@ -84,6 +84,7 @@ void MainWindow::on_newData( QString str )
     int i = 0;
     i++;
     qDebug() << "MainWindow::on_newData : " << str;
+    processCommandResponse( str );
 
 }
 
@@ -104,3 +105,22 @@ bool MainWindow::connectToPort( const QString &name, int baudRate )
     return success;
 }
 
+
+bool MainWindow::processCommandResponse( QString response )
+{
+    SERIAL_COMMAND command = m_pApplication->m_Transport.getLastCommand();
+    if( command == SERIAL_COMMAND::INVALID )
+        return false;
+
+    //resetting last command
+    m_pApplication->m_Transport.clearLastCommand();
+
+    switch( command )
+    {
+        case PROGRAMINFO:
+            return m_formPrograms->ProgramsToForm( response );
+    }
+
+    return false;
+
+}

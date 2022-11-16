@@ -29,8 +29,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-
-
+    bool processCommandResponse( QString response );
     bool connectToPort( const QString &name, int baudRate );
     FormCommands *m_formCommmands = nullptr;
     FormPrograms *m_formPrograms = nullptr;

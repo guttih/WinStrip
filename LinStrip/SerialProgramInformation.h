@@ -15,6 +15,22 @@ public:
     bool isValid();
     bool parseJsonProgramInformation( JsonData* jsonData );
     void reset();
+    QString getName()
+    {
+        return m_name;
+    }
+    QString getDescription()
+    {
+        return m_description;
+    }
+    int getColors()
+    {
+        return m_colors;
+    }
+    QStringList getValues()
+    {
+        return m_values;
+    }
 
 private:
     bool m_isValid = false;

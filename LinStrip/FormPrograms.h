@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QPushButton>
+#include "LinuxStripApp.h"
+#include "SerialProgramInformation.h"
 
 namespace Ui
 {
@@ -17,6 +19,7 @@ public:
     explicit FormPrograms( QWidget *parent = nullptr );
     ~FormPrograms();
     void showEvent( QShowEvent* event );
+    bool ProgramsToForm( QString programJsonList );
 
 private slots:
     void on_btnColor0_clicked();
@@ -45,6 +48,8 @@ private slots:
 private:
     Ui::FormPrograms *ui;
     void btnColor_clicked( QPushButton *btnColor );
+    QList< SerialProgramInformation * > m_ProgramList;
+    LinuxStripApp *m_pApplication = nullptr;
 };
 
 #endif // FORMPROGRAMS_H

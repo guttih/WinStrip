@@ -8,6 +8,7 @@ FormPrograms::FormPrograms( QWidget *parent ) :
     ui( new Ui::FormPrograms )
 {
     ui->setupUi( this );
+    m_pApplication = LinuxStripApp::instance();
 
     int max = 2000;
     ui->hSlider0->setMaximum( max );
@@ -160,6 +161,19 @@ void FormPrograms::on_spinBoxDelay_valueChanged( int value )
 void FormPrograms::on_spinBoxBrightness_valueChanged( int value )
 {
     ui->sliderBrightness->setValue( value );
+}
+
+bool FormPrograms::ProgramsToForm( QString programJsonList  )
+{
+    m_ProgramList = m_pApplication->m_Transport.parseJsonProgramInformation( programJsonList );
+    ui->comboProgramName->clear();
+    for( const auto program: qAsConst( m_ProgramList ) )
+    {
+        ui->comboProgramName->addItem( program->getName() );
+    }
+
+    return m_ProgramList.count() > 0;
+
 }
 
 

@@ -89,9 +89,46 @@ bool SerialTransport::send( const char *strToSend )
 
 bool SerialTransport::sendCommand( SERIAL_COMMAND serialCommand )
 {
-    SerialPortHandler *handler = this->getSerialHandler();
-    if( !handler || handler->m_LastCommand != SERIAL_COMMAND::INVALID )
+    if( m_LastCommand != SERIAL_COMMAND::INVALID )
         return false; //you need to process value from last command
-    handler->m_LastCommand = serialCommand;
+    m_LastCommand = serialCommand;
     return send( SERIAL_COMMAND_STRING[ serialCommand ] );
+}
+
+void SerialTransport::clearLastCommand()
+{
+    m_LastCommand = SERIAL_COMMAND::INVALID;
+}
+
+SERIAL_COMMAND SerialTransport::getLastCommand()
+{
+    return m_LastCommand;
+};
+
+QList< SerialProgramInformation * > SerialTransport::parseJsonProgramInformation( QString str )
+{
+    QList< SerialProgramInformation * > list;
+
+    JsonG::Json json( str.toStdString().c_str() );
+
+    if( !json.isValid() )
+        return list;
+
+    JsonData *root=json.getRootObject();
+    if( !root || root->getType() != JSONTYPE::JSONTYPE_ARRAY )
+        return list;
+
+    JsonData *child=root->getChildAt( 0 );
+    SerialProgramInformation spi;
+    while( child )
+    {
+        spi.parseJsonProgramInformation( child );
+        if( spi.isValid() )
+        {
+            list.append( new SerialProgramInformation( spi ) );
+        }
+        child=child->getNext();
+    }
+
+    return list;
 }

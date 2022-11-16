@@ -2,6 +2,7 @@
 #define _SERIALTRANSPORT_H
 
 #include "SerialPortHandler.h"
+#include "SerialProgramInformation.h"
 
 class SerialTransport : public QObject
 {
@@ -19,6 +20,9 @@ public:
     bool send( const char *strToSend );
     bool sendCommand( SERIAL_COMMAND serialCommand );
     void registerOnNewData( onnewdata_t func );
+    void clearLastCommand();
+    SERIAL_COMMAND getLastCommand();
+    QList< SerialProgramInformation * > parseJsonProgramInformation( QString str );
 
 signals:
     void dataHasCome( QString str );
@@ -30,6 +34,7 @@ private:
     std::vector< onnewdata_t >    funcs;
     QSerialPort m_serialPort;
     SerialPortHandler *m_SerialHandler = nullptr;
+    SERIAL_COMMAND m_LastCommand=SERIAL_COMMAND::INVALID;
 };
 
 #endif

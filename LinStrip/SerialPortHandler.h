@@ -10,7 +10,6 @@
 #include <QTimer>
 #include <QList>
 #include "serialcommands.h"
-#include "SerialProgramInformation.h"
 
 
 
@@ -26,7 +25,6 @@ class SerialPortHandler : public QObject
 Q_OBJECT
 
 public:
-    SERIAL_COMMAND m_LastCommand=SERIAL_COMMAND::INVALID;
     explicit SerialPortHandler( QSerialPort *serialPort, QObject *parent = nullptr );
     bool send( const char *strToSend );
     void stopTimer();
@@ -41,7 +39,7 @@ public:
 
         return portsNames;
     }
-    QList< SerialProgramInformation * >  parseJsonProgramInformation( QString str );
+
     void setEdit( QTextEdit *pTextEdit );
     bool m_debugging = false;
 
@@ -61,7 +59,6 @@ private:
     QTextStream m_standardOutput;
     QTimer m_timer;
     QTextEdit *m_pTextEdit = nullptr;
-    bool processCommandResponse( QString response );
 
 };
 

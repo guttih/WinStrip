@@ -125,6 +125,17 @@ void FormPrograms::on_hSlider2_valueChanged( int value )
     ui->spinBox2->setValue( value );
 }
 
+void FormPrograms::on_sliderDelay_valueChanged( int value )
+{
+    ui->spinBoxDelay->setValue( value );
+}
+
+void FormPrograms::on_sliderBrightness_valueChanged( int value )
+{
+    ui->spinBoxBrightness->setValue( value );
+}
+
+
 void FormPrograms::on_spinBox0_valueChanged( int value )
 {
     ui->hSlider0->setValue( value );
@@ -140,4 +151,15 @@ void FormPrograms::on_spinBox2_valueChanged( int value )
 {
     ui->hSlider2->setValue( value );
 }
+
+void FormPrograms::on_spinBoxDelay_valueChanged( int value )
+{
+    ui->sliderDelay->setValue( value );
+}
+
+void FormPrograms::on_spinBoxBrightness_valueChanged( int value )
+{
+    ui->sliderBrightness->setValue( value );
+}
+
 

@@ -33,9 +33,14 @@ private slots:
     void on_hSlider0_valueChanged( int value );
     void on_hSlider1_valueChanged( int value );
     void on_hSlider2_valueChanged( int value );
+    void on_sliderDelay_valueChanged( int value );
+    void on_sliderBrightness_valueChanged( int value );
     void on_spinBox0_valueChanged( int value );
     void on_spinBox1_valueChanged( int value );
     void on_spinBox2_valueChanged( int value );
+    void on_spinBoxDelay_valueChanged( int value );
+    void on_spinBoxBrightness_valueChanged( int value );
+
 
 private:
     Ui::FormPrograms *ui;

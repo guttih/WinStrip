@@ -19,6 +19,7 @@ void SerialTransport::dataFromHandler( QString str )
     QTextStream output( stdout );
     output << "SerialTransport::dataFromHandler got: ";
     output << QObject::tr( "%0" ).arg( str ) << Qt::endl;
+    emit dataHasCome( str );
 }
 
 SerialPortHandler *SerialTransport::getSerialHandler()

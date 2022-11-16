@@ -22,6 +22,7 @@ MainWindow::MainWindow( QWidget *parent )
 
     for( const auto &deviceName : SerialPortHandler::getAvailablePorts() )
         ui->comboDevices->addItem( deviceName );
+    QObject::connect( &m_pApplication->m_Transport, SIGNAL( dataHasCome( QString ) ), this, SLOT( on_newData( QString ) ) );
 
 }
 
@@ -69,7 +70,10 @@ void MainWindow::on_btnConnect_clicked()
         if( portName.length() < 1 )
             return;
         if( connectToPort( portName, 115200 ) )
+        {
             m_pApplication->m_Transport.sendCommand( SERIAL_COMMAND::PROGRAMINFO );
+            isConnected=true;
+        }
 
 
     }
@@ -79,9 +83,9 @@ void MainWindow::on_newData( QString str )
 {
     int i = 0;
     i++;
+    qDebug() << "MainWindow::on_newData : " << str;
 
 }
-
 
 
 bool MainWindow::connectToPort( const QString &name, int baudRate )

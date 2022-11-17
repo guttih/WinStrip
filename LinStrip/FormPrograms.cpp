@@ -23,9 +23,6 @@ FormPrograms::FormPrograms( QWidget *parent ) :
 void FormPrograms::showEvent( QShowEvent* event )
 {
     QWidget::showEvent( event );
-
-    ui->btnColor0->setStyleSheet( "QPushButton { background-color: grey; }\n"
-                                  "QPushButton:enabled { background-color: rgb(200,0,0); }\n" );
 }
 
 FormPrograms::~FormPrograms()
@@ -285,13 +282,13 @@ void FormPrograms::SendFormValuesToSerial()
     int com = ui->comboProgramName->currentIndex();
     int brightness = ui->spinBoxBrightness->value();
     int value0 = ui->hGroupBox0->isEnabled() ? ui->spinBox0->value() : 0;
-    int value1 = ui->hGroupBox0->isEnabled() ? ui->spinBox1->value() : 0;
-    int value2 = ui->hGroupBox0->isEnabled() ? ui->spinBox2->value() : 0;
+    int value1 = ui->hGroupBox1->isEnabled() ? ui->spinBox1->value() : 0;
+    int value2 = ui->hGroupBox2->isEnabled() ? ui->spinBox2->value() : 0;
 
     //{"delay":0,"com":2,"brightness":1,"values":[0,0,0]}
     m_sendString = QString( "{\"delay\":%0,\"com\":%1,\"brightness\":%2,\"values\":[%3,%4,%5]}" ).arg( delay ).arg( com ).arg( brightness ).arg( value0 ).arg(
         value1 ).arg( value2 );
-    m_timerSend.start( 200 );
+    m_timerSend.start( 100 );
 
 
 }
@@ -321,7 +318,7 @@ void FormPrograms::SendFormColorsToSerial()
     //"{\"colors\":[16711935,16711680,32768,255,16777215,10824234]}"
 
     m_sendString = QString( "{\"colors\":[%0,%1,%2,%3,%4,%5]}" ).arg( color0 ).arg( color1 ).arg( color2 ).arg( color3 ).arg( color4 ).arg( color5 );
-    m_timerSend.start( 200 );
+    m_timerSend.start( 100 );
 
 
 }
@@ -329,15 +326,28 @@ void FormPrograms::SendFormColorsToSerial()
 void FormPrograms::on_pushButton_clicked()
 {
 
-    //SendFormValuesToSerial();
-    //SendFormColorsToSerial();
-
-    int delay = ui->spinBoxDelay->value();
     int com = ui->comboProgramName->currentIndex();
+    if( com == 1 )
+    {
+        //todo:create reset function
+        //str = "{\"delay\":0,\"com\":1,\"brightness\":1,\"values\":[0,0,0]}";
+        ui->spinBoxDelay->setValue( 0 );
+        ui->spinBoxBrightness->setValue( 1 );
+        ui->spinBox0->setValue( 0 );
+        ui->spinBox1->setValue( 1 );
+        ui->spinBox2->setValue( 2 );
+        ColorToFormButton( ui->btnColor0, DecToHex( 16711935 ) );
+        ColorToFormButton( ui->btnColor2, DecToHex( 16711680 ) );
+        ColorToFormButton( ui->btnColor1, DecToHex( 32768 ) );
+        ColorToFormButton( ui->btnColor3, DecToHex( 255 ) );
+        ColorToFormButton( ui->btnColor4, DecToHex( 16777215 ) );
+        ColorToFormButton( ui->btnColor5, DecToHex( 10824234 ) );
+    }
+    int delay = ui->spinBoxDelay->value();
     int brightness = ui->spinBoxBrightness->value();
     int value0 = ui->hGroupBox0->isEnabled() ? ui->spinBox0->value() : 0;
-    int value1 = ui->hGroupBox0->isEnabled() ? ui->spinBox1->value() : 0;
-    int value2 = ui->hGroupBox0->isEnabled() ? ui->spinBox2->value() : 0;
+    int value1 = ui->hGroupBox1->isEnabled() ? ui->spinBox1->value() : 0;
+    int value2 = ui->hGroupBox2->isEnabled() ? ui->spinBox2->value() : 0;
     uint color0 = getButtonBackroundColorAsDecimal( ui->btnColor0 );
     uint color1 = getButtonBackroundColorAsDecimal( ui->btnColor1 );
     uint color2 = getButtonBackroundColorAsDecimal( ui->btnColor2 );
@@ -345,12 +355,16 @@ void FormPrograms::on_pushButton_clicked()
     uint color4 = getButtonBackroundColorAsDecimal( ui->btnColor4 );
     uint color5 = getButtonBackroundColorAsDecimal( ui->btnColor5 );
 
+
+
     //"{\"delay\":6,\"com\":2,\"brightness\":11,\"values\":[0,0,0],\"colors\":[6754803,16711680,32768,255,16777215,10824234]}"
     QString str = QString( "{\"delay\":%0,\"com\":%1,\"brightness\":%2,\"values\":[%3,%4,%5],\"colors\":[%6,%7,%8,%9,%10,%11]}" )
                   .arg( delay ).arg( com ).arg( brightness )
                   .arg( value0 ).arg( value1 ).arg( value2 )
                   .arg( color0 ).arg( color1 ).arg( color2 ).arg( color3 ).arg( color4 ).arg( color5 );
 
+    if( m_timerSend.isActive() )
+        m_timerSend.stop();
     this->m_pApplication->m_Transport.send( str.toStdString().c_str() );
 
 }

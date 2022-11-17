@@ -46,6 +46,8 @@ private slots:
     void on_spinBoxDelay_valueChanged( int value );
     void on_spinBoxBrightness_valueChanged( int value );
     void on_comboProgramName_currentIndexChanged( int index );
+    void on_pushButton_clicked();
+    void on_TimerSend();
 
 private:
     Ui::FormPrograms *ui;
@@ -55,6 +57,11 @@ private:
     LinuxStripApp *m_pApplication = nullptr;
     void SerialStatusToForm();
     void ColorToFormButton( QPushButton *btnColor, QString strHexidecimalColor );
+    void SendFormValuesToSerial();
+    void SendFormColorsToSerial();
+    uint getButtonBackroundColorAsDecimal( QPushButton *btnColor );
+    QTimer m_timerSend;
+    QString m_sendString;
 };
 
 #endif // FORMPROGRAMS_H

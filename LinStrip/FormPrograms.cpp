@@ -17,6 +17,8 @@ FormPrograms::FormPrograms( QWidget *parent ) :
     ui->spinBox0->setMaximum( max );
     ui->spinBox1->setMaximum( max );
     ui->spinBox2->setMaximum( max );
+
+    connect( &m_timerSend, &QTimer::timeout, this, &FormPrograms::on_TimerSend );
 }
 void FormPrograms::showEvent( QShowEvent* event )
 {
@@ -80,35 +82,41 @@ QString FormPrograms::DecToHex( int number )
 void FormPrograms::on_btnColor0_clicked()
 {
     btnColor_clicked( ui->btnColor0 );
+    SendFormColorsToSerial();
 }
 
 void FormPrograms::on_btnColor1_clicked()
 {
     btnColor_clicked( ui->btnColor1 );
+    SendFormColorsToSerial();
 }
 
 
 void FormPrograms::on_btnColor2_clicked()
 {
     btnColor_clicked( ui->btnColor2 );
+    SendFormColorsToSerial();
 }
 
 
 void FormPrograms::on_btnColor3_clicked()
 {
     btnColor_clicked( ui->btnColor3 );
+    SendFormColorsToSerial();
 }
 
 
 void FormPrograms::on_btnColor4_clicked()
 {
     btnColor_clicked( ui->btnColor4 );
+    SendFormColorsToSerial();
 }
 
 
 void FormPrograms::on_btnColor5_clicked()
 {
     btnColor_clicked( ui->btnColor5 );
+    SendFormColorsToSerial();
 }
 
 
@@ -148,27 +156,32 @@ void FormPrograms::on_sliderBrightness_valueChanged( int value )
 void FormPrograms::on_spinBox0_valueChanged( int value )
 {
     ui->hSlider0->setValue( value );
+    SendFormValuesToSerial();
 }
 
 void FormPrograms::on_spinBox1_valueChanged( int value )
 {
     ui->hSlider1->setValue( value );
+    SendFormValuesToSerial();
 }
 
 
 void FormPrograms::on_spinBox2_valueChanged( int value )
 {
     ui->hSlider2->setValue( value );
+    SendFormValuesToSerial();
 }
 
 void FormPrograms::on_spinBoxDelay_valueChanged( int value )
 {
     ui->sliderDelay->setValue( value );
+    SendFormValuesToSerial();
 }
 
 void FormPrograms::on_spinBoxBrightness_valueChanged( int value )
 {
     ui->sliderBrightness->setValue( value );
+    SendFormValuesToSerial();
 }
 
 bool FormPrograms::ProgramsToForm( QString programJsonList  )
@@ -257,5 +270,94 @@ void FormPrograms::on_comboProgramName_currentIndexChanged( int index )
         ui->hGroupBox1->setDisabled( valueCount < 2 );
         ui->hGroupBox2->setDisabled( valueCount < 3 );
     }
+    SendFormValuesToSerial();
+}
+
+
+void FormPrograms::SendFormValuesToSerial()
+{
+    if( m_timerSend.isActive() )
+        m_timerSend.stop();
+
+
+
+    int delay = ui->spinBoxDelay->value();
+    int com = ui->comboProgramName->currentIndex();
+    int brightness = ui->spinBoxBrightness->value();
+    int value0 = ui->hGroupBox0->isEnabled() ? ui->spinBox0->value() : 0;
+    int value1 = ui->hGroupBox0->isEnabled() ? ui->spinBox1->value() : 0;
+    int value2 = ui->hGroupBox0->isEnabled() ? ui->spinBox2->value() : 0;
+
+    //{"delay":0,"com":2,"brightness":1,"values":[0,0,0]}
+    m_sendString = QString( "{\"delay\":%0,\"com\":%1,\"brightness\":%2,\"values\":[%3,%4,%5]}" ).arg( delay ).arg( com ).arg( brightness ).arg( value0 ).arg(
+        value1 ).arg( value2 );
+    m_timerSend.start( 200 );
+
+
+}
+
+uint FormPrograms::getButtonBackroundColorAsDecimal( QPushButton  *btnColor )
+{
+    QColor color = btnColor->palette().button().color();
+    if( color.isValid() )
+    {
+        return HexToDec( color.name().right( 6 ) );
+    }
+    return 0;
+
+}
+void FormPrograms::SendFormColorsToSerial()
+{
+    if( m_timerSend.isActive() )
+        m_timerSend.stop();
+
+    uint color0 = getButtonBackroundColorAsDecimal( ui->btnColor0 );
+    uint color1 = getButtonBackroundColorAsDecimal( ui->btnColor1 );
+    uint color2 = getButtonBackroundColorAsDecimal( ui->btnColor2 );
+    uint color3 = getButtonBackroundColorAsDecimal( ui->btnColor3 );
+    uint color4 = getButtonBackroundColorAsDecimal( ui->btnColor4 );
+    uint color5 = getButtonBackroundColorAsDecimal( ui->btnColor5 );
+
+    //"{\"colors\":[16711935,16711680,32768,255,16777215,10824234]}"
+
+    m_sendString = QString( "{\"colors\":[%0,%1,%2,%3,%4,%5]}" ).arg( color0 ).arg( color1 ).arg( color2 ).arg( color3 ).arg( color4 ).arg( color5 );
+    m_timerSend.start( 200 );
+
+
+}
+
+void FormPrograms::on_pushButton_clicked()
+{
+
+    //SendFormValuesToSerial();
+    //SendFormColorsToSerial();
+
+    int delay = ui->spinBoxDelay->value();
+    int com = ui->comboProgramName->currentIndex();
+    int brightness = ui->spinBoxBrightness->value();
+    int value0 = ui->hGroupBox0->isEnabled() ? ui->spinBox0->value() : 0;
+    int value1 = ui->hGroupBox0->isEnabled() ? ui->spinBox1->value() : 0;
+    int value2 = ui->hGroupBox0->isEnabled() ? ui->spinBox2->value() : 0;
+    uint color0 = getButtonBackroundColorAsDecimal( ui->btnColor0 );
+    uint color1 = getButtonBackroundColorAsDecimal( ui->btnColor1 );
+    uint color2 = getButtonBackroundColorAsDecimal( ui->btnColor2 );
+    uint color3 = getButtonBackroundColorAsDecimal( ui->btnColor3 );
+    uint color4 = getButtonBackroundColorAsDecimal( ui->btnColor4 );
+    uint color5 = getButtonBackroundColorAsDecimal( ui->btnColor5 );
+
+    //"{\"delay\":6,\"com\":2,\"brightness\":11,\"values\":[0,0,0],\"colors\":[6754803,16711680,32768,255,16777215,10824234]}"
+    QString str = QString( "{\"delay\":%0,\"com\":%1,\"brightness\":%2,\"values\":[%3,%4,%5],\"colors\":[%6,%7,%8,%9,%10,%11]}" )
+                  .arg( delay ).arg( com ).arg( brightness )
+                  .arg( value0 ).arg( value1 ).arg( value2 )
+                  .arg( color0 ).arg( color1 ).arg( color2 ).arg( color3 ).arg( color4 ).arg( color5 );
+
+    this->m_pApplication->m_Transport.send( str.toStdString().c_str() );
+
+}
+
+void FormPrograms::on_TimerSend()
+{
+    m_timerSend.stop();
+    this->m_pApplication->m_Transport.send( m_sendString.toStdString().c_str() );
 }
 

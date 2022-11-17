@@ -71,7 +71,7 @@ void MainWindow::on_btnConnect_clicked()
             return;
         if( connectToPort( portName, 115200 ) )
         {
-            m_pApplication->m_Transport.sendCommand( SERIAL_COMMAND::PROGRAMINFO );
+            m_pApplication->m_Transport.sendCommand( SERIAL_COMMAND::ALLSTATUS );
             isConnected=true;
         }
 
@@ -81,9 +81,7 @@ void MainWindow::on_btnConnect_clicked()
 }
 void MainWindow::on_newData( QString str )
 {
-    int i = 0;
-    i++;
-    qDebug() << "MainWindow::on_newData : " << str;
+    //qDebug() << "MainWindow::on_newData : " << str;
     processCommandResponse( str );
 
 }
@@ -119,6 +117,11 @@ bool MainWindow::processCommandResponse( QString response )
     {
         case PROGRAMINFO:
             return m_formPrograms->ProgramsToForm( response );
+            break;
+        case ALLSTATUS:
+            m_formPrograms->AllStatusToForm( response );
+            return true;
+            break;
     }
 
     return false;

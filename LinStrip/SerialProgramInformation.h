@@ -8,6 +8,12 @@
 class SerialProgramInformation
 {
 public:
+    QString m_name;
+    QString m_description;
+    QStringList m_values;
+    int m_colors;
+
+    SerialProgramInformation( const SerialProgramInformation &fromObject );
     SerialProgramInformation &operator=( const SerialProgramInformation &rhs );
     SerialProgramInformation();
     SerialProgramInformation( JsonData *jsonData );
@@ -15,29 +21,9 @@ public:
     bool isValid();
     bool parseJsonProgramInformation( JsonData* jsonData );
     void reset();
-    QString getName()
-    {
-        return m_name;
-    }
-    QString getDescription()
-    {
-        return m_description;
-    }
-    int getColors()
-    {
-        return m_colors;
-    }
-    QStringList getValues()
-    {
-        return m_values;
-    }
 
 private:
     bool m_isValid = false;
-    QString m_name;
-    QString m_description;
-    QStringList m_values;
-    int m_colors;
 };
 
 #endif

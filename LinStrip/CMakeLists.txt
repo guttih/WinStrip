@@ -41,6 +41,8 @@ set(PROJECT_SOURCES
         JsonData.h
         SerialProgramInformation.cpp
         SerialProgramInformation.h
+        SerialStatus.cpp
+        SerialStatus.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

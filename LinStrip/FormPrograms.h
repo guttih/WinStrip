@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include "LinuxStripApp.h"
 #include "SerialProgramInformation.h"
+#include "SerialStatus.h"
 
 namespace Ui
 {
@@ -20,6 +21,7 @@ public:
     ~FormPrograms();
     void showEvent( QShowEvent* event );
     bool ProgramsToForm( QString programJsonList );
+    bool AllStatusToForm( QString jsonAllStatus );
 
 private slots:
     void on_btnColor0_clicked();
@@ -43,13 +45,16 @@ private slots:
     void on_spinBox2_valueChanged( int value );
     void on_spinBoxDelay_valueChanged( int value );
     void on_spinBoxBrightness_valueChanged( int value );
-
+    void on_comboProgramName_currentIndexChanged( int index );
 
 private:
     Ui::FormPrograms *ui;
     void btnColor_clicked( QPushButton *btnColor );
     QList< SerialProgramInformation * > m_ProgramList;
+    SerialStatus m_SerialStatus;
     LinuxStripApp *m_pApplication = nullptr;
+    void SerialStatusToForm();
+    void ColorToFormButton( QPushButton *btnColor, QString strHexidecimalColor );
 };
 
 #endif // FORMPROGRAMS_H

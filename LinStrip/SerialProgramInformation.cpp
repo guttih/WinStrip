@@ -59,6 +59,15 @@ SerialProgramInformation::SerialProgramInformation()
 {
     reset();
 }
+
+SerialProgramInformation::SerialProgramInformation( const SerialProgramInformation &fromObject )
+{
+    m_colors= fromObject.m_colors;
+    m_name=fromObject.m_name;
+    m_description=fromObject.m_description;
+    m_values = fromObject.m_values;
+    m_isValid = fromObject.m_isValid;
+}
 SerialProgramInformation::SerialProgramInformation( JsonData* jsonData )
 {
     reset();
@@ -75,6 +84,7 @@ bool SerialProgramInformation::isValid()
 {
     return m_isValid;
 }
+
 
 
 

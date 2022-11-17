@@ -16,9 +16,9 @@ void SerialTransport::registerOnNewData( onnewdata_t func )
 }
 void SerialTransport::dataFromHandler( QString str )
 {
-    QTextStream output( stdout );
+    /*QTextStream output( stdout );
     output << "SerialTransport::dataFromHandler got: ";
-    output << QObject::tr( "%0" ).arg( str ) << Qt::endl;
+    output << QObject::tr( "%0" ).arg( str ) << Qt::endl;*/
     emit dataHasCome( str );
 }
 
@@ -71,7 +71,6 @@ bool SerialTransport::connectToPort( const QString &name, int baudRate, QObject 
     }
     serialHandler = setSerialHandler( new SerialPortHandler( serialPort, parent ) );
 
-    //todo: hér ætti að tengja við eitthvað update stuff
     return success;
 
 }

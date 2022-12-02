@@ -19,7 +19,8 @@ SerialReader reader;
 
 #include "StripHelper.h"
 
-#define NUM_LEDS 19
+//#define NUM_LEDS 116
+#define NUM_LEDS 62
 #define CLOCK_PIN 13  /*green wire*/
 #define DATA_PIN  14  /*blue wire*/
 
@@ -28,8 +29,10 @@ const char* stripType = "APA102";
 #define COLOR_SCHEME BGR
 
 /*
-#define STRIP_TYPE WS2801
+// #define STRIP_TYPE WS2801
+#define STRIP_TYPE WS2811
 #define COLOR_SCHEME RBG
+const char* stripType = "WS2811";
 */
 
 
@@ -159,7 +162,8 @@ int getCommand( const char *str )
 
 void processJson( String str )
 {
-    //Serial.println(str);
+    Serial.print( "processJson" );
+    Serial.println( str );
     Json parser( str.c_str() );
     if( !parser.isValid() )
     {
@@ -244,17 +248,15 @@ void processJson( String str )
         i++;
     }
 
-    stripper.setNewValues( ( STRIP_PROGRAMS ) ulCom, ulDelay, values[ 0 ], values[ 1 ], values[ 2 ] );
     stripper.setBrightness( ulBrightness );
-    // Serial.println( stripper.getValuesAsJson() );
-    // stripper.initProgram( stripper.getProgram() );
-    // Serial.println( stripper.getValuesAsJson() );
+    stripper.setNewValues( ( STRIP_PROGRAMS ) ulCom, ulDelay, values[ 0 ], values[ 1 ], values[ 2 ] );
+    stripper.initProgram( stripper.getProgram() );
 
+    delay( 100 );
 }
 
 void processNewString()
 {
-
     int len = reader.inputString.length();
 
     if( len < 1 )
@@ -268,6 +270,7 @@ void processNewString()
     if( firstChar == '{' )
     {
         processJson( reader.inputString );
+        Serial.println( "after processJson" );
     }
     else if( len < 20 )
     {
@@ -284,6 +287,8 @@ void stripInit()
     pinMode( DATA_PIN, OUTPUT );
     pinMode( CLOCK_PIN, OUTPUT );
     FastLED.addLeds< STRIP_TYPE, DATA_PIN, CLOCK_PIN, COLOR_SCHEME >( leds, NUM_LEDS );
+    //FastLED.addLeds< STRIP_TYPE, DATA_PIN, RGB >( leds,  NUM_LEDS );
+    //FastLED.addLeds<WS2811,     DATA_PIN, RGB>(leds, NUM_LEDS);
     stripper.initialize( &FastLED, stripType, COLOR_SCHEME, DATA_PIN, CLOCK_PIN );
     Serial.println( "- - - - - - - -     Available strip commands     - - - - - - - -" );
     Serial.println( stripper.getAllProgramNames() );
@@ -311,8 +316,9 @@ void setup()
 
 
     //todo: remove after debugging
-    stripper.setBrightness( 255 );
-    stripper.setNewValues( STRIP_PROGRAMS::RAINBOW, 30, 1, 0, 0 );
+    stripper.setBrightness( 90 );
+    // stripper.setNewValues( STRIP_PROGRAMS::RAINBOW, 30, 1, 0, 0 );
+    stripper.setNewValues( STRIP_PROGRAMS::RAINBOW, 30, 1, 15, 0 );
     stripper.initProgram( stripper.getProgram() );
 
 }

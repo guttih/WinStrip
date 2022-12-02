@@ -11,14 +11,9 @@
 #include <QList>
 #include "serialcommands.h"
 
-
-
 QT_BEGIN_NAMESPACE
 
     QT_END_NAMESPACE
-
-
-
 
 class SerialPortHandler : public QObject
 {
@@ -40,7 +35,6 @@ public:
         return portsNames;
     }
 
-    void setEdit( QTextEdit *pTextEdit );
     bool m_debugging = false;
 
 signals:

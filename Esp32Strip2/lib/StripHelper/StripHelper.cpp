@@ -39,6 +39,7 @@ void StripHelper::init()
 
 void StripHelper::reset()
 {
+    Serial.println( "void StripHelper::reset()" );
     ulWorker1 = 0;
     iWorker1 = 0;
     lightLastTime = 0;
@@ -747,6 +748,7 @@ void StripHelper::programStarsSelectNewStars()
 
 void StripHelper::programStarsInit()
 {
+    // Serial.print( "programStarsInit" );
 
     ulWorker1 = 0;
     iWorker1 = 1;
@@ -755,9 +757,11 @@ void StripHelper::programStarsInit()
         value1 = getCount();
 
     unsigned int starCount = value1;
-
-    setDirection( true );  toggleDirection();
-
+    Serial.print( " setDirection" );
+    setDirection( true );
+    Serial.print( "calling  toggleDirection" );
+    toggleDirection();
+    //Serial.print( "Done\n" );
     if( tempArray != NULL )
     {
         delete[] tempArray;
@@ -766,7 +770,6 @@ void StripHelper::programStarsInit()
 
     if( starCount < 1 )
         return;
-
     tempArray = new unsigned int[ starCount ]();
     programStarsSelectNewStars();
 
@@ -781,12 +784,14 @@ void StripHelper::programRainbow()
 
 void StripHelper::programStars()
 {
+    delay( 100 );
+    Serial.println( "void StripHelper::programStars()" );
     if( getProgram() != STRIP_PROGRAMS::STARS || tempArray == NULL || value1 < 1 )
     {
 
         return; //to be sure that the temArray slots exit
     }
-
+    SerialLogPrint( "ProgramStarts count", getCount() );
     fill_solid( leds, getCount(), getColorBank( 1 ) );
     if( ulWorker1 > 30 )
     {
@@ -868,12 +873,15 @@ void StripHelper::initProgram( STRIP_PROGRAMS programToSet )
 
         case OFF:
         case SINGLE_COLOR:
+            Serial.println( "case SINGLE_COLOR" );
             break;
         case MULTI_COLOR:
             setDirection( true ); break;
         case RESET:
-            reset(); initProgram( getProgram() );     break;
+            Serial.println( "case RESET" );
+            reset(); initProgram( STRIP_PROGRAMS::SINGLE_COLOR ); break;
         case UP:
+            Serial.println( "case UP" );
             setDirection( true );  break;
         case DOWN:
             setDirection( false ); break;

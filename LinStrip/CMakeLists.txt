@@ -35,10 +35,10 @@ set(PROJECT_SOURCES
         SerialTransport.h
         String.cpp
         String.h
-        Json.cpp
-        Json.h
         JsonData.cpp
         JsonData.h
+        Json.cpp
+        Json.h
         SerialProgramInformation.cpp
         SerialProgramInformation.h
         SerialStatus.cpp

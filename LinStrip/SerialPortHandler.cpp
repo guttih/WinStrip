@@ -75,11 +75,6 @@ void SerialPortHandler::handleReadyRead()
     }
 }
 
-void SerialPortHandler::setEdit( QTextEdit *pTextEdit )
-{
-    m_pTextEdit=pTextEdit;
-}
-
 void SerialPortHandler::handleTimeout()
 {
     if( m_readData.isEmpty() )

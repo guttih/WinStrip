@@ -54,3 +54,8 @@ void FormCommands::on_pushButton_clicked()
     ui->textEditResponse->clear();
 }
 
+void FormCommands::onNewData( QString str )
+{
+    this->GetTextEditResponce()->append( str );
+}
+

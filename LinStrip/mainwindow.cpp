@@ -82,7 +82,10 @@ void MainWindow::on_btnConnect_clicked()
 void MainWindow::on_newData( QString str )
 {
     //qDebug() << "MainWindow::on_newData : " << str;
-    processCommandResponse( str );
+    if( ui->tabWidget->currentIndex() == 1 )
+        processCommandResponse( str );
+    else if( ui->tabWidget->currentIndex() == 2 )
+        this->m_formCommmands->onNewData( str );
 
 }
 
@@ -90,12 +93,7 @@ void MainWindow::on_newData( QString str )
 bool MainWindow::connectToPort( const QString &name, int baudRate )
 {
     bool success = m_pApplication->m_Transport.connectToPort( name,  baudRate, this );
-    if( success )
-    {
-        if( ui->tabWidget->currentIndex() == 2 )
-            m_pApplication->m_Transport.getSerialHandler()->setEdit( m_formCommmands->GetTextEditResponce() );
-    }
-    else
+    if( !success )
     {
         QMessageBox msgBox;
         msgBox.critical( this, "Error connecting", QString( "error %1, %2" ).arg( name, m_pApplication->m_Transport.getSerialPort()->errorString() ) );
@@ -127,3 +125,9 @@ bool MainWindow::processCommandResponse( QString response )
     return false;
 
 }
+
+void MainWindow::on_tabWidget_currentChanged( int index )
+{
+
+}
+

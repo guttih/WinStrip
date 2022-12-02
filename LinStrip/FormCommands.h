@@ -19,6 +19,7 @@ public:
     explicit FormCommands( QWidget *parent = nullptr );
     ~FormCommands();
     QTextEdit *GetTextEditResponce();
+    void onNewData( QString str );
 
 private slots:
     void showEvent( QShowEvent* event );

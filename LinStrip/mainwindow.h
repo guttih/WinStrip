@@ -27,6 +27,8 @@ private slots:
     void on_btnConnect_clicked();
     void on_newData( QString str );
 
+    void on_tabWidget_currentChanged( int index );
+
 private:
     Ui::MainWindow *ui;
     bool processCommandResponse( QString response );

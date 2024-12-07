@@ -215,7 +215,7 @@ int StripHelper::getDirection()
 // if forward is true then direction is backward
 int StripHelper::setDirection( bool forward )
 {
-    direction = forward ? 1 : -1;
+    return direction = forward ? 1 : -1;
 }
 
 String StripHelper::getProgramName( STRIP_PROGRAMS stripProgram )

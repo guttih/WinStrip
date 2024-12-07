@@ -9,4 +9,3 @@ following commands and log off and then log on again.
   sudo usermod -a -G tty <your_username>
   sudo usermod -a -G dialout <your_username>
 ```
-æ

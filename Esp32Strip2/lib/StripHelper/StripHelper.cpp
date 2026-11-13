@@ -21,7 +21,7 @@ CFastLED* StripHelper::getController()
     return this->fastLED;
 }
 
-void StripHelper::fillByIndex( int startIndex, int endIndex, const struct CRGB& color )
+void StripHelper::fillByIndex( int startIndex, int endIndex, const CRGB& color )
 {
     for( int i = startIndex; i < endIndex + 1; i++ )
     {

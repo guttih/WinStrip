@@ -1,11 +1,8 @@
-# LinStrip
-A Linux application to control a light strip via USB and esp32.
+# Esp32Strip2
 
-# Get access to USB ports
+ESP32 firmware for a USB-controlled LED strip, built with PlatformIO and the
+Arduino framework. The Linux desktop controller is [LinStrip](../LinStrip/README.md).
+Building the desktop application and flashing the ESP32 are separate steps.
 
-To be able to program the esp32 via serial port you will need to give the 
-following commands and log off and then log on again.
-```
-  sudo usermod -a -G tty <your_username>
-  sudo usermod -a -G dialout <your_username>
-```
+See [development.md](development.md) for Rocky Linux 10 setup, build, upload,
+and serial troubleshooting.

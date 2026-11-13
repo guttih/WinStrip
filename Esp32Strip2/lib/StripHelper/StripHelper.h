@@ -1,4 +1,5 @@
 #define FASTLED_INTERNAL
+#include <Arduino.h>
 #include <FastLED.h>
 
 #ifndef _StripHelper_h
@@ -56,7 +57,7 @@ private:
     unsigned long stepDelay;
     STRIP_PROGRAMS program;
     CFastLED* fastLED;
-    struct CRGB* leds;
+    CRGB* leds;
     unsigned long lightLastTime;
     unsigned int* tempArray;
     uint8_t byteWorker1 = 0;
@@ -71,7 +72,7 @@ private:
     int dataPin;
     int clockPin;
 
-    void fillByIndex( int startIndex, int endIndex, const struct CRGB& color );
+    void fillByIndex( int startIndex, int endIndex, const CRGB& color );
     void reset();
 
 

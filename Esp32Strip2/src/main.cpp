@@ -1,4 +1,4 @@
-
+#include <Arduino.h>
 #include "SerialReader.h"
 #include "Json.h"
 /*
@@ -12,10 +12,10 @@
         1) "This is@\n"
         2) " a long@\n"
         3) " string.\n"
-    See command SerialPrintLine for more information
+    See SerialReader::printLine for reply framing.
 */
 
-SerialReader reader;
+SerialReader usbConnection( Serial );
 
 #include "StripHelper.h"
 
@@ -78,77 +78,48 @@ COMMAND_TEXT commands[ COMMAND::COMMAND_COUNT ] = {
 };
 
 
-void SerialPrintLine( String str )
-{
-
-    int len = str.length();
-    if( len < 255 )
-    {
-        Serial.println( str );
-        return;
-    }
-
-    //we need to send chuncks
-    int MaxChunkSize = 255;
-    int chunkLen = MaxChunkSize;
-    String chunk;
-
-    while( str.length() > 0 )
-    {
-        chunk = str.substring( 0, chunkLen );
-        str.remove( 0, chunkLen );
-
-        len = str.length();
-        if( len > 0 )
-            chunk += reader.getSeparator();
-
-        Serial.println( chunk );
-
-        chunkLen = len < MaxChunkSize ? len : MaxChunkSize;
-    }
-}
-void runCommand( int cmd )
+void runCommand( int cmd, SerialReader &connection )
 {
     switch( cmd )
     {
         case COMMAND_STATUS:
-            SerialPrintLine( "OK" );
+            connection.printLine( "OK" );
             break;
         case COMMAND_BUFFERSIZE:
-            Serial.println( reader.getMaxLength() );
+            connection.printLine( String( connection.getMaxLength() ).c_str() );
             break;
         case COMMAND_SEPARATOR:
-            Serial.println( reader.getSeparator() );
+            connection.printLine( String( connection.getSeparator() ).c_str() );
             break;
         case COMMAND_PROGRAMCOUNT:
-            Serial.println( stripper.getProgramCount() );
+            connection.printLine( String( stripper.getProgramCount() ).c_str() );
             break;
         case COMMAND_PROGRAMINFO:
-            SerialPrintLine( stripper.getAllProgramInfosAsJsonArray() );
+            connection.printLine( stripper.getAllProgramInfosAsJsonArray().c_str() );
             break;
         case COMMAND_ALLSTATUS:
-            SerialPrintLine( stripper.toJson() );
+            connection.printLine( stripper.toJson().c_str() );
             break;
         case COMMAND_COLORS:
-            SerialPrintLine( "{" + stripper.MakeJsonKeyVal( "colors", stripper.getColorsAsJson() ) + "}" );
+            connection.printLine( ( "{" + stripper.MakeJsonKeyVal( "colors", stripper.getColorsAsJson() ) + "}" ).c_str() );
             break;
         case COMMAND_VALUES:
-            SerialPrintLine( stripper.getValuesAsJson() );
+            connection.printLine( stripper.getValuesAsJson().c_str() );
             break;
         case COMMAND_HARDWARE:
-            SerialPrintLine( stripper.getHardwareAsJson() );
+            connection.printLine( stripper.getHardwareAsJson().c_str() );
             break;
         case COMMAND_PIXELCOUNT:
-            Serial.println( stripper.getCount() );
+            connection.printLine( String( stripper.getCount() ).c_str() );
             break;
         case COMMAND_VALUES_COLORS:
-            SerialPrintLine( stripper.getValuesAndColorsAsJson() );
+            connection.printLine( stripper.getValuesAndColorsAsJson().c_str() );
             break;
 
     }
 }
 
-// return -1 if no command is found
+// Return COMMAND_INVALID if no command is found.
 int getCommand( const char *str )
 {
     for( int i = COMMAND::COMMAND_STATUS; i < COMMAND::COMMAND_COUNT; i++ )
@@ -160,28 +131,23 @@ int getCommand( const char *str )
 }
 
 
-void processJson( String str )
+void processJson( const char *str )
 {
-    Serial.print( "processJson" );
-    Serial.println( str );
-    Json parser( str.c_str() );
+    Json parser( str );
     if( !parser.isValid() )
     {
-        Serial.println( "Invalid json string" );
         return;
     }
 
 
-    //Serial.println(parser.toString());
     JsonData *root = parser.getRootObject();
-    if( root->getType() != JSONTYPE_OBJECT )
+    if( root == NULL || root->getType() != JSONTYPE_OBJECT )
         return;
 
 
 
     JsonData* current;
     unsigned long ulCom, ulDelay, ulBrightness, ulColor;
-    unsigned long stepDelay;
     const int VARIABLE_COUNT = 3;
     unsigned long values[ VARIABLE_COUNT ] = { 0, 0, 0 };
     int i;
@@ -252,34 +218,40 @@ void processJson( String str )
     stripper.setNewValues( ( STRIP_PROGRAMS ) ulCom, ulDelay, values[ 0 ], values[ 1 ], values[ 2 ] );
     stripper.initProgram( stripper.getProgram() );
 
-    delay( 100 );
 }
 
-void processNewString()
+void processNewString( SerialReader &connection )
 {
-    int len = reader.inputString.length();
+    const char *message = connection.getMessage();
+    size_t len = strlen( message );
 
     if( len < 1 )
     {
-        reader.resetBuffer();
         return; //nothing to do
     }
 
-    char firstChar = reader.inputString.charAt( 0 );
+    char firstChar = message[ 0 ];
 
     if( firstChar == '{' )
     {
-        processJson( reader.inputString );
-        Serial.println( "after processJson" );
+        processJson( message );
     }
     else if( len < 20 )
     {
-        int i = getCommand( reader.inputString.c_str() );
-        if( i > -1 )
-            runCommand( i );
+        int i = getCommand( message );
+        if( i != COMMAND_INVALID )
+            runCommand( i, connection );
     }
 
-    reader.resetBuffer();
+}
+
+void serviceConnection( SerialReader &connection )
+{
+    if( connection.readMessage() == SerialReader::ReadResult::MessageReady )
+    {
+        processNewString( connection );
+        connection.resetBuffer();
+    }
 }
 
 void stripInit()
@@ -290,9 +262,6 @@ void stripInit()
     //FastLED.addLeds< STRIP_TYPE, DATA_PIN, RGB >( leds,  NUM_LEDS );
     //FastLED.addLeds<WS2811,     DATA_PIN, RGB>(leds, NUM_LEDS);
     stripper.initialize( &FastLED, stripType, COLOR_SCHEME, DATA_PIN, CLOCK_PIN );
-    Serial.println( "- - - - - - - -     Available strip commands     - - - - - - - -" );
-    Serial.println( stripper.getAllProgramNames() );
-    Serial.println( "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" );
     stripper.initProgram( stripper.getProgram() );
 }
 
@@ -300,17 +269,6 @@ void setup()
 {
     // initialize serial:
     Serial.begin( 115200 );
-    while( !Serial )
-    {
-        ; // wait for serial port to connect. Needed for native USB port only
-    }
-    // reserve 200 bytes for the inputString:
-    Serial.println( "Max string length is " + reader.getMaxLength() );
-    if( reader.getMaxLength() > 255 )
-    {
-        Serial.println(
-            "If you need send longer strings than 255 you will need to split the sending up and end split strings with the simbol \";\".  Do not add ; to the last part of the split string." );
-    }
 
     stripInit();
 
@@ -325,12 +283,7 @@ void setup()
 
 void loop()
 {
-    reader.serialEvent();
-
-    if( reader.stringComplete )
-    {
-        processNewString();
-    }
+    serviceConnection( usbConnection );
 
     stripper.run();
 

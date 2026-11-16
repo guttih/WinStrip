@@ -82,11 +82,39 @@ release it once writing starts.
 
 In the monitor, send `STATUS` followed by Enter; the firmware should reply `OK`.
 `HARDWARE`, `PIXELCOUNT`, and `ALLSTATUS` provide more information. Commands are
-case-sensitive and must end with LF, without CR. Exit the monitor with Ctrl+C
-before opening LinStrip or uploading again.
+case-sensitive and must end with LF; CRLF is also accepted. Replies use CRLF.
+Exit the monitor with Ctrl+C before opening LinStrip or uploading again.
+See [protocol.md](protocol.md) for chunking, buffer limits, and response formats.
 
 For the desktop controller, follow [LinStrip's build/run guide](../LinStrip/README.md).
 It uses Qt 6 and USB serial at 115200 baud.
+
+## Debugging and the Bluetooth preparation
+
+The application no longer writes startup banners or effect/JSON debug text to
+USB. USB remains a protocol connection, so a serial monitor can send queries
+and inspect replies whenever LinStrip has released the port. Opening a monitor
+may reset the board.
+
+USB and Bluetooth are separate connections. Once Bluetooth is implemented and
+LinStrip uses it, USB can carry development diagnostics while Bluetooth carries
+commands and replies. This needs an explicit logging option that keeps USB
+logging disabled when a desktop controller uses USB. The current firmware has
+neither Bluetooth initialization nor a USB debug-logging option.
+
+The transport preparation provides a separate bounded `SerialReader(Stream&)`
+for each future connection. Reset its buffer on disconnect. The Stars effect
+still contains blocking delays that must be removed before enabling Bluetooth.
+Confirm the module supports Bluetooth Classic before adding `BluetoothSerial`;
+the configured `esp32dev` board and the USB bridge do not identify the chip.
+
+Run the host regression tests without a connected board:
+
+```bash
+bash test/run_host_tests.sh
+```
+
+See [test/README](test/README) for coverage and optional sanitizers.
 
 ## Verification on the development machine
 
@@ -104,3 +132,15 @@ Inspected on 2026-11-10, running Rocky Linux 10.2:
   do not include it: start a fresh login session before accessing the board.
 - No `/dev/ttyUSB*` or `/dev/ttyACM*` device was visible. Upload and physical LED
   operation still require verification with the board connected.
+
+On 2026-11-16, after the transport preparation:
+
+- `pio run -e esp32dev` succeeded: 348,773 bytes flash of 1,310,720 and
+  26,500 bytes static RAM of 327,680. The fixed receive buffer now appears in
+  static RAM usage rather than an Arduino `String` allocation on the heap.
+- All 15 native reader/reply tests passed. The installed host compiler could
+  not link AddressSanitizer because its runtime is missing; the successful run
+  used the default tests without sanitizers.
+- The user reported an earlier successful USB build/upload. This refactor was
+  built and host-tested only; it was not uploaded or checked against hardware,
+  desktop controls, or physical LEDs. Bluetooth is still disabled.

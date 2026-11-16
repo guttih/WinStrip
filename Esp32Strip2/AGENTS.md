@@ -30,16 +30,21 @@ avoid mixing unrelated toolchain upgrades into feature changes.
 - Building does not upload firmware. For tasks involving upload or a serial
   monitor, identify the actual port and release it from LinStrip or other
   monitors first. Opening the USB serial connection can reset the board.
-- `lib/StripReader` currently reads directly from `Serial`. For Bluetooth,
-  accept a `Stream` per connection and keep each connection's partial input
-  separate. Route every command response, including numeric responses, through
-  its requesting connection.
-- Process complete messages individually, enforce the receive-buffer limit,
-  and preserve the existing `@` continuation format. The original reader can
-  concatenate multiple commands received in one burst and does not enforce its
-  advertised limit; account for these cases when changing it.
+- `lib/StripReader/SerialReader` accepts a `Stream` and owns a fixed 3300-byte
+  payload buffer per instance. Keep one instance per connection and route all
+  replies, including numeric responses, through that instance's `printLine`.
+- Process complete messages individually and preserve LF/CRLF and `@`
+  continuation framing. Oversized or NUL-containing messages are discarded
+  through their final logical-message boundary. Each read has a byte budget;
+  preserve it so incomplete input cannot monopolize the loop. See [protocol.md](protocol.md).
+- Call `resetBuffer()` when a connection is lost so partial input and overflow
+  state cannot carry into the next session. Bluetooth lifecycle handling is
+  still to be implemented; only the USB connection is currently instantiated.
 - Keep logging separate from protocol output. Avoid blocking delays in command
-  processing and effects that stall servicing either connection.
+  processing and effects that stall servicing either connection. Application
+  diagnostics are currently removed; USB debug logging must be an explicit
+  development option when that port is not carrying controller replies.
+  The Stars effect still has blocking delays to address before enabling Bluetooth.
 - Check flash usage after Bluetooth or dependency changes. A compilation probe
   adding Bluetooth initialization used 1,177,957 of the current 1,310,720-byte
   application slot. Review the partition layout and wireless-update needs as
@@ -48,8 +53,9 @@ avoid mixing unrelated toolchain upgrades into feature changes.
 
 ## Verification
 
-Build affected firmware and report its result and relevant memory usage. The
-`test/` directory currently contains a template README, not a working test suite.
-Add focused regression coverage when changing framing or command handling.
+Build affected firmware and report its result and relevant memory usage. Run
+`bash test/run_host_tests.sh` for native framing and reply-routing regression
+coverage; it compiles the production reader against a minimal test Stream.
+Extend this coverage when changing framing or command handling.
 For hardware work, report which queries, control updates, connection recovery,
 and LED behaviors were actually checked; compilation alone does not verify them.

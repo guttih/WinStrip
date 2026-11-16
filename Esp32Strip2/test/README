@@ -1,11 +1,39 @@
+# Firmware host regression tests
 
-This directory is intended for PlatformIO Test Runner and project tests.
+From Esp32Strip2, run:
 
-Unit Testing is a software testing method by which individual units of
-source code, sets of one or more MCU program modules together with associated
-control data, usage procedures, and operating procedures, are tested to
-determine whether they are fit for use. Unit testing finds problems early
-in the development cycle.
+```bash
+bash test/run_host_tests.sh
+```
 
-More information about PlatformIO Unit Testing:
-- https://docs.platformio.org/en/latest/advanced/unit-testing/index.html
+Requires a C++11 compiler (`g++` by default; override with `CXX`). No board,
+Arduino installation, PlatformIO package download, or Python test dependencies
+are needed. The script builds in a temporary directory and removes it on exit.
+These tests use a standalone host runner, not `pio test`.
+
+The tests compile the production `lib/StripReader/SerialReader.cpp` against
+`host/Stream.h`, a minimal interface shim. `FakeStream` supplies independent
+input queues and captures each connection's actual output. Coverage includes:
+
+- Split requests, every split boundary in a mixed command/JSON burst, and
+  one-byte reads with LF/CRLF and continuation chunks.
+- Multiple messages in one burst, empty messages, and preserving unread input.
+- Independent connection buffers and replies sent only to the selected stream.
+- Read budgets, incomplete input, the exact 3300-byte limit, oversized input
+  across continuation chunks, and recovery at the next logical boundary.
+- Embedded NUL rejection, embedded CR preservation, disconnect buffer reset,
+  and a stream returning no byte after reporting input available.
+- Numeric/text reply bytes, CRLF, 255-byte chunk boundaries, and reassembling a
+  long JSON reply from one-byte deliveries. `SEPARATOR` retains its legacy raw
+  `@\r\n` response; see [protocol.md](../protocol.md) for that special case.
+
+If the compiler's sanitizer runtimes are installed, enable memory/undefined
+behavior instrumentation with:
+
+```bash
+HOST_TEST_SANITIZERS=1 bash test/run_host_tests.sh
+```
+
+These tests do not execute the Arduino JSON/effect code or the real serial and
+Bluetooth drivers. A passing host run and `pio run -e esp32dev` do not verify
+device upload, Bluetooth pairing/reconnects, the desktop GUI, or LED behavior.

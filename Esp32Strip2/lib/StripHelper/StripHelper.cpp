@@ -39,7 +39,6 @@ void StripHelper::init()
 
 void StripHelper::reset()
 {
-    Serial.println( "void StripHelper::reset()" );
     ulWorker1 = 0;
     iWorker1 = 0;
     lightLastTime = 0;
@@ -554,30 +553,6 @@ void StripHelper::programSections()
 }
 
 
-void StripHelper::SerialLogPrint( const char* str1, int value1,  bool endLine )
-{
-    Serial.print( " " ); Serial.print( str1 ); Serial.print( "=" );
-    if( value1 < 10 )
-        Serial.print( "00" );
-    else if( value1 < 100 )
-        Serial.print( "0" );
-    Serial.print( value1 );
-    if( endLine )
-        Serial.println();
-
-}
-void StripHelper::SerialLogPrint( const char* str1, int value1,  const char* str2, int value2,  bool endLine )
-{
-    SerialLogPrint( str1, value1 );
-    SerialLogPrint( str2, value2, endLine );
-}
-void StripHelper::SerialLogPrint( const char* str1, int value1,  const char* str2, int value2,  const char* str3, int value3,   bool endLine )
-{
-
-    SerialLogPrint( str1, value1, str2, value2, false );
-    SerialLogPrint( str3, value3, endLine );
-}
-
 void StripHelper::fillTrail( int startIndex, CRGB onColor, CRGB trailColor, uint trailCount, bool addToFrontToo )
 {
 
@@ -748,8 +723,6 @@ void StripHelper::programStarsSelectNewStars()
 
 void StripHelper::programStarsInit()
 {
-    // Serial.print( "programStarsInit" );
-
     ulWorker1 = 0;
     iWorker1 = 1;
 
@@ -757,11 +730,8 @@ void StripHelper::programStarsInit()
         value1 = getCount();
 
     unsigned int starCount = value1;
-    Serial.print( " setDirection" );
     setDirection( true );
-    Serial.print( "calling  toggleDirection" );
     toggleDirection();
-    //Serial.print( "Done\n" );
     if( tempArray != NULL )
     {
         delete[] tempArray;
@@ -785,13 +755,11 @@ void StripHelper::programRainbow()
 void StripHelper::programStars()
 {
     delay( 100 );
-    Serial.println( "void StripHelper::programStars()" );
     if( getProgram() != STRIP_PROGRAMS::STARS || tempArray == NULL || value1 < 1 )
     {
 
         return; //to be sure that the temArray slots exit
     }
-    SerialLogPrint( "ProgramStarts count", getCount() );
     fill_solid( leds, getCount(), getColorBank( 1 ) );
     if( ulWorker1 > 30 )
     {
@@ -867,21 +835,17 @@ void StripHelper::run()
 //steps one pixel at a time and changes the the pixels aftier
 void StripHelper::initProgram( STRIP_PROGRAMS programToSet )
 {
-    Serial.print( "initProgram:" ); Serial.println( programToSet );
     switch( programToSet )
     {
 
         case OFF:
         case SINGLE_COLOR:
-            Serial.println( "case SINGLE_COLOR" );
             break;
         case MULTI_COLOR:
             setDirection( true ); break;
         case RESET:
-            Serial.println( "case RESET" );
             reset(); initProgram( STRIP_PROGRAMS::SINGLE_COLOR ); break;
         case UP:
-            Serial.println( "case UP" );
             setDirection( true );  break;
         case DOWN:
             setDirection( false ); break;

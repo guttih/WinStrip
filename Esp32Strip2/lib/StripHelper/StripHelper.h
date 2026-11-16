@@ -87,9 +87,6 @@ private:
     int getDirection();
     int setDirection( bool forward );
     void toggleDirection( bool resetStep );
-    void SerialLogPrint( const char* str1, int value1, bool endLine = false );
-    void SerialLogPrint( const char* str1, int value1, const char* str2, int value2, bool endLine = false );
-    void SerialLogPrint( const char* str1, int value1, const char* str2, int value2, const char* str3, int value3, bool endLine = false );
     String quotes( String value );
     String ulToString( uint32_t number );
     CRGB fadeTowardColor( CRGB& cur, const CRGB& target, uint8_t amount );

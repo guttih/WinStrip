@@ -1,6 +1,7 @@
 #define FASTLED_INTERNAL
 #include <Arduino.h>
 #include <FastLED.h>
+#include "AnimationClock.h"
 
 #ifndef _StripHelper_h
 #define _StripHelper_h
@@ -58,7 +59,7 @@ private:
     STRIP_PROGRAMS program;
     CFastLED* fastLED;
     CRGB* leds;
-    unsigned long lightLastTime;
+    AnimationClock animationClock;
     unsigned int* tempArray;
     uint8_t byteWorker1 = 0;
     unsigned long ulWorker1;

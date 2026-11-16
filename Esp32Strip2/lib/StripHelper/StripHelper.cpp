@@ -41,7 +41,7 @@ void StripHelper::reset()
 {
     ulWorker1 = 0;
     iWorker1 = 0;
-    lightLastTime = 0;
+    animationClock.reset( 0 ); // reset() also runs during global construction.
     step = 0;
     turns = 0;
     direction = 1;
@@ -754,7 +754,6 @@ void StripHelper::programRainbow()
 
 void StripHelper::programStars()
 {
-    delay( 100 );
     if( getProgram() != STRIP_PROGRAMS::STARS || tempArray == NULL || value1 < 1 )
     {
 
@@ -767,8 +766,7 @@ void StripHelper::programStars()
     }
 
     ulWorker1 += iWorker1;
-    unsigned int starCount = value1,
-                 fadeDelay = value2;
+    unsigned int starCount = value1;
 
     CRGB starColor = getColorBank( 0 );
     CRGB backColor = getColorBank( 1 );
@@ -784,7 +782,10 @@ void StripHelper::programStars()
 
         programStarsSelectNewStars();
         iWorker1 = 1;
-        delay( fadeDelay );
+        // Preserve the old pause plus minimum frame time without blocking
+        // command handling. Saturate instead of wrapping a very long pause.
+        uint32_t pause = value2 > UINT32_MAX - 100 ? UINT32_MAX : value2 + 100;
+        animationClock.pause( millis(), pause );
     }
 }
 
@@ -795,9 +796,11 @@ void StripHelper::run()
         programOff();
         return;
     }
-    unsigned long time = millis();
-
-    if( lightLastTime + getStepDelay() > time )
+    uint32_t time = millis();
+    uint32_t interval = getStepDelay();
+    if( getProgram() == STRIP_PROGRAMS::STARS && interval < 100 )
+        interval = 100;
+    if( !animationClock.ready( time, interval ) )
         return;
 
     if( fastLED->getBrightness() != getBrightness() )
@@ -806,7 +809,6 @@ void StripHelper::run()
     }
 
 
-    lightLastTime = time;
     switch( getProgram() )
     {
         case OFF:
@@ -835,6 +837,7 @@ void StripHelper::run()
 //steps one pixel at a time and changes the the pixels aftier
 void StripHelper::initProgram( STRIP_PROGRAMS programToSet )
 {
+    animationClock.reset( millis() );
     switch( programToSet )
     {
 

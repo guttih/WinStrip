@@ -18,3 +18,12 @@ fi
     -o "$test_build_dir/test_serial_reader"
 
 "$test_build_dir/test_serial_reader"
+
+for test_name in bluetooth_session animation_clock; do
+    "${CXX:-g++}" -std=c++11 -Wall -Wextra -Werror -pedantic -g \
+        "${test_compile_flags[@]}" \
+        -I"$project_dir/lib/BluetoothTransport" -I"$project_dir/lib/StripHelper" \
+        "$project_dir/test/host/test_$test_name.cpp" \
+        -o "$test_build_dir/test_$test_name"
+    "$test_build_dir/test_$test_name"
+done

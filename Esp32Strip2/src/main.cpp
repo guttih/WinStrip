@@ -1,6 +1,15 @@
 #include <Arduino.h>
+#include <esp_log.h>
+#include "FirmwareConfig.h"
 #include "SerialReader.h"
 #include "Json.h"
+
+#if STRIP_ENABLE_BLUETOOTH
+#include "BluetoothTransport.h"
+BluetoothTransport bluetooth;
+SerialReader bluetoothConnection( bluetooth );
+const char *bluetoothName = "WinStrip";
+#endif
 /*
  Name:		Esp32Strip.ino
  Created:	3/14/2020 11:24:27 AM
@@ -15,7 +24,9 @@
     See SerialReader::printLine for reply framing.
 */
 
+#if !STRIP_USB_DEBUG
 SerialReader usbConnection( Serial );
+#endif
 
 #include "StripHelper.h"
 
@@ -136,6 +147,7 @@ void processJson( const char *str )
     Json parser( str );
     if( !parser.isValid() )
     {
+        STRIP_LOG( "[protocol] Invalid JSON\r\n" );
         return;
     }
 
@@ -245,14 +257,36 @@ void processNewString( SerialReader &connection )
 
 }
 
-void serviceConnection( SerialReader &connection )
+void serviceConnection( SerialReader &connection, bool ( *isCurrent )() = nullptr )
 {
     if( connection.readMessage() == SerialReader::ReadResult::MessageReady )
     {
-        processNewString( connection );
+        if( isCurrent == nullptr || isCurrent() )
+            processNewString( connection );
         connection.resetBuffer();
     }
 }
+
+#if STRIP_ENABLE_BLUETOOTH
+bool bluetoothSessionIsCurrent()
+{
+    return bluetooth.isCurrentSession();
+}
+
+void serviceBluetooth()
+{
+    bluetooth.poll();
+    if( bluetooth.selectSession() )
+    {
+        bluetoothConnection.resetBuffer();
+        STRIP_LOG( "[Bluetooth] %s; free heap %u\r\n",
+            bluetooth.isCurrentSession() ? "connected" : "disconnected",
+            ESP.getFreeHeap() );
+    }
+    if( bluetooth.isCurrentSession() )
+        serviceConnection( bluetoothConnection, bluetoothSessionIsCurrent );
+}
+#endif
 
 void stripInit()
 {
@@ -269,6 +303,8 @@ void setup()
 {
     // initialize serial:
     Serial.begin( 115200 );
+    // Keep framework/driver diagnostics out of the USB protocol too.
+    esp_log_level_set( "*", ESP_LOG_NONE );
 
     stripInit();
 
@@ -279,11 +315,22 @@ void setup()
     stripper.setNewValues( STRIP_PROGRAMS::RAINBOW, 30, 1, 15, 0 );
     stripper.initProgram( stripper.getProgram() );
 
+#if STRIP_ENABLE_BLUETOOTH
+    bool ready = bluetooth.begin( bluetoothName );
+    STRIP_LOG( "[Bluetooth] %s: %s; free heap %u\r\n", bluetoothName,
+        ready ? "started" : "initialization failed", ESP.getFreeHeap() );
+    (void) ready;
+#endif
 }
 
 void loop()
 {
+#if !STRIP_USB_DEBUG
     serviceConnection( usbConnection );
+#endif
+#if STRIP_ENABLE_BLUETOOTH
+    serviceBluetooth();
+#endif
 
     stripper.run();
 

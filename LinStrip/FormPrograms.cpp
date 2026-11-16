@@ -181,17 +181,11 @@ void FormPrograms::on_spinBoxBrightness_valueChanged( int value )
     SendFormValuesToSerial();
 }
 
-bool FormPrograms::ProgramsToForm( QString programJsonList  )
+void FormPrograms::resetConnection()
 {
-    m_ProgramList = m_pApplication->m_Transport.parseJsonProgramInformation( programJsonList );
-    ui->comboProgramName->clear();
-    for( const auto program: qAsConst( m_ProgramList ) )
-    {
-        ui->comboProgramName->addItem( program->m_name );
-    }
-
-    return m_ProgramList.count() > 0;
-
+    m_timerSend.stop();
+    m_sendString.clear();
+    setEnabled(false);
 }
 
 void FormPrograms::SerialStatusToForm()
@@ -228,9 +222,15 @@ void FormPrograms::SerialStatusToForm()
 
 bool FormPrograms::AllStatusToForm( QString jsonAllStatus  )
 {
-    if( !m_SerialStatus.parse( jsonAllStatus ) )
+    if( !m_SerialStatus.parse( jsonAllStatus ) ) {
+        resetConnection();
         return false;
+    }
+    m_loading = true;
+    m_timerSend.stop();
     SerialStatusToForm();
+    m_loading = false;
+    setEnabled(true);
     return true;
 }
 
@@ -273,6 +273,10 @@ void FormPrograms::on_comboProgramName_currentIndexChanged( int index )
 
 void FormPrograms::SendFormValuesToSerial()
 {
+    if (m_loading || !isEnabled() || !m_pApplication->m_Transport.isConnected() ||
+        ui->comboProgramName->currentIndex() < 0 ||
+        ui->comboProgramName->currentIndex() >= m_SerialStatus.m_programs.count())
+        return;
     if( m_timerSend.isActive() )
         m_timerSend.stop();
 
@@ -305,6 +309,8 @@ uint FormPrograms::getButtonBackroundColorAsDecimal( QPushButton  *btnColor )
 }
 void FormPrograms::SendFormColorsToSerial()
 {
+    if (m_loading || !isEnabled() || !m_pApplication->m_Transport.isConnected())
+        return;
     if( m_timerSend.isActive() )
         m_timerSend.stop();
 
@@ -372,6 +378,8 @@ void FormPrograms::on_pushButton_clicked()
 void FormPrograms::on_TimerSend()
 {
     m_timerSend.stop();
+    if (!isEnabled() || !m_pApplication->m_Transport.isConnected())
+        return;
     this->m_pApplication->m_Transport.send( m_sendString.toStdString().c_str() );
 }
 

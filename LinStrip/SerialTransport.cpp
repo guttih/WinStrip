@@ -1,133 +1,121 @@
 #include "SerialTransport.h"
+#include <QBluetoothAddress>
+#include <QBluetoothUuid>
 
-SerialTransport::SerialTransport()
+SerialTransport::SerialTransport(QObject *parent) : QObject(parent)
 {
-
+    connectTimeout.setSingleShot(true);
+    connectTimeout.setInterval(30000);
+    connect(&connectTimeout, &QTimer::timeout, this, [this] {
+        fail(tr("Bluetooth connection timed out. Check pairing and try again."));
+    });
+    connect(&session, &ProtocolSession::messageReceived, this, &SerialTransport::dataHasCome);
+    connect(&session, &ProtocolSession::queryReply, this, &SerialTransport::queryReply);
+    connect(&session, &ProtocolSession::errorOccurred, this, &SerialTransport::errorOccurred);
+    connect(&session, &ProtocolSession::sessionFailed, this, &SerialTransport::fail);
 }
 
 SerialTransport::~SerialTransport()
 {
-
+    disconnectDevice();
 }
 
-void SerialTransport::registerOnNewData( onnewdata_t func )
+void SerialTransport::setState(State value)
 {
-    funcs.push_back( func );
-}
-void SerialTransport::dataFromHandler( QString str )
-{
-    /*QTextStream output( stdout );
-    output << "SerialTransport::dataFromHandler got: ";
-    output << QObject::tr( "%0" ).arg( str ) << Qt::endl;*/
-    emit dataHasCome( str );
-}
-
-SerialPortHandler *SerialTransport::getSerialHandler()
-{
-    return this->m_SerialHandler;
-}
-SerialPortHandler *SerialTransport::setSerialHandler( SerialPortHandler *pSerialPortHandler )
-{
-    m_SerialHandler = pSerialPortHandler;
-    connect( m_SerialHandler, SIGNAL( dataHasCome( QString ) ), this, SLOT( dataFromHandler( QString ) ) );
-    return this->getSerialHandler();
-}
-QSerialPort *SerialTransport::getSerialPort()
-{
-    QSerialPort *pD = &m_serialPort;
-    return pD;
-}
-
-bool SerialTransport::isConnected()
-{
-    return m_serialPort.isOpen();
-}
-bool SerialTransport::connectToPort( const QString &name, int baudRate, QObject *parent )
-{
-
-    auto serialPort = getSerialPort();
-    auto serialHandler = getSerialHandler();
-    if( serialPort->isOpen() )
-    {
-        serialHandler->stopTimer();
-        serialPort->close();
+    if (connectionState != value) {
+        connectionState = value;
+        emit stateChanged(value);
     }
+}
 
-    serialPort->setPortName( name );
-    serialPort->setBaudRate( baudRate );
-    bool success = serialPort->open( QIODevice::ReadWrite );
-    if( !success )
-    {
-        // QMessageBox msgBox;
-        // msgBox.critical( this, "Error connecting", QString( "error %1, %2" ).arg( name, serialPort->errorString() ) );
-        //todo: how to report error to Gui.
+void SerialTransport::disconnectDevice()
+{
+    connectTimeout.stop();
+    session.reset();
+    // Remove callbacks before closing: a delayed signal from a previous socket
+    // must never change the state of a newly connected device.
+    if (serial) {
+        auto old = serial;
+        serial = nullptr;
+        disconnect(old, nullptr, this, nullptr);
+        old->close();
+        old->deleteLater();
+    }
+    if (bluetooth) {
+        auto old = bluetooth;
+        bluetooth = nullptr;
+        disconnect(old, nullptr, this, nullptr);
+        old->abort();
+        old->deleteLater();
+    }
+    setState(State::Disconnected);
+}
+
+void SerialTransport::fail(const QString &message)
+{
+    disconnectDevice();
+    emit errorOccurred(message);
+}
+
+bool SerialTransport::connectToPort(const QString &name, int baudRate)
+{
+    disconnectDevice();
+    setState(State::Connecting);
+    auto port = new QSerialPort(this);
+    serial = port;
+    port->setPortName(name);
+    port->setBaudRate(baudRate);
+    port->setDataBits(QSerialPort::Data8);
+    port->setParity(QSerialPort::NoParity);
+    port->setStopBits(QSerialPort::OneStop);
+    port->setFlowControl(QSerialPort::NoFlowControl);
+    if (!port->open(QIODevice::ReadWrite)) {
+        fail(tr("Cannot open %1: %2").arg(name, port->errorString()));
         return false;
     }
-
-    if( serialHandler )
-    {
-        delete serialHandler;
-        serialHandler = nullptr;
-    }
-    serialHandler = setSerialHandler( new SerialPortHandler( serialPort, parent ) );
-
-    return success;
-
-}
-bool SerialTransport::send( const char *strToSend )
-{
-    auto serialHandler = this->getSerialHandler();
-    if( serialHandler )
-    {
-        QString str( strToSend );
-        if( str.length() > 0 )
-            return serialHandler->send( str.toStdString().c_str() );
-    }
-    return false;
-}
-
-bool SerialTransport::sendCommand( SERIAL_COMMAND serialCommand )
-{
-    if( m_LastCommand != SERIAL_COMMAND::INVALID )
-        return false; //you need to process value from last command
-    m_LastCommand = serialCommand;
-    return send( SERIAL_COMMAND_STRING[ serialCommand ] );
-}
-
-void SerialTransport::clearLastCommand()
-{
-    m_LastCommand = SERIAL_COMMAND::INVALID;
-}
-
-SERIAL_COMMAND SerialTransport::getLastCommand()
-{
-    return m_LastCommand;
-};
-
-QList< SerialProgramInformation * > SerialTransport::parseJsonProgramInformation( QString str )
-{
-    QList< SerialProgramInformation * > list;
-
-    JsonG::Json json( str.toStdString().c_str() );
-
-    if( !json.isValid() )
-        return list;
-
-    JsonData *root=json.getRootObject();
-    if( !root || root->getType() != JSONTYPE::JSONTYPE_ARRAY )
-        return list;
-
-    JsonData *child=root->getChildAt( 0 );
-    SerialProgramInformation spi;
-    while( child )
-    {
-        spi.parseJsonProgramInformation( child );
-        if( spi.isValid() )
-        {
-            list.append( new SerialProgramInformation( spi ) );
+    connect(port, &QSerialPort::errorOccurred, this, [this, port](QSerialPort::SerialPortError error) {
+        if (serial == port && error != QSerialPort::NoError)
+            fail(tr("USB connection error: %1").arg(port->errorString()));
+    });
+    session.attach(port);
+    // Opening USB can reset an ESP32. Let it boot, retaining incoming bytes.
+    QTimer::singleShot(1500, port, [this, port] {
+        if (serial == port) {
+            setState(State::Connected);
+            session.sendCommand(ALLSTATUS);
         }
-        child=child->getNext();
-    }
+    });
+    return true;
+}
 
-    return list;
+void SerialTransport::connectToBluetooth(const QString &address)
+{
+    disconnectDevice();
+    const QBluetoothAddress target(address);
+    if (target.isNull()) {
+        emit errorOccurred(tr("Select a Bluetooth device with a valid address."));
+        return;
+    }
+    setState(State::Connecting);
+    auto socket = new QBluetoothSocket(QBluetoothServiceInfo::RfcommProtocol, this);
+    bluetooth = socket;
+    connect(socket, &QBluetoothSocket::connected, this, [this, socket] {
+        if (bluetooth != socket)
+            return;
+        connectTimeout.stop();
+        session.attach(socket);
+        setState(State::Connected);
+        session.sendCommand(ALLSTATUS);
+    });
+    connect(socket, &QBluetoothSocket::disconnected, this, [this, socket] {
+        if (bluetooth == socket)
+            fail(tr("Bluetooth device disconnected. You can reconnect."));
+    });
+    connect(socket, &QBluetoothSocket::errorOccurred, this, [this, socket](QBluetoothSocket::SocketError) {
+        if (bluetooth == socket)
+            fail(tr("Bluetooth connection error: %1. Check pairing in Linux Bluetooth settings.")
+                 .arg(socket->errorString()));
+    });
+    connectTimeout.start();
+    socket->connectToService(target, QBluetoothUuid(QBluetoothUuid::ServiceClassUuid::SerialPort));
 }

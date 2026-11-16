@@ -20,7 +20,7 @@ public:
     explicit FormPrograms( QWidget *parent = nullptr );
     ~FormPrograms();
     void showEvent( QShowEvent* event );
-    bool ProgramsToForm( QString programJsonList );
+    void resetConnection();
     bool AllStatusToForm( QString jsonAllStatus );
 
 private slots:
@@ -52,7 +52,7 @@ private slots:
 private:
     Ui::FormPrograms *ui;
     void btnColor_clicked( QPushButton *btnColor );
-    QList< SerialProgramInformation * > m_ProgramList;
+    bool m_loading = false;
     SerialStatus m_SerialStatus;
     LinuxStripApp *m_pApplication = nullptr;
     void SerialStatusToForm();

@@ -2,6 +2,7 @@
 #define SERIALPROGRAMINFORMATION_H
 
 #include <QString>
+#include <QJsonObject>
 #include <QStringList>
 #include "Json.h"
 
@@ -20,6 +21,7 @@ public:
     ~SerialProgramInformation();
     bool isValid();
     bool parseJsonProgramInformation( JsonData* jsonData );
+    bool parse(const QJsonObject &object);
     void reset();
 
 private:

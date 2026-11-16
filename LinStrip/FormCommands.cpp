@@ -11,8 +11,8 @@ FormCommands::FormCommands( QWidget *parent ) :
 
     m_pApplication = LinuxStripApp::instance();
 
-    for( auto command : SERIAL_COMMAND_STRING )
-        ui->comboCommands->addItem( QString::fromUtf8( command ) );
+    for (int command = STATUS; command < COMMAND_COUNT; ++command)
+        ui->comboCommands->addItem(QString::fromUtf8(SERIAL_COMMAND_STRING[command]));
 
     ui->textEditResponse->ensureCursorVisible();
 
@@ -56,6 +56,9 @@ void FormCommands::on_pushButton_clicked()
 
 void FormCommands::onNewData( QString str )
 {
-    this->GetTextEditResponce()->append( str );
+    auto edit = GetTextEditResponce();
+    edit->moveCursor(QTextCursor::End);
+    edit->insertPlainText(str + "\n");
+    edit->ensureCursorVisible();
 }
 

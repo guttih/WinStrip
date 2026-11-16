@@ -1,113 +1,77 @@
 #include "SerialStatus.h"
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <cmath>
+#include <limits>
 
-SerialStatus::SerialStatus()
+namespace {
+bool integer(const QJsonValue &value, int minimum, int maximum)
 {
-
+    const double number = value.toDouble(-1);
+    return value.isDouble() && std::isfinite(number) && number == std::floor(number)
+        && number >= minimum && number <= maximum;
 }
+}
+
+SerialStatus::SerialStatus() = default;
 
 SerialStatus::~SerialStatus()
 {
-
-}
-
-bool SerialStatus::setIsValid( bool value )
-{
-    m_isValid = value;
-    return m_isValid;
+    qDeleteAll(m_programs);
 }
 
 bool SerialStatus::isValid()
 {
-    bool success =
-        m_com        >= 0 && m_com        < SERIAL_COMMAND::COMMAND_COUNT &&
-        m_brightness >= 0 && m_brightness < 256
-        && m_programs.count() == ( SERIAL_COMMAND::COMMAND_COUNT ) -1;
-
-
-    if( !success )
-        m_isValid = false;
-
-    return m_isValid;
+    return m_isValid && !m_programs.isEmpty() && m_com >= 0 && m_com < m_programs.size()
+        && m_brightness >= 0 && m_brightness <= 255 && m_delay >= 0;
 }
-bool SerialStatus::parse( QString jsonAllStatusResponse )
+
+bool SerialStatus::parse(QString response)
 {
+    m_isValid = false;
+    const auto document = QJsonDocument::fromJson(response.toUtf8());
+    if (!document.isObject())
+        return false;
+    const auto object = document.object();
+    if (!object["programs"].isArray() || !object["values"].isArray() || !object["colors"].isArray())
+        return false;
+    const auto programs = object["programs"].toArray();
+    const auto values = object["values"].toArray();
+    const auto colors = object["colors"].toArray();
+    if (programs.isEmpty() || !integer(object["com"], 0, programs.size() - 1) ||
+        !integer(object["brightness"], 0, 255) ||
+        !integer(object["delay"], 0, std::numeric_limits<int>::max()) ||
+        values.size() != 3 || colors.size() != 6)
+        return false;
+    for (const auto &value : values)
+        if (!integer(value, 0, std::numeric_limits<int>::max()))
+            return false;
+    for (const auto &color : colors)
+        if (!integer(color, 0, 0xffffff))
+            return false;
 
-    JsonG::Json json( jsonAllStatusResponse.toStdString().c_str() );
-    setIsValid( true );
-    if( !json.isValid() )
-        return setIsValid( false );
-
-    JsonData *root=json.getRootObject();
-    JsonData *programs = root->getChild( "programs" ),
-             *delay = root->getChild( "delay" ),
-             *com = root->getChild( "com" ),
-             *brightness = root->getChild( "brightness" ),
-             *values = root->getChild( "values" ),
-             *colors = root->getChild( "colors" );
-    if( !programs || !delay || !com || !brightness || !values || !colors || programs->getValueType() != JSONTYPE_ARRAY )
-    {
-        return setIsValid( false );
-    }
-
-    JsonData *current = programs->getChildAt( 0 );
-    if( current )
-        current = current->getChildAt( 0 );
-    if( m_programs.count() > 0 )
-        m_programs.clear();
-    SerialProgramInformation spi;
-    while( current )
-    {
-
-        spi.parseJsonProgramInformation( current );
-        if( spi.isValid() )
-        {
-
-            m_programs.append( new SerialProgramInformation( spi ) );
+    QList<SerialProgramInformation *> parsed;
+    for (const auto &program : programs) {
+        // Preserve every metadata index; skipping an invalid entry would remap
+        // subsequent effect IDs and could select the wrong physical effect.
+        auto info = new SerialProgramInformation;
+        if (!program.isObject() || !info->parse(program.toObject())) {
+            delete info;
+            qDeleteAll(parsed);
+            return false;
         }
-        current = current->getNext();
+        parsed.append(info);
     }
-
-    current = root->getChild( "values" );
-    if( current == NULL || current->getValueType() != JSONTYPE_ARRAY )
-    {
-        return false;
-    }
-    current = current->getChildAt( 0 );
-    int value, i=-1;
-    if( current )
-        current = current->getChildAt( 0 );
-    while( current  && i < 2 )
-    {
-        i++;
-        value = current->getValueAsInt();
-        m_values[ i ]=value;
-        current = current->getNext();
-    }
-
-
-    current = root->getChild( "colors" );
-    if( current == NULL || current->getValueType() != JSONTYPE_ARRAY )
-    {
-        return false;
-    }
-    current = current->getChildAt( 0 );
-    if( current )
-        current = current->getChildAt( 0 );
-
-    unsigned long ulValue;
-    i=-1;
-    while( current && i < 5 )
-    {
-        i++;
-        ulValue = current->getValueAsULong();
-        m_colors[ i ]=ulValue;
-        current = current->getNext();
-    }
-
-    m_com = com->getValueAsInt();
-    m_brightness = brightness->getValueAsInt();
-    m_delay = delay->getValueAsInt();
-
-
+    qDeleteAll(m_programs);
+    m_programs = parsed;
+    m_com = object["com"].toInt();
+    m_delay = object["delay"].toInt();
+    m_brightness = object["brightness"].toInt();
+    for (int i = 0; i < 3; ++i)
+        m_values[i] = values[i].toInt();
+    for (int i = 0; i < 6; ++i)
+        m_colors[i] = colors[i].toInt();
+    m_isValid = true;
     return isValid();
 }

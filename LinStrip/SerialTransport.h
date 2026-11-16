@@ -1,40 +1,39 @@
-#ifndef _SERIALTRANSPORT_H
-#define _SERIALTRANSPORT_H
+#ifndef SERIALTRANSPORT_H
+#define SERIALTRANSPORT_H
 
-#include "SerialPortHandler.h"
-#include "SerialProgramInformation.h"
+#include <QSerialPort>
+#include <QBluetoothSocket>
+#include <QTimer>
+#include "ProtocolSession.h"
 
+// Retains the existing application-facing name; both transports share a session.
 class SerialTransport : public QObject
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
-    typedef void (*onnewdata_t)( QString );
-    SerialTransport();
-    virtual ~SerialTransport();
-    QSerialPort *getSerialPort();
-    SerialPortHandler *setSerialHandler( SerialPortHandler *pSerialPortHandler );
-    SerialPortHandler *getSerialHandler();
-    bool connectToPort( const QString &name, int baudRate, QObject *parent );
-    bool isConnected();
-    bool send( const char *strToSend );
-    bool sendCommand( SERIAL_COMMAND serialCommand );
-    void registerOnNewData( onnewdata_t func );
-    void clearLastCommand();
-    SERIAL_COMMAND getLastCommand();
-    QList< SerialProgramInformation * > parseJsonProgramInformation( QString str );
-
+    enum class State { Disconnected, Connecting, Connected };
+    Q_ENUM(State)
+    explicit SerialTransport(QObject *parent = nullptr);
+    ~SerialTransport() override;
+    bool connectToPort(const QString &name, int baudRate = 115200);
+    void connectToBluetooth(const QString &address);
+    void disconnectDevice();
+    State state() const { return connectionState; }
+    bool isConnected() const { return connectionState == State::Connected; }
+    bool send(const char *text) { return session.send(QString::fromUtf8(text)); }
+    bool sendCommand(SERIAL_COMMAND command) { return session.sendCommand(command); }
 signals:
-    void dataHasCome( QString str );
-
-private slots:
-    void dataFromHandler( QString str );
-
+    void dataHasCome(QString message);
+    void queryReply(SERIAL_COMMAND command, QString reply);
+    void stateChanged(SerialTransport::State state);
+    void errorOccurred(QString message);
 private:
-    std::vector< onnewdata_t >    funcs;
-    QSerialPort m_serialPort;
-    SerialPortHandler *m_SerialHandler = nullptr;
-    SERIAL_COMMAND m_LastCommand=SERIAL_COMMAND::INVALID;
+    void setState(State state);
+    void fail(const QString &message);
+    QSerialPort *serial = nullptr;
+    QBluetoothSocket *bluetooth = nullptr;
+    ProtocolSession session;
+    QTimer connectTimeout;
+    State connectionState = State::Disconnected;
 };
-
 #endif

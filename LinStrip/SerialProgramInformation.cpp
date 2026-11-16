@@ -1,5 +1,6 @@
 #include "SerialProgramInformation.h"
 #include "Json.h"
+#include <QJsonArray>
 
 void SerialProgramInformation::reset()
 {
@@ -96,4 +97,29 @@ SerialProgramInformation &SerialProgramInformation::operator=( const SerialProgr
     this->m_values = rhs.m_values;
     this->m_isValid = rhs.m_isValid;
     return *this;
+}
+
+
+bool SerialProgramInformation::parse(const QJsonObject &object)
+{
+    reset();
+    if (!object["name"].isString() || object["name"].toString().isEmpty() ||
+        !object["description"].isString() || !object["colors"].isDouble() ||
+        object["colors"].toDouble() < 0 || object["colors"].toDouble() > 6 ||
+        object["colors"].toDouble() != object["colors"].toInt() ||
+        !object["values"].isArray())
+        return false;
+    m_name = object["name"].toString();
+    m_description = object["description"].toString();
+    m_colors = object["colors"].toInt();
+    const auto values = object["values"].toArray();
+    if (values.size() > 3)
+        return false;
+    for (const auto &value : values) {
+        if (!value.isString())
+            return false;
+        m_values.append(value.toString());
+    }
+    m_isValid = true;
+    return true;
 }

@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
-find_package(Qt6 COMPONENTS Core Widgets SerialPort REQUIRED)
+find_package(Qt6 COMPONENTS Core Widgets SerialPort Bluetooth REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -28,8 +28,10 @@ set(PROJECT_SOURCES
         FormPrograms.cpp
         FormPrograms.h
         FormPrograms.ui
-        SerialPortHandler.cpp
-        SerialPortHandler.h
+        MessageFramer.cpp
+        MessageFramer.h
+        ProtocolSession.cpp
+        ProtocolSession.h
         SerialTransport.cpp
         SerialTransport.h
         String.cpp
@@ -69,7 +71,7 @@ endif()
 
 
 target_link_libraries(LinStrip PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-target_link_libraries(LinStrip PRIVATE Qt6::SerialPort)
+target_link_libraries(LinStrip PRIVATE Qt6::SerialPort Qt6::Bluetooth)
 
 set_target_properties(LinStrip PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
@@ -81,4 +83,15 @@ set_target_properties(LinStrip PROPERTIES
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(LinStrip)
+endif()
+
+include(CTest)
+if(BUILD_TESTING)
+    find_package(Qt6 COMPONENTS Test REQUIRED)
+    set(TEST_APP_SOURCES ${PROJECT_SOURCES})
+    list(REMOVE_ITEM TEST_APP_SOURCES main.cpp)
+    qt_add_executable(LinStripTests tests/regression.cpp ${TEST_APP_SOURCES})
+    target_link_libraries(LinStripTests PRIVATE Qt6::Widgets Qt6::SerialPort Qt6::Bluetooth Qt6::Test util)
+    add_test(NAME LinStripRegression COMMAND LinStripTests)
+    set_tests_properties(LinStripRegression PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen" TIMEOUT 30)
 endif()

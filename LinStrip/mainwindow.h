@@ -2,39 +2,30 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "SerialPortHandler.h"
+#include <QBluetoothDeviceDiscoveryAgent>
 #include "FormCommands.h"
 #include "FormPrograms.h"
 #include "LinuxStripApp.h"
 
-QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
-
 class MainWindow : public QMainWindow
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
-    MainWindow( QWidget *parent = nullptr );
-    ~MainWindow();
-
-
+    explicit MainWindow(QWidget *parent = nullptr);
+    ~MainWindow() override;
 private slots:
     void on_action_About_2_triggered();
-    void on_MainWindow_iconSizeChanged( const QSize &iconSize );
-    void on_tabWidget_tabBarClicked( int index );
     void on_btnConnect_clicked();
-    void on_newData( QString str );
-
-    void on_tabWidget_currentChanged( int index );
-
+    void refreshDevices();
 private:
+    void updateConnectionState(SerialTransport::State state);
+    void showError(const QString &message);
+    void handleReply(SERIAL_COMMAND command, const QString &reply);
     Ui::MainWindow *ui;
-    bool processCommandResponse( QString response );
-    bool connectToPort( const QString &name, int baudRate );
-    FormCommands *m_formCommmands = nullptr;
-    FormPrograms *m_formPrograms = nullptr;
-    LinuxStripApp *m_pApplication = nullptr;
+    FormCommands *m_formCommands;
+    FormPrograms *m_formPrograms;
+    LinuxStripApp *m_pApplication;
+    QBluetoothDeviceDiscoveryAgent discovery;
 };
-#endif // MAINWINDOW_H
+#endif

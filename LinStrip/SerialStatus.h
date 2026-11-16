@@ -9,11 +9,11 @@ class SerialStatus
 {
 public:
     QList< SerialProgramInformation  * > m_programs;
-    int m_delay;
-    int m_com;
-    int m_brightness;
-    int m_values[ 4 ];
-    unsigned int m_colors[ 6 ];
+    int m_delay = 0;
+    int m_com = -1;
+    int m_brightness = 0;
+    int m_values[ 4 ] = {};
+    unsigned int m_colors[ 6 ] = {};
 
     SerialStatus();
     ~SerialStatus();
@@ -22,7 +22,7 @@ public:
 
 
 private:
-    bool setIsValid( bool value );
+    Q_DISABLE_COPY(SerialStatus)
     bool m_isValid = false;
 };
 

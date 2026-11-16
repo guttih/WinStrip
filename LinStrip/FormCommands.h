@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include "serialcommands.h"
-#include "SerialPortHandler.h"
+#include <QTextEdit>
 #include "LinuxStripApp.h"
 
 namespace Ui

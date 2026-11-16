@@ -11,12 +11,23 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>LinStrip</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="2" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QComboBox" name="comboTransport">
+        <item><property name="text"><string>USB</string></property></item>
+        <item><property name="text"><string>Bluetooth</string></property></item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnRefresh">
+        <property name="text"><string>Refresh / Discover</string></property>
+       </widget>
+      </item>
       <item>
        <widget class="QComboBox" name="comboDevices"/>
       </item>
@@ -50,8 +61,9 @@
     </item>
     <item row="1" column="0">
      <widget class="QLabel" name="labelX">
+      <property name="wordWrap"><bool>true</bool></property>
       <property name="text">
-       <string>TextLabel</string>
+       <string>Disconnected</string>
       </property>
      </widget>
     </item>

@@ -24,9 +24,9 @@ directory. Keep new resource paths independent of the developer's home directory
 
 ## Connections and protocol
 
-- The current implementation links Qt Core, Widgets, and SerialPort. Bluetooth
-  implementation should add the Qt Bluetooth component and `Qt6::Bluetooth`
-  linkage. On Rocky Linux, its development package is
+- The implementation links Qt Core, Widgets, SerialPort, and Bluetooth.
+  `SerialTransport` opens USB at 115200 or Bluetooth Classic SPP via SDP and
+  `QBluetoothSocket`. On Rocky Linux, the Bluetooth development package is
   `qt6-qtconnectivity-devel`; the runtime package alone is insufficient.
 - Keep effect controls independent of the selected connection. USB
   `QSerialPort` and Bluetooth `QBluetoothSocket` can share message handling
@@ -39,16 +39,26 @@ directory. Keep new resource paths independent of the developer's home directory
   errors in the UI instead of terminating the application.
 - Populate effect choices from firmware metadata. Validate the selected effect
   against the received effect list, not `SERIAL_COMMAND::COMMAND_COUNT`.
-  The existing `SerialStatus::isValid()` incorrectly couples these counts.
+  `SerialStatus` now validates against the complete metadata array and rejects
+  malformed entries rather than changing effect indexes.
 - Preserve both manual commands and program controls as transports evolve.
   Provide device refresh/discovery and explicit connecting, connected, and
   disconnected states when extending connection controls.
+- `ProtocolSession` serializes queries independently of tabs, limits queued
+  commands, and treats JSON updates as acknowledgement-free. Query/write timeout
+  or framing failure invalidates the connection; reconnect explicitly because
+  replies contain no request IDs. `MessageFramer` handles the literal `@` reply
+  only when `SEPARATOR` is pending. Never clear unread device data after a reply.
+- Stop debounced updates and disable program controls on loss. Enable them only
+  after valid `ALLSTATUS`; loading status must not send updates back to the strip.
 
 ## Verification
 
-Build after C++ or form changes. There is no configured automated Linux test
-suite yet; `test.sh` is an old external-command experiment, not a test runner.
-Add focused coverage for framing and request-state changes. An offscreen Qt
-startup check can help in a headless session, but does not verify visual layout
+Build after C++ or form changes. Run `ctest --test-dir build --output-on-failure`:
+`LinStripTests` covers incremental framing, request state and failures, metadata,
+and the offscreen GUI with a pseudo-terminal USB device. Tests build by default
+with Qt Test; `-DBUILD_TESTING=OFF` disables them. `test.sh` is an old
+external-command experiment, not a test runner. Keep regression coverage for
+framing and request-state changes. An offscreen Qt startup check can help in a headless session, but does not verify visual layout
 or device communication. For connection or control changes, exercise the
 relevant GUI and hardware when available and report any checks still unverified.

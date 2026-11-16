@@ -26,11 +26,27 @@ pio run -e esp32dev
 The checkmark **Build** button in PlatformIO performs the same task.
 The first build downloads dependencies and needs internet access.
 
+The physical module was identified by the user as **ESP32-WROOM-32** on
+2026-11-16. This supports Bluetooth Classic SPP. The standard `esp32dev` build
+now enables Bluetooth alongside the existing USB protocol. Dependencies and
+the default flash partition layout are unchanged.
+See the [ESP32-WROOM-32 datasheet](https://documentation.espressif.com/esp32-wroom-32_datasheet_en.html)
+for the module's Bluetooth BR/EDR support.
+
+| PlatformIO environment | USB | Bluetooth |
+| --- | --- | --- |
+| `esp32dev` (default) | Protocol, 115200 baud | SPP, name `WinStrip` |
+| `esp32dev-usb-debug` | Development logs, 115200 baud | SPP commands/replies |
+| `esp32dev-usb-only` | Protocol, 115200 baud | Disabled |
+
+Build the logging or recovery variants with `pio run -e esp32dev-usb-debug` or
+`pio run -e esp32dev-usb-only`. A bare `pio run` builds only `esp32dev`.
+
 Hardware settings live near the beginning of `src/main.cpp`:
 
 | Setting | Current value |
 | --- | --- |
-| Board | Generic ESP32 development module (`esp32dev`) |
+| Board/module | `esp32dev`, user-confirmed ESP32-WROOM-32 |
 | Strip | APA102 |
 | LED count | 62 |
 | Data pin | GPIO 14 |
@@ -89,24 +105,67 @@ See [protocol.md](protocol.md) for chunking, buffer limits, and response formats
 For the desktop controller, follow [LinStrip's build/run guide](../LinStrip/README.md).
 It uses Qt 6 and USB serial at 115200 baud.
 
-## Debugging and the Bluetooth preparation
+## Bluetooth and USB debugging
 
-The application no longer writes startup banners or effect/JSON debug text to
-USB. USB remains a protocol connection, so a serial monitor can send queries
-and inspect replies whenever LinStrip has released the port. Opening a monitor
-may reset the board.
+After uploading `esp32dev`, pair with **WinStrip** in the Linux Bluetooth
+settings and open its Serial Port Profile (SPP/RFCOMM) service in a compatible
+client. The firmware accepts one Bluetooth client at a time. Pairing follows the
+installed Arduino-ESP32 2.0.17 defaults; a legacy PIN prompt uses `1234`. A paired
+device is not necessarily connected to SPP. LinStrip currently supports USB
+only; its Qt Bluetooth client still needs implementation.
 
-USB and Bluetooth are separate connections. Once Bluetooth is implemented and
-LinStrip uses it, USB can carry development diagnostics while Bluetooth carries
-commands and replies. This needs an explicit logging option that keeps USB
-logging disabled when a desktop controller uses USB. The current firmware has
-neither Bluetooth initialization nor a USB debug-logging option.
+The normal build keeps application/driver diagnostics out of both protocol
+connections. A USB serial monitor can send queries whenever LinStrip has
+released the port. For startup/connection logs while using Bluetooth commands,
+build and upload the explicit debug environment, replacing the example port:
 
-The transport preparation provides a separate bounded `SerialReader(Stream&)`
-for each future connection. Reset its buffer on disconnect. The Stars effect
-still contains blocking delays that must be removed before enabling Bluetooth.
-Confirm the module supports Bluetooth Classic before adding `BluetoothSerial`;
-the configured `esp32dev` board and the USB bridge do not identify the chip.
+```bash
+pio run -e esp32dev-usb-debug -t upload --upload-port /dev/ttyUSB0
+pio device monitor --port /dev/ttyUSB0 --baud 115200 --eol LF
+```
+
+In this environment USB carries logs only; sending `STATUS` over USB will not
+produce a protocol reply. Logs begin in setup, before any Bluetooth client
+connects, and include initialization, connection transitions, and current free
+heap. Invalid JSON is also logged without echoing its contents. Opening a USB
+monitor can reset the board and disconnect Bluetooth. Use the normal build
+again for USB controller compatibility.
+
+Each connection has its own `SerialReader(Stream&)`. Bluetooth callbacks copy
+bytes and update session state under a lock; the Arduino loop runs all commands
+and effects. The adapter has 4096-byte RX/TX wire queues, sends at most one
+256-byte SPP packet at a time, and waits for write/congestion events without
+blocking the loop. Overflow, a write error, or a five-second stalled write or
+congestion invalidates the session and requests disconnect. Partial input and
+pending replies are cleared between clients, even on a rapid reconnect.
+Clients should wait for query replies rather than flood metadata requests.
+
+The Stars effect uses elapsed-time scheduling for its minimum 100 ms frame
+interval and inter-cycle pause. Switching effects cancels that pause. There
+are no explicit `delay()` calls in command/effect servicing.
+
+## Hardware checks after upload
+
+These remain manual checks; compilation and host tests do not replace them:
+
+1. With the normal build, send `STATUS`, `BUFFERSIZE`, `SEPARATOR`,
+   `PROGRAMCOUNT`, `PIXELCOUNT`, `HARDWARE`, and `ALLSTATUS` over USB and SPP.
+   Expect matching values and no reply on the other connection. Reassemble
+   long metadata replies using `@` continuation chunks.
+2. Send split requests and `STATUS\nPIXELCOUNT\n` in a single burst. Both replies
+   should be separate, ordered messages. Try a continued JSON update, then
+   query `VALUES_COLORS` and inspect the LEDs.
+3. Disconnect Bluetooth halfway through a command, then reconnect and send
+   `STATUS`. The old partial command must not carry over. Repeat with queued
+   metadata replies and a rapid reconnect; USB should remain usable.
+4. Run Stars with a long pause, for example
+   `{"com":7,"delay":30,"brightness":90,"values":[5,2000,0]}`. Check that queries
+   and a switch to Rainbow work during its pause. Confirm the physical effect
+   still fades and selects new stars as expected.
+5. With the debug build, check USB startup/connection logs and free heap while
+   Bluetooth serves commands. USB must not serve protocol replies in this mode.
+
+## Host tests
 
 Run the host regression tests without a connected board:
 
@@ -143,4 +202,24 @@ On 2026-11-16, after the transport preparation:
   used the default tests without sanitizers.
 - The user reported an earlier successful USB build/upload. This refactor was
   built and host-tested only; it was not uploaded or checked against hardware,
-  desktop controls, or physical LEDs. Bluetooth is still disabled.
+  desktop controls, or physical LEDs. Bluetooth was still disabled at that
+  checkpoint (`29582c1`).
+
+On 2026-11-16, after adding Bluetooth and nonblocking Stars timing:
+
+| Environment | Flash bytes / 1,310,720 | Static RAM bytes / 327,680 |
+| --- | --- | --- |
+| `esp32dev` | 1,168,769 (89.2%) | 56,612 (17.3%) |
+| `esp32dev-usb-debug` | 1,170,061 (89.3%) | 53,300 (16.3%) |
+| `esp32dev-usb-only` | 343,537 (26.2%) | 26,444 (8.1%) |
+
+- All three builds succeeded using the same Espressif32 7.0.1,
+  Arduino-ESP32 2.0.17, and FastLED 3.10.9 versions. No partition changes were
+  needed; the normal Bluetooth build leaves 141,951 bytes in its app slot.
+- All 25 host checks passed. As before, host sanitizer runtimes are missing;
+  these checks ran without sanitizers.
+- Static RAM figures do not measure runtime Bluetooth heap/stack use. The debug
+  build reports current free heap for device checks.
+- No board port was visible in the agent environment. No upload, pairing,
+  real USB/SPP commands, physical reconnect, desktop GUI, or LED checks were
+  performed for this implementation. Use the manual checks above on the board.

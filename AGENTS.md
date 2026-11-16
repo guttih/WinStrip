@@ -61,11 +61,18 @@
 
 ## Agreed direction
 
-- Bluetooth is planned; the current source implements USB serial only.
-- Add Bluetooth Classic SPP for a confirmed Classic-capable ESP32, using
-  Arduino `BluetoothSerial` and Qt `QBluetoothSocket`. The configured `esp32dev`
-  target is not proof of the physical chip model; a CP2102 identifies only the
-  USB bridge. Reassess the Bluetooth transport for other ESP32 variants.
+- The user confirmed the module is ESP32-WROOM-32 on 2026-11-16. Firmware now
+  enables Bluetooth Classic SPP as `WinStrip` alongside USB, using Arduino
+  `BluetoothSerial` for initialization/pairing and buffered SPP events/writes.
+  Compilation and host tests pass; actual Bluetooth/LED hardware checks remain.
+- LinStrip's Bluetooth client is still pending and should use Qt
+  `QBluetoothSocket`. The configured `esp32dev` target alone is not proof of a
+  different physical module; a CP2102 identifies only the USB bridge. Reassess
+  the Bluetooth transport for other ESP32 variants.
+- Normal firmware serves the same protocol on USB and Bluetooth. The explicit
+  `esp32dev-usb-debug` build reserves USB for logs and accepts commands over
+  Bluetooth; `esp32dev-usb-only` provides USB without the Bluetooth stack.
+  See [the protocol contract](Esp32Strip2/protocol.md) for framing and lifecycle.
 - Share command handling and message framing across USB and Bluetooth, with
   separate receive buffers per connection and replies sent to the requester.
   Keep diagnostics out of protocol replies and animations responsive.

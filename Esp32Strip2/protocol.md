@@ -1,9 +1,10 @@
 # LED strip communication protocol
 
 This is the contract shared by Esp32Strip2, [LinStrip](../LinStrip), and the
-existing Windows controller. The current firmware enables USB at 115200 baud.
-Bluetooth Classic SPP is planned for a confirmed Classic-capable ESP32 and will
-use the same commands and framing. It is not enabled by this refactor.
+existing Windows controller. The default firmware enables USB at 115200 baud
+and Bluetooth Classic SPP, advertised as `WinStrip`, on the confirmed
+ESP32-WROOM-32. Both connections use the same commands and framing and control
+the same strip. If both send updates, the last processed update takes effect.
 
 ## Framing and connection ownership
 
@@ -23,9 +24,15 @@ use the same commands and framing. It is not enabled by this refactor.
 - One call reads at most 256 wire bytes and returns after the first complete
   logical message. Other input remains in the stream for later loop iterations.
 - All replies, including numeric metadata, go only to the requesting stream.
-  Call `SerialReader::resetBuffer()` when that connection is lost. The transport
-  must also ensure unread driver data belongs to the new session before serving
-  a new client. Bluetooth connection lifecycle handling remains to be added.
+  Bluetooth resets partial input and queued replies on disconnect and binds
+  reads/replies to a session generation, including when disconnect and reconnect
+  occur between loop iterations. Bytes from a new session are kept separate.
+- Bluetooth supports one client at a time, with bounded 4096-byte wire queues
+  for input and output in addition to its logical-message buffer. A queue
+  overflow, write error, or five seconds without write/congestion progress
+  invalidates the session and requests disconnection; it does not execute
+  truncated input. Clients should await query replies before sending more
+  queries. Long metadata replies use the same continuation format as USB.
 
 For example, these wire chunks form a single `STATUS` request:
 
@@ -85,16 +92,21 @@ text commands and rejected JSON do not produce debug text on the connection.
 
 ## Diagnostics and controller follow-up
 
-Application startup, JSON processing, and animation diagnostics no longer go
-to USB. USB remains available for manual protocol queries when the desktop
-controller releases it. A controller should still tolerate boot/reset output
-from the ESP32 itself when opening USB resets the board.
+Normal builds disable application/driver logs and serve protocol requests over
+both USB and Bluetooth. USB remains available for manual protocol queries when
+the desktop controller releases it. A controller should still tolerate boot/reset
+output from the ESP32 itself when opening USB resets the board.
 
-After Bluetooth is available, USB can serve as a development log connection
-while LinStrip uses Bluetooth. An explicit USB logging mode must prevent those
-diagnostics from mixing with USB controller replies. This mode is not yet
-implemented. The Stars effect also still has blocking delays to remove before
-enabling Bluetooth.
+The `esp32dev-usb-debug` build explicitly reserves USB for startup, connection,
+heap, and invalid-JSON diagnostics. USB protocol handling is disabled in that
+build; commands and replies use Bluetooth. USB logging starts during setup and
+does not need a connected Bluetooth client. The `esp32dev-usb-only` build serves
+USB alone without the Bluetooth stack. See [development.md](development.md).
+
+Bluetooth initialization/pairing uses the installed Arduino `BluetoothSerial`
+defaults. Replies use asynchronous, handle-specific SPP writes; the loop does
+not wait for Bluetooth congestion or write acknowledgements. Stars frame and
+pause timing also return to the loop without blocking waits.
 
 LinStrip currently assembles replies on a one-second timer and clears serial
 data after emitting a reply. Its Bluetooth integration should instead frame

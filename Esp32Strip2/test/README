@@ -27,6 +27,18 @@ input queues and captures each connection's actual output. Coverage includes:
   long JSON reply from one-byte deliveries. `SEPARATOR` retains its legacy raw
   `@\r\n` response; see [protocol.md](../protocol.md) for that special case.
 
+The same runner also compiles the production `BluetoothSession` and
+`AnimationClock` headers without any hardware shim. Additional coverage checks:
+
+- Disconnect/reconnect between loop iterations, rejection of reads/replies
+  from the previous session, preservation of the new client's first bytes,
+  and ignoring events/data for rejected or stale connection handles.
+- Receive queue wraparound, exact capacity, overflow/disconnect recovery,
+  bounded asynchronous output packets, congestion, write errors, output
+  overflow, and five-second write/congestion timeouts across clock rollover.
+- Animation frame intervals, nonblocking Stars pauses, switching effects
+  during a pause, and frame/pause timing across clock rollover.
+
 If the compiler's sanitizer runtimes are installed, enable memory/undefined
 behavior instrumentation with:
 
@@ -34,6 +46,7 @@ behavior instrumentation with:
 HOST_TEST_SANITIZERS=1 bash test/run_host_tests.sh
 ```
 
-These tests do not execute the Arduino JSON/effect code or the real serial and
-Bluetooth drivers. A passing host run and `pio run -e esp32dev` do not verify
-device upload, Bluetooth pairing/reconnects, the desktop GUI, or LED behavior.
+There are 25 reported checks in total. These tests do not execute the Arduino
+JSON/effect rendering code, transport lock/callback wiring, or the real serial
+and Bluetooth drivers. A passing host run and firmware build do not verify
+device upload, actual pairing/reconnects, the desktop GUI, or LED behavior.

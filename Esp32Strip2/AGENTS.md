@@ -27,6 +27,11 @@ avoid mixing unrelated toolchain upgrades into feature changes.
 - Hardware settings are currently in `src/main.cpp`: 62 APA102 LEDs, data GPIO
   14, clock GPIO 13, BGR order, and USB serial at 115200 baud. Treat the source
   and identified physical hardware as authoritative before uploading.
+- The user identified the physical module as ESP32-WROOM-32 on 2026-11-16.
+  The default `esp32dev` build enables Bluetooth Classic SPP as `WinStrip`
+  alongside USB. `esp32dev-usb-debug` reserves USB for logs and accepts commands
+  over Bluetooth; `esp32dev-usb-only` omits Bluetooth. Build affected variants
+  when changing transport or configuration code.
 - Building does not upload firmware. For tasks involving upload or a serial
   monitor, identify the actual port and release it from LinStrip or other
   monitors first. Opening the USB serial connection can reset the board.
@@ -38,13 +43,22 @@ avoid mixing unrelated toolchain upgrades into feature changes.
   through their final logical-message boundary. Each read has a byte budget;
   preserve it so incomplete input cannot monopolize the loop. See [protocol.md](protocol.md).
 - Call `resetBuffer()` when a connection is lost so partial input and overflow
-  state cannot carry into the next session. Bluetooth lifecycle handling is
-  still to be implemented; only the USB connection is currently instantiated.
+  state cannot carry into the next session. Bluetooth uses a session generation
+  to catch disconnect/reconnect transitions between loop iterations. Preserve
+  the generation checks on reads, completed commands, and outgoing replies.
+- `lib/BluetoothTransport` uses Arduino `BluetoothSerial` for initialization and
+  pairing, with bounded 4096-byte RX/TX queues around SPP callbacks. Send one
+  packet at a time with `esp_spp_write` to the captured connection handle and
+  advance on write/congestion events. Do not replace this with blocking
+  `BluetoothSerial::write`/`flush` calls. Overflow, write errors, and a five-second
+  stalled write/congestion invalidate the session and request a disconnect.
+  Callbacks only update buffered state under the transport lock; they must not
+  run commands, touch LEDs, or print logs.
 - Keep logging separate from protocol output. Avoid blocking delays in command
   processing and effects that stall servicing either connection. Application
-  diagnostics are currently removed; USB debug logging must be an explicit
-  development option when that port is not carrying controller replies.
-  The Stars effect still has blocking delays to address before enabling Bluetooth.
+  diagnostics are off in normal builds. `STRIP_USB_DEBUG` explicitly reserves
+  USB for logs and disables USB command handling, preventing mixed replies.
+  Animation timing, including Stars pauses, uses elapsed times without `delay()`.
 - Check flash usage after Bluetooth or dependency changes. A compilation probe
   adding Bluetooth initialization used 1,177,957 of the current 1,310,720-byte
   application slot. Review the partition layout and wireless-update needs as
@@ -54,8 +68,9 @@ avoid mixing unrelated toolchain upgrades into feature changes.
 ## Verification
 
 Build affected firmware and report its result and relevant memory usage. Run
-`bash test/run_host_tests.sh` for native framing and reply-routing regression
-coverage; it compiles the production reader against a minimal test Stream.
-Extend this coverage when changing framing or command handling.
+`bash test/run_host_tests.sh` for native framing, reply routing, Bluetooth session
+queues/lifecycle, and animation timing regression coverage. It compiles the
+production reader against a minimal test Stream and exercises the portable
+session and timing code. Extend this coverage when changing these behaviors.
 For hardware work, report which queries, control updates, connection recovery,
 and LED behaviors were actually checked; compilation alone does not verify them.

@@ -6,7 +6,10 @@ are unchanged. Both work over the normal USB and Bluetooth protocol.
 
 ## Frost
 
-Frost starts with faint white `(12,12,12)` as color 0 and full white as color 1.
+Frost uses the first two entries of the existing color bank without replacing
+them: color 0 is the background and color 1 is the sparkle highlight. For the
+original icy look, choose faint white `(12,12,12)` and full white `(255,255,255)`
+in the controller before selecting Frost.
 Each flash lights exactly the selected number of distinct pixels with color 1;
 all remaining pixels keep color 0. During the pause every pixel returns to the
 background. Each cycle chooses a new arrangement; individual pixels may repeat
@@ -56,10 +59,11 @@ Delay controls animation speed; 30 ms is a useful starting point:
 
 ## Palettes, controllers and verification
 
-Entry palettes are applied when switching to one of these new effects. Editing
-parameters while staying on the same effect preserves custom colors. An
-explicit `colors` array in the same effect update overrides its entry palette;
-colors-only updates still work. Query `VALUES_COLORS` or `ALLSTATUS` to read
+Aurora applies its entry palette when selected. Frost always preserves the
+existing color bank when selected. Editing parameters while staying on the
+same effect preserves custom colors. An explicit `colors` array in the same
+effect update overrides Aurora's entry palette.
+Colors-only updates still work. Query `VALUES_COLORS` or `ALLSTATUS` to read
 normalized parameters and the current palette. The six-color bank is shared
 with existing effects, as before.
 
@@ -87,12 +91,12 @@ Verified on 2026-11-17: all 28 host checks and all three firmware builds passed.
 
 | Build | Flash bytes | Static RAM bytes |
 | --- | --- | --- |
-| `esp32dev` | 1,170,589 / 1,310,720 | 56,620 / 327,680 |
-| `esp32dev-usb-debug` | 1,171,881 / 1,310,720 | 53,308 / 327,680 |
-| `esp32dev-usb-only` | 345,341 / 1,310,720 | 26,452 / 327,680 |
+| `esp32dev` | 1,170,553 / 1,310,720 | 56,620 / 327,680 |
+| `esp32dev-usb-debug` | 1,171,849 / 1,310,720 | 53,308 / 327,680 |
+| `esp32dev-usb-only` | 345,325 / 1,310,720 | 26,452 / 327,680 |
 
 A source-derived conservative bound for `ALLSTATUS` with the 13 effect entries
-and maximum numeric state fields is 2469 payload bytes (2498 with framing),
+and maximum numeric state fields is 2476 payload bytes (2505 with framing),
 within the 3300-byte message limit and 4096-byte Bluetooth wire queues. This is
 a serializer-size estimate, not a device capture. No firmware was uploaded and
 no physical LED, USB/SPP, or desktop interaction checks were performed here.

@@ -72,12 +72,7 @@ void StripHelper::setNewValues( STRIP_PROGRAMS program, unsigned long stepDelay,
 {
     if( this->program != program )
     {
-        if( program == STRIP_PROGRAMS::FROST )
-        {
-            stripColors[ 0 ] = CRGB( 12, 12, 12 );
-            stripColors[ 1 ] = CRGB::White;
-        }
-        else if( program == STRIP_PROGRAMS::AURORA )
+        if( program == STRIP_PROGRAMS::AURORA )
         {
             stripColors[ 0 ] = CRGB( 0, 0, 8 );
             stripColors[ 1 ] = CRGB( 0, 255, 80 );
@@ -313,7 +308,7 @@ String StripHelper::getProgramDescription( STRIP_PROGRAMS stripProgram )
         case AURORA:
             return "Drifting northern lights. Color 0: background; colors 1-3: ribbons. Delay controls drift speed. Zero width/count uses defaults.";
         case FROST:
-            return "Bright sparkles on faint white. Color 0: background; color 1: sparkle. Values: count, flash ms, pause ms. Zero selects defaults 5/40/80; count is capped at pixel count. Timing is independent of Delay (10 ms refresh).";
+            return "Uses the current color bank unchanged. Color 0: background; color 1: sparkle. Values: count, flash ms, pause ms. Zero selects defaults 5/40/80; count is capped at pixel count. Timing is independent of Delay (10 ms refresh).";
     }
     return "This program is one of the available program.  The possible programs are only from 0 to " + String(
         ( ( int ) STRIP_PROGRAMS::STRIP_PROGRAMS_COUNT ) - 1 ) + ".";

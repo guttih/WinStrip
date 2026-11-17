@@ -53,7 +53,11 @@ plus Aurora drift and parameter/color bounds. They use the production template
 renderer with a plain RGB pixel type. The Frost checks reject the previous
 synchronized group strobe and any pixel dimming below its background.
 
-There are 28 reported checks in total. These tests do not execute the Arduino
+Trail renderer/motion tests cover all three directions, wrap and bounce
+endpoints, a fading tail, zero/oversized lengths, empty and single-pixel strips,
+and changing direction. They exercise the production `TrailPattern` header.
+
+There are 32 reported checks in total. These tests do not execute the Arduino
 JSON/effect rendering code, transport lock/callback wiring, or the real serial
 and Bluetooth drivers. A passing host run and firmware build do not verify
 device upload, actual pairing/reconnects, the desktop GUI, or LED behavior.

@@ -1,8 +1,47 @@
-# Aurora and Frost
+# Trail, Aurora and Frost
 
-New programs are appended to the existing effect list: Aurora is `com:11`,
-Frost is `com:12`, and `PROGRAMCOUNT` is now 13. IDs 0-10, including Stars at 7,
-are unchanged. Both work over the normal USB and Bluetooth protocol.
+The effect list now has 11 programs. Up, Down, and Up and down have been
+replaced by one Trail program, as requested. Both USB and Bluetooth expose the
+same list and parameter metadata.
+
+| ID | Program |
+| --- | --- |
+| 0 | Off |
+| 1 | Reset |
+| 2 | Single color |
+| 3 | Multicolor |
+| 4 | Trail |
+| 5 | Stars |
+| 6 | Rainbow |
+| 7 | Cylon |
+| 8 | Sections |
+| 9 | Aurora |
+| 10 | Frost |
+
+Reconnect the desktop after flashing to reload the list. Previously copied
+numeric JSON commands for IDs 5 and above must use the new IDs shown here.
+
+## Trail
+
+Trail combines the three previous movement programs. It preserves the color
+bank: color 0 is the moving light, color 1 is the background. A fading tail
+follows the light; its pixels are redrawn against the background each frame.
+
+| Parameter | Meaning |
+| --- | --- |
+| Value 1 | Direction: 0 = up and down, 1 = up, 2 = down |
+| Value 2 | Trail length, 0 to LED count minus one |
+
+Delay controls speed. Value 3 is unused. Direction values above 2 select 0;
+oversized trails are capped at LED count minus one. A zero-length trail is a
+single moving pixel. Up and Down wrap around; Up and down reverses at each end
+without duplicating the endpoint frame or wrapping the tail across the ends.
+
+Example: bounce with an eight-pixel tail:
+
+```json
+{"com":4,"delay":30,"brightness":90,"values":[0,8,0]}
+```
 
 ## Frost
 
@@ -36,13 +75,13 @@ milliseconds, with no blocking waits or old Stars fade cycle.
 Fast sparkle:
 
 ```json
-{"com":12,"delay":10,"brightness":90,"values":[5,40,80]}
+{"com":10,"delay":10,"brightness":90,"values":[5,40,80]}
 ```
 
 Slow sparkle with up to ten independently flashing pixels:
 
 ```json
-{"com":12,"delay":10,"brightness":90,"values":[10,500,1000]}
+{"com":10,"delay":10,"brightness":90,"values":[10,500,1000]}
 ```
 
 ## Aurora
@@ -63,7 +102,7 @@ also appear in the firmware program descriptions shown by the desktop app.
 Delay controls animation speed; 30 ms is a useful starting point:
 
 ```json
-{"com":11,"delay":30,"brightness":90,"values":[22,50,3]}
+{"com":9,"delay":30,"brightness":90,"values":[22,50,3]}
 ```
 
 ## Palettes, controllers and verification
@@ -76,7 +115,7 @@ normalized parameters and the current palette. The six-color bank is shared
 with existing effects, as before.
 
 The current LinStrip reads names, parameter labels and effect counts from
-firmware metadata and supports these appended effects. Reconnect to reload the
+firmware metadata and supports the current effect list. Reconnect to reload the
 list after flashing. Neither effect silently changes colors behind the UI.
 Zero/default parameter normalization can still leave the displayed parameters
 out of date until status is refreshed; a desktop follow-up should refresh
@@ -84,28 +123,31 @@ out of date until status is refreshed; a desktop follow-up should refresh
 is unchanged in this firmware feature.
 
 Windows application changes remain deferred. Its effect-count validation must
-be checked against the expanded metadata array on a Windows machine; preserve
-existing effect IDs and validate against effect count, not command count.
+be checked against the current metadata array and new IDs on a Windows machine.
+The removal of the old movement entries intentionally changes IDs 5 and above;
+validate effect selections against effect count, not command count.
 
 Run `bash test/run_host_tests.sh` for deterministic render checks: stable
 background pixels, staggered sparkle limits, fast/slow on/off boundaries,
 background restoration, saturating color addition, short strips and elapsed-time
-rollover, plus Aurora motion and parameter extremes.
+rollover, plus Aurora motion/parameter extremes and Trail direction, reversal,
+wrap, tail fading, and zero-length behavior.
 The production rendering functions are shared with these tests; this does not
 verify hardware timing, visual quality, or desktop interaction. After upload,
-check both examples, custom palettes, count 1/62, switching effects, and queries
+check all three Trail directions and length 0/8/61, the Aurora/Frost examples,
+custom palettes, count 1/62, switching effects, and queries
 over USB/Bluetooth while the animations run.
 
-Verified on 2026-11-17: all 28 host checks and all three firmware builds passed.
+Verified on 2026-11-17: all 32 host checks and all three firmware builds passed.
 
 | Build | Flash bytes | Static RAM bytes |
 | --- | --- | --- |
-| `esp32dev` | 1,170,813 / 1,310,720 | 56,620 / 327,680 |
-| `esp32dev-usb-debug` | 1,172,105 / 1,310,720 | 53,308 / 327,680 |
-| `esp32dev-usb-only` | 345,581 / 1,310,720 | 26,452 / 327,680 |
+| `esp32dev` | 1,170,309 / 1,310,720 | 56,628 / 327,680 |
+| `esp32dev-usb-debug` | 1,171,609 / 1,310,720 | 53,316 / 327,680 |
+| `esp32dev-usb-only` | 345,025 / 1,310,720 | 26,460 / 327,680 |
 
-A source-derived conservative bound for `ALLSTATUS` with the 13 effect entries
-and maximum numeric state fields is 2588 payload bytes (2620 with framing),
+A source-derived conservative bound for `ALLSTATUS` with the 11 effect entries
+and maximum numeric state fields is 2425 payload bytes (2454 with framing),
 within the 3300-byte message limit and 4096-byte Bluetooth wire queues. This is
 a serializer-size estimate, not a device capture. No firmware was uploaded and
 no physical LED, USB/SPP, or desktop interaction checks were performed here.

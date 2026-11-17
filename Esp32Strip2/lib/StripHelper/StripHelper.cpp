@@ -70,7 +70,14 @@ void StripHelper::reset()
 
 void StripHelper::setNewValues( STRIP_PROGRAMS program, unsigned long stepDelay, unsigned long value1, unsigned long value2, unsigned long value3 )
 {
-    if( program == STRIP_PROGRAMS::FROST )
+    if( program == STRIP_PROGRAMS::TRAIL )
+    {
+        if( value1 > 2 ) value1 = 0;
+        unsigned long maximum = ledCount > 0 ? ledCount - 1 : 0;
+        if( value2 > maximum ) value2 = maximum;
+        value3 = 0;
+    }
+    else if( program == STRIP_PROGRAMS::FROST )
     {
         value1 = value1 == 0 ? 5 : value1;
         if( value1 > static_cast<unsigned long>( ledCount ) ) value1 = ledCount;
@@ -245,12 +252,8 @@ String StripHelper::getProgramName( STRIP_PROGRAMS stripProgram )
             return "Single color";
         case MULTI_COLOR:
             return "Multicolor";
-        case UP:
-            return "Up";
-        case DOWN:
-            return "Down";
-        case UP_DOWN:
-            return "Up and down";
+        case TRAIL:
+            return "Trail";
         case RAINBOW:
             return "Rainbow";
         case CYLON:
@@ -281,12 +284,8 @@ String StripHelper::getProgramDescription( STRIP_PROGRAMS stripProgram )
             return "First color will be set to all of the strip pixels";
         case MULTI_COLOR:
             return "Display each of your selected colors in series through out the strip.";
-        case UP:
-            return "Color 0 is the color of a a pixel running up the strip. Color 1 is the background.";
-        case DOWN:
-            return "Color 0 is the color of a a pixel running down the strip. Color 1 is the background.";
-        case UP_DOWN:
-            return "Color 0 is the color of a a pixel running up and down the strip. Color 1 is the background.";
+        case TRAIL:
+            return "Moving light with a fading trail. Direction: 0=up and down, 1=up, 2=down. Value 2: trail length; 0 gives a single pixel. Color 0: light; color 1: background. Delay controls speed.";
         case STARS:
             return "Color 0 is the color of a start pixel.  Color 1 is the background color.";
         case RAINBOW:
@@ -324,10 +323,10 @@ String StripHelper::getProgramInfoAsJsonArray( STRIP_PROGRAMS stripProgram )
             colors = COLOR_COUNT;
             values += "\"Number of colors\"";
             break;
-        case UP:
-        case DOWN:
-        case UP_DOWN:
-            values += "\"Trail\""; break;
+        case TRAIL:
+            colors = 2;
+            values += "\"Direction (0=up/down, 1=up, 2=down)\",\"Trail length\"";
+            break;
         case STARS:
             colors = 2; values += "\"Number of stars\",\"Delay between new stars\"";
             break;
@@ -585,96 +584,13 @@ void StripHelper::programSections()
 }
 
 
-void StripHelper::fillTrail( int startIndex, CRGB onColor, CRGB trailColor, uint trailCount, bool addToFrontToo )
+void StripHelper::programTrail()
 {
-
-
-
-    uint8_t step = 255 / trailCount + 1;
-    int index = abs( startIndex % getCount() ),
-        frontIndex, endIndex, blendAmount;
-
-    if( trailCount == 0 )
-    {
-        //todo: fix so this if segment is un-necessary
-        frontIndex       = ( index - 1 < 0 ) ? getLast()  : index - 1;
-        leds[ frontIndex ] = trailColor;
-        if( index == 0 )
-            leds[ getLast() ] = trailColor;
-        leds[ index     ] = onColor;
-        endIndex         = ( index + 1 > getLast() ) ? 0 : index + 1;
-        leds[ endIndex  ] = trailColor;
-        return;
-    }
-
-
-    for( int i = 0; i < ( int ) trailCount; i++ )
-    {
-        frontIndex = abs(  (  ( i + startIndex ) - ( int ) trailCount    )       % getCount() );
-        endIndex =   abs(  (  (  ( int ) trailCount + startIndex  ) - ( i )  )   % getCount()  );
-        blendAmount = step * i + 1;
-        CRGB workTrailColor = trailColor;
-        workTrailColor = fadeTowardColorSlowFirst( workTrailColor, onColor, blendAmount, i + 1, trailCount );
-        if( addToFrontToo )
-            leds[ frontIndex ] = workTrailColor;
-
-        leds[ endIndex ] = workTrailColor;
-    }
-
-
-    leds[ index ] = onColor;
-
-    //wipe front
-    leds[ abs( ( ( startIndex - 1 ) - ( int ) trailCount ) % getCount() ) ] = trailColor;
-
-    //wipe end
-    leds[ abs( ( ( ( int ) trailCount + startIndex )   + 1 ) % getCount() ) ] = trailColor;
-
-
-
-
-
-
-}
-int StripHelper::incAndFixOverflow()
-{
-    const int maxInt = 32767;
-    if( getDirection() == -1 && iWorker1 < getCount() )
-        iWorker1 = ( iWorker1 % getCount() ) +  (  (  (  maxInt / getCount()  ) * getCount() ) - getCount() );
-    else if( getDirection() == 1 && iWorker1 > maxInt - ( getCount() * 2 ) )
-        iWorker1 = iWorker1 % getCount() * 2;
-
-    iWorker1 += getDirection();
-    return iWorker1;
-}
-
-void StripHelper::programStepOne( CRGB onColor, CRGB trailColor )
-{
-
-    int index = getStep();
-    int trailColorIndex;
-    int trailCount = value1;
-
-    iWorker1 = incAndFixOverflow();
-    fillTrail( iWorker1, onColor, trailColor, trailCount, true );
+    trail.render( leds, ledCount, value2, value1, getColorBank( 0 ), getColorBank( 1 ) );
     fastLED->show();
-
+    trail.advance( ledCount, value1 );
 }
 
-void StripHelper::programUpDown()
-{
-    programStepOne( getColorBank( 0 ), getColorBank( 1 ) );
-
-    stepUp();
-    if( getTurns() == 1 )
-    {
-        toggleDirection();
-    }
-    else if( getTurns() == -1 )
-    {
-        toggleDirection();
-    }
-}
 void StripHelper::programOff()
 {
     fill_solid( leds, getCount(), CRGB::Black );
@@ -867,11 +783,8 @@ void StripHelper::run()
             programSingleColor(); break;
         case MULTI_COLOR:
             programMultiColor(); break;
-        case UP:
-        case DOWN:
-            programStepOne( getColorBank( 0 ), getColorBank( 1 ) ); stepUp(); break;
-        case UP_DOWN:
-            programUpDown(); break;
+        case TRAIL:
+            programTrail(); break;
         case RAINBOW:
             programRainbow(); break;
         case STARS:
@@ -904,12 +817,8 @@ void StripHelper::initProgram( STRIP_PROGRAMS programToSet )
             setDirection( true ); break;
         case RESET:
             reset(); initProgram( STRIP_PROGRAMS::SINGLE_COLOR ); break;
-        case UP:
-            setDirection( true );  break;
-        case DOWN:
-            setDirection( false ); break;
-        case UP_DOWN:
-            setDirection( false ); toggleDirection( true ); iWorker1 = 1; break;
+        case TRAIL:
+            trail.reset( ledCount, value1 ); break;
         case RAINBOW:
             setDirection( true ); break;
         case CYLON:

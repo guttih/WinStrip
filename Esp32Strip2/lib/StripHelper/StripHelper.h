@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include <FastLED.h>
 #include "AnimationClock.h"
+#include "TrailPattern.h"
 
 #ifndef _StripHelper_h
 #define _StripHelper_h
@@ -15,9 +16,7 @@ enum STRIP_PROGRAMS {
     RESET,
     SINGLE_COLOR,
     MULTI_COLOR,
-    UP,
-    DOWN,
-    UP_DOWN,
+    TRAIL,
     STARS,
     RAINBOW,
     CYLON,
@@ -62,6 +61,7 @@ private:
     CFastLED* fastLED;
     CRGB* leds;
     AnimationClock animationClock;
+    TrailPattern trail;
     uint32_t effectStarted = 0;
     uint32_t frostSeed = 0;
     unsigned int* tempArray;
@@ -102,10 +102,7 @@ private:
     void programCylonFadeall();
     void programCylon();
     void programSections();
-    void fillTrail( int startIndex, CRGB onColor, CRGB trailColor, uint trailCount, bool addToFrontToo );
-    int incAndFixOverflow();
-    void programStepOne( CRGB onColor, CRGB trailColor );
-    void programUpDown();
+    void programTrail();
     void programSingleColor();
     void programMultiColor();
     void programStars();

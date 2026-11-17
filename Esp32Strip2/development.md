@@ -159,7 +159,7 @@ These remain manual checks; compilation and host tests do not replace them:
    `STATUS`. The old partial command must not carry over. Repeat with queued
    metadata replies and a rapid reconnect; USB should remain usable.
 4. Run Stars with a long pause, for example
-   `{"com":7,"delay":30,"brightness":90,"values":[5,2000,0]}`. Check that queries
+   `{"com":5,"delay":30,"brightness":90,"values":[5,2000,0]}`. Check that queries
    and a switch to Rainbow work during its pause. Confirm the physical effect
    still fades and selects new stars as expected.
 5. With the debug build, check USB startup/connection logs and free heap while

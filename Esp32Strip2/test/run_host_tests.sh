@@ -19,7 +19,7 @@ fi
 
 "$test_build_dir/test_serial_reader"
 
-for test_name in bluetooth_session animation_clock effect_patterns; do
+for test_name in bluetooth_session animation_clock effect_patterns trail_pattern; do
     "${CXX:-g++}" -std=c++11 -Wall -Wextra -Werror -pedantic -g \
         "${test_compile_flags[@]}" \
         -I"$project_dir/lib/BluetoothTransport" -I"$project_dir/lib/StripHelper" \

@@ -17,5 +17,6 @@ Bluetooth. `esp32dev-usb-only` provides a build without the Bluetooth stack.
 See [development.md](development.md) for build and hardware-check instructions.
 LinStrip supports USB and Bluetooth and reads its effect list from the firmware.
 
-Aurora (11) and Frost (12) are available in the firmware effect metadata.
+Trail (4), Aurora (9), and Frost (10) are available in the firmware effect metadata.
+Trail combines Up, Down, and Up and down; the list now contains 11 programs.
 See [effects.md](effects.md) for palettes, controls, and fast/slow sparkle examples.

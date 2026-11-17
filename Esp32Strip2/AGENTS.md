@@ -67,7 +67,9 @@ avoid mixing unrelated toolchain upgrades into feature changes.
 
 ## Verification
 
-Aurora (11) and Frost (12) are appended effects; preserve IDs 0-10. See
+The user requested consolidation of Up/Down/Up and down into Trail (4).
+The list now has 11 effects: Stars 5, Rainbow 6, Cylon 7, Sections 8, Aurora 9,
+Frost 10. There are no legacy movement entries. See
 [effects.md](effects.md) for timing, color-bank usage, zero/default values, and
 controller follow-up. `EffectPatterns.h` holds the portable production renderers
 used by host tests. Frost timing is independent of the generic effect Delay.

@@ -8,7 +8,7 @@ are unchanged. Both work over the normal USB and Bluetooth protocol.
 
 Frost uses the first two entries of the existing color bank without replacing
 them: color 0 is the steady background and color 1 supplies the sparkle light. For the
-original icy look, choose faint white `(12,12,12)` and full white `(255,255,255)`
+original icy look, choose faint white `0c0c0c` and full white `ffffff`
 in the controller before selecting Frost.
 Sparkles have staggered, independent flash/pause cycles rather than one shared
 on/off gate. The count limits the number of simultaneous sparkles; the actual
@@ -50,8 +50,9 @@ Slow sparkle with up to ten independently flashing pixels:
 Aurora uses the current color bank without changing it: color 0 is the
 background and colors 1-3 are ribbon colors. Ribbons move back and forth at
 different rates with soft edges, changing intensity and optional shimmer.
-For a northern-lights palette, select dark blue `(0,0,8)`, green `(0,255,80)`,
-teal `(0,160,180)`, and purple `(120,0,200)` yourself in colors 0-3.
+For a northern-lights palette, select dark blue `000008`, green `00ff50`,
+teal `00a0b4`, and purple `7800c8` yourself in colors 0-3. These suggestions
+also appear in the firmware program descriptions shown by the desktop app.
 
 | Parameter | Meaning | Zero/default |
 | --- | --- | --- |
@@ -99,12 +100,12 @@ Verified on 2026-11-17: all 28 host checks and all three firmware builds passed.
 
 | Build | Flash bytes | Static RAM bytes |
 | --- | --- | --- |
-| `esp32dev` | 1,170,685 / 1,310,720 | 56,620 / 327,680 |
-| `esp32dev-usb-debug` | 1,171,977 / 1,310,720 | 53,308 / 327,680 |
-| `esp32dev-usb-only` | 345,453 / 1,310,720 | 26,452 / 327,680 |
+| `esp32dev` | 1,170,813 / 1,310,720 | 56,620 / 327,680 |
+| `esp32dev-usb-debug` | 1,172,105 / 1,310,720 | 53,308 / 327,680 |
+| `esp32dev-usb-only` | 345,581 / 1,310,720 | 26,452 / 327,680 |
 
 A source-derived conservative bound for `ALLSTATUS` with the 13 effect entries
-and maximum numeric state fields is 2461 payload bytes (2490 with framing),
+and maximum numeric state fields is 2588 payload bytes (2620 with framing),
 within the 3300-byte message limit and 4096-byte Bluetooth wire queues. This is
 a serializer-size estimate, not a device capture. No firmware was uploaded and
 no physical LED, USB/SPP, or desktop interaction checks were performed here.

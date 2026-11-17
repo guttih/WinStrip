@@ -296,9 +296,9 @@ String StripHelper::getProgramDescription( STRIP_PROGRAMS stripProgram )
         case SECTIONS:
             return "Divide the strip into four color sections.  Possbile colors are from 0-4. Color 0 is for section 1, color 1 is for section 2 and so on.";
         case AURORA:
-            return "Drifting northern lights. Color 0: background; colors 1-3: ribbons. Delay controls drift speed. Zero width/count uses defaults.";
+            return "Drifting northern lights. Color 0: background; colors 1-3: ribbons. Suggested hex colors: 0=000008, 1=00ff50, 2=00a0b4, 3=7800c8. Delay controls drift speed. Zero width/count uses defaults.";
         case FROST:
-            return "Steady color 0 background with independently timed sparkles adding color 1. Values: maximum sparkles, flash ms, pause per sparkle ms. Zero defaults 5/40/80. Delay does not affect timing (10 ms refresh).";
+            return "Steady color 0 background with independently timed sparkles adding color 1. Suggested hex colors: 0=0c0c0c (background), 1=ffffff (sparkle). Values: maximum sparkles, flash ms, pause per sparkle ms. Zero defaults 5/40/80. Delay does not affect timing (10 ms refresh).";
     }
     return "This program is one of the available program.  The possible programs are only from 0 to " + String(
         ( ( int ) STRIP_PROGRAMS::STRIP_PROGRAMS_COUNT ) - 1 ) + ".";

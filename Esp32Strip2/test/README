@@ -46,10 +46,12 @@ behavior instrumentation with:
 HOST_TEST_SANITIZERS=1 bash test/run_host_tests.sh
 ```
 
-The effect renderer tests also check exact Frost sparkle counts and fast/slow
-flash boundaries, background restoration, new selections, small strips and
-elapsed-time rollover, plus Aurora drift and parameter/color bounds. They use
-the production template renderer with a plain RGB pixel type.
+The effect renderer tests check Frost's stable background, staggered sparkle
+limits (including full count), fast/slow flash boundaries, restoration to the
+background, saturating color addition, small strips and elapsed-time rollover,
+plus Aurora drift and parameter/color bounds. They use the production template
+renderer with a plain RGB pixel type. The Frost checks reject the previous
+synchronized group strobe and any pixel dimming below its background.
 
 There are 28 reported checks in total. These tests do not execute the Arduino
 JSON/effect rendering code, transport lock/callback wiring, or the real serial

@@ -14,14 +14,14 @@ inline uint32_t mix( uint32_t value )
     return value ^ ( value >> 16 );
 }
 
-inline size_t gcd( size_t a, size_t b )
+inline uint8_t addChannel( uint8_t background, uint8_t highlight )
 {
-    while( b ) { size_t next = a % b; a = b; b = next; }
-    return a;
+    unsigned int sum = static_cast<unsigned int>( background ) + highlight;
+    return static_cast<uint8_t>( sum > 255 ? 255 : sum );
 }
 
-// An affine permutation gives exactly N distinct sparkle positions without
-// allocating memory or retrying random positions until they are unique.
+// Independent, staggered sparkle slots. Disjoint pixel regions prevent
+// collisions without allocations. Every unlit pixel stays at background.
 template <typename Pixel>
 void frost( Pixel *pixels, size_t count, uint32_t elapsed, uint32_t seed,
             size_t sparkles, uint32_t flashMs, uint32_t pauseMs,
@@ -32,16 +32,26 @@ void frost( Pixel *pixels, size_t count, uint32_t elapsed, uint32_t seed,
     flashMs = flashMs == 0 ? 40 : ( flashMs > 60000 ? 60000 : flashMs );
     pauseMs = pauseMs > 60000 ? 60000 : pauseMs;
     uint32_t period = flashMs + pauseMs;
-    if( elapsed % period >= flashMs ) return;
     if( sparkles > count ) sparkles = count;
-    uint32_t random = mix( seed + elapsed / period );
-    size_t position = random % count;
-    size_t stride = mix( random ) % count;
-    while( gcd( stride, count ) != 1 ) stride = ( stride + 1 ) % count;
-    for( size_t i = 0; i < sparkles; ++i )
+    if( sparkles == 0 ) return;
+    Pixel light( addChannel( background.r, highlight.r ),
+                 addChannel( background.g, highlight.g ),
+                 addChannel( background.b, highlight.b ) );
+    for( size_t slot = 0; slot < sparkles; ++slot )
     {
-        pixels[ position ] = highlight;
-        position = ( position + stride ) % count;
+        uint32_t bucketStart = static_cast<uint64_t>( slot ) * period / sparkles;
+        uint32_t bucketEnd = static_cast<uint64_t>( slot + 1 ) * period / sparkles;
+        uint32_t bucketWidth = bucketEnd - bucketStart;
+        uint32_t random = mix( seed + static_cast<uint32_t>( slot ) * 0x9e3779b9U );
+        uint32_t offset = bucketStart + ( bucketWidth ? random % bucketWidth : 0 );
+        uint64_t localTime = static_cast<uint64_t>( elapsed ) + offset;
+        if( localTime % period >= flashMs ) continue;
+
+        size_t first = slot * count / sparkles;
+        size_t end = ( slot + 1 ) * count / sparkles;
+        uint32_t cycle = static_cast<uint32_t>( localTime / period );
+        size_t position = first + mix( random ^ mix( cycle ) ) % ( end - first );
+        pixels[ position ] = light;
     }
 }
 

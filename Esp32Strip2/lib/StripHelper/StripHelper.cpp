@@ -308,7 +308,7 @@ String StripHelper::getProgramDescription( STRIP_PROGRAMS stripProgram )
         case AURORA:
             return "Drifting northern lights. Color 0: background; colors 1-3: ribbons. Delay controls drift speed. Zero width/count uses defaults.";
         case FROST:
-            return "Uses the current color bank unchanged. Color 0: background; color 1: sparkle. Values: count, flash ms, pause ms. Zero selects defaults 5/40/80; count is capped at pixel count. Timing is independent of Delay (10 ms refresh).";
+            return "Steady color 0 background with independently timed sparkles adding color 1. Values: maximum sparkles, flash ms, pause per sparkle ms. Zero defaults 5/40/80. Delay does not affect timing (10 ms refresh).";
     }
     return "This program is one of the available program.  The possible programs are only from 0 to " + String(
         ( ( int ) STRIP_PROGRAMS::STRIP_PROGRAMS_COUNT ) - 1 ) + ".";
@@ -356,7 +356,7 @@ String StripHelper::getProgramInfoAsJsonArray( STRIP_PROGRAMS stripProgram )
             break;
         case FROST:
             colors = 2;
-            values += "\"Sparkle count\",\"Flash duration (ms)\",\"Pause duration (ms)\"";
+            values += "\"Maximum sparkles\",\"Flash duration (ms)\",\"Pause per sparkle (ms)\"";
             break;
 
         default:

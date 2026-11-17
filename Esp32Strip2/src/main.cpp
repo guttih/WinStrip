@@ -235,7 +235,7 @@ void processJson( const char *str )
 
     stripper.setBrightness( ulBrightness );
     stripper.setNewValues( ( STRIP_PROGRAMS ) ulCom, ulDelay, values[ 0 ], values[ 1 ], values[ 2 ] );
-    processColors( root ); // Explicit colors override an effect's entry palette.
+    processColors( root ); // Apply explicit color-bank updates, when supplied.
     stripper.initProgram( stripper.getProgram() );
 
 }

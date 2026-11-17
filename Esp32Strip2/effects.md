@@ -47,10 +47,11 @@ Slow sparkle with up to ten independently flashing pixels:
 
 ## Aurora
 
-Aurora blends drifting ribbons over a dark blue background. Its entry palette
-is dark blue `(0,0,8)`, green `(0,255,80)`, teal `(0,160,180)`, and purple
-`(120,0,200)` in colors 0-3. Ribbons move back and forth at different rates with
-soft edges, changing intensity and optional shimmer.
+Aurora uses the current color bank without changing it: color 0 is the
+background and colors 1-3 are ribbon colors. Ribbons move back and forth at
+different rates with soft edges, changing intensity and optional shimmer.
+For a northern-lights palette, select dark blue `(0,0,8)`, green `(0,255,80)`,
+teal `(0,160,180)`, and purple `(120,0,200)` yourself in colors 0-3.
 
 | Parameter | Meaning | Zero/default |
 | --- | --- | --- |
@@ -66,21 +67,20 @@ Delay controls animation speed; 30 ms is a useful starting point:
 
 ## Palettes, controllers and verification
 
-Aurora applies its entry palette when selected. Frost always preserves the
-existing color bank when selected. Editing parameters while staying on the
-same effect preserves custom colors. An explicit `colors` array in the same
-effect update overrides Aurora's entry palette.
-Colors-only updates still work. Query `VALUES_COLORS` or `ALLSTATUS` to read
+Aurora and Frost both preserve the existing color bank when selected or when
+parameters change. Colors change only through an explicit `colors` update or
+the existing Reset program. Colors-only updates still work.
+Query `VALUES_COLORS` or `ALLSTATUS` to read
 normalized parameters and the current palette. The six-color bank is shared
 with existing effects, as before.
 
 The current LinStrip reads names, parameter labels and effect counts from
 firmware metadata and supports these appended effects. Reconnect to reload the
-list after flashing. Its UI may retain the previous colors/zero parameter values
-until status is refreshed: firmware entry palettes and zero/default normalization
-are not an acknowledgement. A desktop follow-up should refresh `ALLSTATUS`
-after an effect change to show that returned state. Desktop source is unchanged
-in this firmware feature.
+list after flashing. Neither effect silently changes colors behind the UI.
+Zero/default parameter normalization can still leave the displayed parameters
+out of date until status is refreshed; a desktop follow-up should refresh
+`ALLSTATUS` after an effect change to show the returned state. Desktop source
+is unchanged in this firmware feature.
 
 Windows application changes remain deferred. Its effect-count validation must
 be checked against the expanded metadata array on a Windows machine; preserve
@@ -99,9 +99,9 @@ Verified on 2026-11-17: all 28 host checks and all three firmware builds passed.
 
 | Build | Flash bytes | Static RAM bytes |
 | --- | --- | --- |
-| `esp32dev` | 1,170,745 / 1,310,720 | 56,620 / 327,680 |
-| `esp32dev-usb-debug` | 1,172,033 / 1,310,720 | 53,308 / 327,680 |
-| `esp32dev-usb-only` | 345,509 / 1,310,720 | 26,452 / 327,680 |
+| `esp32dev` | 1,170,685 / 1,310,720 | 56,620 / 327,680 |
+| `esp32dev-usb-debug` | 1,171,977 / 1,310,720 | 53,308 / 327,680 |
+| `esp32dev-usb-only` | 345,453 / 1,310,720 | 26,452 / 327,680 |
 
 A source-derived conservative bound for `ALLSTATUS` with the 13 effect entries
 and maximum numeric state fields is 2461 payload bytes (2490 with framing),

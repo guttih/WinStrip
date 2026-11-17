@@ -70,16 +70,6 @@ void StripHelper::reset()
 
 void StripHelper::setNewValues( STRIP_PROGRAMS program, unsigned long stepDelay, unsigned long value1, unsigned long value2, unsigned long value3 )
 {
-    if( this->program != program )
-    {
-        if( program == STRIP_PROGRAMS::AURORA )
-        {
-            stripColors[ 0 ] = CRGB( 0, 0, 8 );
-            stripColors[ 1 ] = CRGB( 0, 255, 80 );
-            stripColors[ 2 ] = CRGB( 0, 160, 180 );
-            stripColors[ 3 ] = CRGB( 120, 0, 200 );
-        }
-    }
     if( program == STRIP_PROGRAMS::FROST )
     {
         value1 = value1 == 0 ? 5 : value1;

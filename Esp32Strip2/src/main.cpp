@@ -142,6 +142,32 @@ int getCommand( const char *str )
 }
 
 
+void processColors( JsonData *root )
+{
+    JsonData *current;
+    unsigned long ulColor;
+    int i;
+    current = root->getChild( "colors" );
+    if( current != NULL && current->getValueType() == JSONTYPE::JSONTYPE_ARRAY )
+    {
+        //Colors are optional
+        //we got the key, let's get the array
+        current = current->getChildAt( 0 );
+        //now let's get the first item in the array
+        if( current ) current = current->getChildAt( 0 );
+        i = 0;
+        while( current && i < COLOR_COUNT )
+        {
+            ulColor = current->getValueAsULong();
+            stripper.setColorBank( i, stripper.decodeColor( ulColor ) );
+            current = current->getNext();
+            i++;
+        }
+    }
+
+
+}
+
 void processJson( const char *str )
 {
     Json parser( str );
@@ -159,39 +185,20 @@ void processJson( const char *str )
 
 
     JsonData* current;
-    unsigned long ulCom, ulDelay, ulBrightness, ulColor;
+    unsigned long ulCom, ulDelay, ulBrightness;
     const int VARIABLE_COUNT = 3;
     unsigned long values[ VARIABLE_COUNT ] = { 0, 0, 0 };
     int i;
 
 
-    current = root->getChild( "colors" );
-    if( current == NULL )
-        current = root->getChild( "colors" );
-    if( current != NULL && current->getValueType() == JSONTYPE::JSONTYPE_ARRAY )
-    {
-        //Colors are optional
-        //we got the key, let's get the array
-        current = current->getChildAt( 0 );
-        //now let's get the first item in the array
-        current = current->getChildAt( 0 );
-        i = 0;
-        while( current && i < COLOR_COUNT )
-        {
-            ulColor = current->getValueAsULong();
-            stripper.setColorBank( i, stripper.decodeColor( ulColor ) );
-            current = current->getNext();
-            i++;
-        }
-    }
-
-
     current = root->getChild( "com" );
     if( current == NULL )
     {
+        processColors( root );
         return;
     }
     ulCom = current->getValueAsULong();
+    if( ulCom >= STRIP_PROGRAMS_COUNT ) return;
 
     current = root->getChild( "delay" );
     if( current == NULL )
@@ -216,7 +223,7 @@ void processJson( const char *str )
         return;
     }
     current = current->getChildAt( 0 );//we got the key, let's get the array
-    current = current->getChildAt( 0 );//now let's get the first item in the array
+    if( current ) current = current->getChildAt( 0 );//first array item
 
     i = 0;
     while( current && i < VARIABLE_COUNT )
@@ -228,6 +235,7 @@ void processJson( const char *str )
 
     stripper.setBrightness( ulBrightness );
     stripper.setNewValues( ( STRIP_PROGRAMS ) ulCom, ulDelay, values[ 0 ], values[ 1 ], values[ 2 ] );
+    processColors( root ); // Explicit colors override an effect's entry palette.
     stripper.initProgram( stripper.getProgram() );
 
 }

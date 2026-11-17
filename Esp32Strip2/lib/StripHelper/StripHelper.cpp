@@ -1,4 +1,5 @@
 #include "StripHelper.h"
+#include "EffectPatterns.h"
 
 StripHelper::StripHelper()
 {
@@ -69,6 +70,35 @@ void StripHelper::reset()
 
 void StripHelper::setNewValues( STRIP_PROGRAMS program, unsigned long stepDelay, unsigned long value1, unsigned long value2, unsigned long value3 )
 {
+    if( this->program != program )
+    {
+        if( program == STRIP_PROGRAMS::FROST )
+        {
+            stripColors[ 0 ] = CRGB( 12, 12, 12 );
+            stripColors[ 1 ] = CRGB::White;
+        }
+        else if( program == STRIP_PROGRAMS::AURORA )
+        {
+            stripColors[ 0 ] = CRGB( 0, 0, 8 );
+            stripColors[ 1 ] = CRGB( 0, 255, 80 );
+            stripColors[ 2 ] = CRGB( 0, 160, 180 );
+            stripColors[ 3 ] = CRGB( 120, 0, 200 );
+        }
+    }
+    if( program == STRIP_PROGRAMS::FROST )
+    {
+        value1 = value1 == 0 ? 5 : value1;
+        if( value1 > static_cast<unsigned long>( ledCount ) ) value1 = ledCount;
+        value2 = value2 == 0 ? 40 : ( value2 < 10 ? 10 : ( value2 > 60000 ? 60000 : value2 ) );
+        value3 = value3 == 0 ? 80 : ( value3 < 10 ? 10 : ( value3 > 60000 ? 60000 : value3 ) );
+    }
+    else if( program == STRIP_PROGRAMS::AURORA )
+    {
+        value1 = value1 == 0 ? ledCount / 3 + 1 : value1;
+        if( value1 > static_cast<unsigned long>( ledCount ) ) value1 = ledCount;
+        if( value2 > 255 ) value2 = 255;
+        value3 = value3 == 0 ? 3 : ( value3 > 8 ? 8 : value3 );
+    }
     this->program = program;
     this->stepDelay = stepDelay;
     this->value1 = value1;
@@ -244,6 +274,10 @@ String StripHelper::getProgramName( STRIP_PROGRAMS stripProgram )
             return "Stars";
         case SECTIONS:
             return "Sections";
+        case AURORA:
+            return "Aurora";
+        case FROST:
+            return "Frost";
 
     }
     return "Invalid program";
@@ -276,6 +310,10 @@ String StripHelper::getProgramDescription( STRIP_PROGRAMS stripProgram )
             return "Multiple color will flow down the strip.";
         case SECTIONS:
             return "Divide the strip into four color sections.  Possbile colors are from 0-4. Color 0 is for section 1, color 1 is for section 2 and so on.";
+        case AURORA:
+            return "Drifting northern lights. Color 0: background; colors 1-3: ribbons. Delay controls drift speed. Zero width/count uses defaults.";
+        case FROST:
+            return "Bright sparkles on faint white. Color 0: background; color 1: sparkle. Values: count, flash ms, pause ms. Zero selects defaults 5/40/80; count is capped at pixel count. Timing is independent of Delay (10 ms refresh).";
     }
     return "This program is one of the available program.  The possible programs are only from 0 to " + String(
         ( ( int ) STRIP_PROGRAMS::STRIP_PROGRAMS_COUNT ) - 1 ) + ".";
@@ -315,6 +353,15 @@ String StripHelper::getProgramInfoAsJsonArray( STRIP_PROGRAMS stripProgram )
         case SECTIONS:
             colors = 4;
             values += "\"Starting number of section 2\",\"Starting number of section 3\",\"Starting number of section 4\"";
+            break;
+
+        case AURORA:
+            colors = 4;
+            values += "\"Ribbon width\",\"Shimmer (0-255)\",\"Ribbon count (1-8)\"";
+            break;
+        case FROST:
+            colors = 2;
+            values += "\"Sparkle count\",\"Flash duration (ms)\",\"Pause duration (ms)\"";
             break;
 
         default:
@@ -789,6 +836,23 @@ void StripHelper::programStars()
     }
 }
 
+void StripHelper::programAurora()
+{
+    uint32_t frameMs = stepDelay == 0 ? 1 : stepDelay;
+    EffectPatterns::aurora( leds, ledCount,
+        static_cast<uint32_t>( millis() - effectStarted ) / frameMs,
+        value1, value2, value3, stripColors );
+    fastLED->show();
+}
+
+void StripHelper::programFrost()
+{
+    EffectPatterns::frost( leds, ledCount,
+        static_cast<uint32_t>( millis() - effectStarted ), frostSeed,
+        value1, value2, value3, stripColors[ 0 ], stripColors[ 1 ] );
+    fastLED->show();
+}
+
 void StripHelper::run()
 {
     if( stripMustBeOff )
@@ -798,6 +862,7 @@ void StripHelper::run()
     }
     uint32_t time = millis();
     uint32_t interval = getStepDelay();
+    if( getProgram() == STRIP_PROGRAMS::FROST ) interval = 10;
     if( getProgram() == STRIP_PROGRAMS::STARS && interval < 100 )
         interval = 100;
     if( !animationClock.ready( time, interval ) )
@@ -830,6 +895,10 @@ void StripHelper::run()
             programCylon(); break;
         case SECTIONS:
             programSections(); break;
+        case AURORA:
+            programAurora(); break;
+        case FROST:
+            programFrost(); break;
 
     }
 }
@@ -838,6 +907,8 @@ void StripHelper::run()
 void StripHelper::initProgram( STRIP_PROGRAMS programToSet )
 {
     animationClock.reset( millis() );
+    effectStarted = millis();
+    frostSeed = ( static_cast<uint32_t>( random16() ) << 16 ) | random16();
     switch( programToSet )
     {
 

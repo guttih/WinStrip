@@ -15,4 +15,7 @@ Replies go to the requesting connection; both control the same LED strip.
 `esp32dev-usb-debug` reserves USB for startup/connection logs while commands use
 Bluetooth. `esp32dev-usb-only` provides a build without the Bluetooth stack.
 See [development.md](development.md) for build and hardware-check instructions.
-LinStrip's Bluetooth client integration is still pending.
+LinStrip supports USB and Bluetooth and reads its effect list from the firmware.
+
+Aurora (11) and Frost (12) are available in the firmware effect metadata.
+See [effects.md](effects.md) for palettes, controls, and fast/slow sparkle examples.

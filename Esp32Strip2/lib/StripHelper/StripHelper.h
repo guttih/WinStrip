@@ -22,6 +22,8 @@ enum STRIP_PROGRAMS {
     RAINBOW,
     CYLON,
     SECTIONS,
+    AURORA,
+    FROST,
 
     /*add next type above this line*/
     STRIP_PROGRAMS_COUNT
@@ -60,6 +62,8 @@ private:
     CFastLED* fastLED;
     CRGB* leds;
     AnimationClock animationClock;
+    uint32_t effectStarted = 0;
+    uint32_t frostSeed = 0;
     unsigned int* tempArray;
     uint8_t byteWorker1 = 0;
     unsigned long ulWorker1;
@@ -108,6 +112,8 @@ private:
     void programStarsInit();
     void programStarsSelectNewStars();
     void programRainbow();
+    void programAurora();
+    void programFrost();
 public:
 
     bool stripMustBeOff;

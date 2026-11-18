@@ -47,18 +47,18 @@ message limit.
 
 ## Queries
 
-| Request | Reply payload |
-| --- | --- |
-| `STATUS` | `OK` |
-| `BUFFERSIZE` | `3300` |
-| `SEPARATOR` | `@` |
-| `PROGRAMCOUNT` | Number of lighting effects, currently `11` |
-| `PROGRAMINFO` | JSON array of effect metadata |
-| `ALLSTATUS` | JSON object with effect metadata and current values/colors |
-| `COLORS` | JSON object containing `colors` |
-| `VALUES` | JSON object containing `delay`, `com`, `brightness`, `values` |
-| `PIXELCOUNT` | LED count, currently `62` |
-| `HARDWARE` | JSON object with strip type, color scheme, pins, pixel count |
+| Request         | Reply payload  |
+| --------------- | ------         |
+| `STATUS`        | `OK`           |
+| `BUFFERSIZE`    | `3300`         |
+| `SEPARATOR`     | `@`            |
+| `PROGRAMCOUNT`  | Number of lighting effects, currently `11` |
+| `PROGRAMINFO`   | JSON array of effect metadata |
+| `ALLSTATUS`     | JSON object with effect metadata and current values/colors |
+| `COLORS`        | JSON object containing `colors` |
+| `VALUES`        | JSON object containing `delay`, `com`, `brightness`, `values` |
+| `PIXELCOUNT`    | LED count, currently `62` |
+| `HARDWARE`      | JSON object with strip type, color scheme, pins, pixel count |
 | `VALUES_COLORS` | JSON object with values and colors |
 
 `SEPARATOR` retains the legacy literal reply `@\r\n`. This particular reply

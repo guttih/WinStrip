@@ -76,7 +76,7 @@ An effect update supplies `com`, `delay` (milliseconds), `brightness`, and up
 to three parameter values. Existing controllers normally send all three:
 
 ```json
-{"com":8,"delay":30,"brightness":90,"values":[1,15,0]}
+{"com":6,"delay":30,"brightness":90,"values":[1,15,0]}
 ```
 
 The six color-bank entries are packed RGB integers (`0xRRGGBB`), sent as decimal
